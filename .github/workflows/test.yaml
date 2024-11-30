@@ -1,0 +1,16 @@
+name: Run lint
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./vue-project
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        working-directory: ./
+      - name: Install Node
+        uses: npm ci
+      - name: Run lint
+        uses: npm run lint
