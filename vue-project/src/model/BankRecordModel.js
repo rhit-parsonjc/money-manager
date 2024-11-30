@@ -1,7 +1,6 @@
 import { DateObjectModel } from './DateObjectModel'
-import { DateRecordModel } from './DateRecordModel'
 
-class RecordModel {
+class BankRecordModel {
   constructor(name, yearValue, monthValue, dayValue, amount) {
     this.name = name
     this.dateObj = new DateObjectModel(yearValue, monthValue, dayValue)
@@ -13,4 +12,4 @@ function sortRecordModels(recordOne, recordTwo) {
   return recordOne.dateObj.dateValue - recordTwo.dateObj.dateValue
 }
 
-export { RecordModel, sortRecordModels }
+export { BankRecordModel, sortRecordModels }

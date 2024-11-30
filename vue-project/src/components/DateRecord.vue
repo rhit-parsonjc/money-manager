@@ -1,5 +1,5 @@
 <script setup>
-import Record from './Record.vue';
+import BankRecord from './BankRecord.vue';
 
 const {dateRecord} = defineProps(["dateRecord"]);
 </script>
@@ -7,7 +7,11 @@ const {dateRecord} = defineProps(["dateRecord"]);
 <template>
     <li>
       <h2 class="dateRecordDate">{{dateRecord.dateObj.format()}}</h2>
-      <Record v-for="record of dateRecord.records" :record="record"/>
+      <BankRecord
+        v-for="(record, i) of dateRecord.records"
+        :key={i}
+        :record="record"
+      />
     </li>
 </template>
 

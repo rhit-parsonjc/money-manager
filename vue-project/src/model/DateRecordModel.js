@@ -1,4 +1,4 @@
-import { sortRecordModels } from './RecordModel'
+import { sortRecordModels } from './BankRecordModel'
 
 class DateRecordModel {
   constructor(dateObj, records) {
