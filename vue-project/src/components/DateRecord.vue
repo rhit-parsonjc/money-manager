@@ -8,8 +8,8 @@ const {dateRecord} = defineProps(["dateRecord"]);
     <li>
       <h2 class="dateRecordDate">{{dateRecord.dateObj.format()}}</h2>
       <BankRecord
-        v-for="(record, i) of dateRecord.records"
-        :key={i}
+        v-for="record of dateRecord.records"
+        :key="record.id"
         :record="record"
       />
     </li>

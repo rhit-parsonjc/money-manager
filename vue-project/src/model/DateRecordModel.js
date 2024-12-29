@@ -8,6 +8,9 @@ class DateRecordModel {
 }
 
 function organizeRecordsByDate(records) {
+  if (records.length === 0) {
+    return []
+  }
   const sortedRecords = [...records].sort(sortRecordModels)
   const firstDateObj = sortedRecords[0].dateObj
   const lastDateObj = sortedRecords[sortedRecords.length - 1].dateObj

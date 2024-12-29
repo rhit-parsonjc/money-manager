@@ -3,6 +3,7 @@ import useRecordStore from './store/DataStore';
 import DateRecord from './components/DateRecord.vue';
 
 const recordStore = useRecordStore();
+recordStore.loadData();
 </script>
 
 <template>
