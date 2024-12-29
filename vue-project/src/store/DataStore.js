@@ -26,7 +26,7 @@ const useRecordStore = defineStore('record', () => {
   function deleteRecord(id) {
     axios
       .delete(`http://localhost:8080/api/v1/bankrecord/${id}`)
-      .then((response) => {
+      .then(() => {
         loadData()
       })
       .catch((error) => console.error(error))
