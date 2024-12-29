@@ -9,4 +9,5 @@ public class BankRecordDto {
     private Integer month;
     private Integer day;
     private Double amount;
+    private String name;
 }

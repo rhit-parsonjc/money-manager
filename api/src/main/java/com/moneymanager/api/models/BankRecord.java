@@ -15,4 +15,5 @@ public class BankRecord {
     private Integer day;
 
     private Double amount;
+    private String name;
 }

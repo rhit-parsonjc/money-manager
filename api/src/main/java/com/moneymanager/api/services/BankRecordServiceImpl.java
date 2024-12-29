@@ -23,6 +23,7 @@ public class BankRecordServiceImpl implements BankRecordService {
         bankRecordDto.setMonth(bankRecord.getMonth());
         bankRecordDto.setDay(bankRecord.getDay());
         bankRecordDto.setAmount(bankRecord.getAmount());
+        bankRecordDto.setName(bankRecord.getName());
         return bankRecordDto;
     }
 
@@ -32,6 +33,7 @@ public class BankRecordServiceImpl implements BankRecordService {
         bankRecord.setMonth(bankRecordRequest.getMonth());
         bankRecord.setDay(bankRecordRequest.getDay());
         bankRecord.setAmount(bankRecordRequest.getAmount());
+        bankRecord.setName(bankRecordRequest.getName());
         return bankRecord;
     }
 
