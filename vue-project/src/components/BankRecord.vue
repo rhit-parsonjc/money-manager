@@ -1,16 +1,18 @@
 <script setup>
-import useRecordStore from '@/store/DataStore';
+import useDataStore from '@/store/DataStore';
 
 const {record} = defineProps(["record"])
 
-const recordStore = useRecordStore();
+const dataStore = useDataStore()
 </script>
 
 <template>
     <li class="record">
         <p>{{ record.name }}</p>
         <p>${{ record.amount.toFixed(2) }}</p>
-        <button @click="recordStore.deleteRecord(record.id)">Delete</button>
+        <button @click="dataStore.deleteRecord(record.id)">
+            Delete
+        </button>
     </li>
 </template>
 

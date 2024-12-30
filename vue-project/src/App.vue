@@ -1,25 +1,8 @@
-<script setup>
-import useRecordStore from './store/DataStore';
-import DateRecord from './components/DateRecord.vue';
-
-const recordStore = useRecordStore();
-recordStore.loadData();
-</script>
-
 <template>
-  <h1>Records</h1>
-  <ul id="dateRecordList">
-    <DateRecord
-      v-for="(dateRecord, i) of recordStore.dateRecords"
-      :dateRecord="dateRecord"
-      :key={i}
-    />
-  </ul>
+  <nav>
+    <RouterLink to="/records">Records</RouterLink>
+  </nav>
+  <main>
+    <RouterView />
+  </main>
 </template>
-
-<style scoped>
-#dateRecordList {
-  list-style-type: none;
-  padding-left: 0em;
-}
-</style>

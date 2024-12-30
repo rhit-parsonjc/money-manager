@@ -6,7 +6,9 @@ const {dateRecord} = defineProps(["dateRecord"]);
 
 <template>
     <li>
-      <h2 class="dateRecordDate">{{dateRecord.dateObj.format()}}</h2>
+      <h2 class="dateRecordDate">
+        {{dateRecord.dateObj.format()}}
+      </h2>
       <BankRecord
         v-for="record of dateRecord.records"
         :key="record.id"
