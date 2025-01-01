@@ -20,3 +20,8 @@
 - [CORS in 100 Seconds](https://www.youtube.com/watch?v=4KHiSt0oLJ0)
 - [Learn CORS In 6 Minutes](https://www.youtube.com/watch?v=PNtFSVU-YTI)
 - Thanks to [Sébastien Deleuze](https://spring.io/blog/2015/06/08/cors-support-in-spring-framework) for the solution.
+
+### Fonts
+
+- Thanks to Brenda Gallo for the font [Happy Monkey](https://fonts.google.com/specimen/Happy+Monkey), licensed under [SIL Open Font License, version 1.1](https://openfontlicense.org/open-font-license-official-text/).
+- Thanks to Pablo Impallari for the font [Libre Baskerville](https://fonts.google.com/specimen/Libre+Baskerville), licensed under [SIL Open Font License, version 1.1](https://openfontlicense.org/open-font-license-official-text/).

@@ -37,6 +37,6 @@ watch(() => dataStore.retrievalStatus,
 <style scoped>
 #dateRecordList {
   list-style-type: none;
-  padding-left: 0em;
+  padding-left: 0rem;
 }
 </style>

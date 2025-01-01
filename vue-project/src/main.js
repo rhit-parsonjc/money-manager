@@ -13,8 +13,8 @@ const pinia = createPinia()
 app.use(pinia)
 
 const routes = [
-  { path: '/records', component: AllBankRecordsView },
-  { path: '/record/:recordId', component: BankRecordDetailsView, props: true },
+  { path: '/records/:recordId', name: 'record', component: BankRecordDetailsView, props: true },
+  { path: '/records', name: 'records', component: AllBankRecordsView },
 ]
 const router = createRouter({
   history: createWebHistory(),

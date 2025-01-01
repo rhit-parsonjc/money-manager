@@ -1,28 +1,27 @@
 <script setup>
-import useDataStore from '@/store/DataStore';
-
 const {record} = defineProps(["record"])
-
-const dataStore = useDataStore()
+import { formatCurrency } from '@/utilities/utilities';
+const recordUrl = "/records/" + record.id;
 </script>
 
 <template>
     <li class="record">
-        <p>{{ record.name }}</p>
-        <p>${{ record.amount.toFixed(2) }}</p>
-        <button @click="dataStore.deleteRecord(record.id)">
-            Delete
-        </button>
+        <RouterLink :to="recordUrl" class="libre-baskerville-regular recordText">
+            {{ record.name }} ({{ formatCurrency(record.amount) }})
+        </RouterLink>
     </li>
 </template>
 
 <style scoped>
 .record {
-    border: 1px solid black;
-    padding: 0.5em;
-    margin: 0.5em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    margin: 0.5rem 0em;
+}
+.recordText {
+    font-size: 12pt;
+    color: black;
+    text-decoration: none;
+}
+.recordText:hover {
+    text-decoration: underline;
 }
 </style>

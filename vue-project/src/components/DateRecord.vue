@@ -6,19 +6,29 @@ const {dateRecord} = defineProps(["dateRecord"]);
 
 <template>
     <li>
-      <h2 class="dateRecordDate">
+      <h2 class="dateRecordDate happy-monkey-regular">
         {{dateRecord.dateObj.format()}}
       </h2>
-      <BankRecord
-        v-for="record of dateRecord.records"
-        :key="record.id"
-        :record="record"
-      />
+      <ul class="bankRecordsPerDate">
+        <BankRecord
+          v-for="record of dateRecord.records"
+          :key="record.id"
+          :record="record"
+        />
+      </ul>
     </li>
 </template>
 
 <style scoped>
 .dateRecordDate {
-  text-align: center;
+  text-align: left;
+  font-size: 18pt;
+  background-color: #0c0;
+  padding: 0.25em;
+  margin: 0.5rem 0em;
+}
+.bankRecordsPerDate {
+  list-style-type: none;
+  padding-left: 1rem;
 }
 </style>

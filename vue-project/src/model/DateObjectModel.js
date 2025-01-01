@@ -13,12 +13,15 @@ const monthNames = [
   'December',
 ]
 
-const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+// const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+// Month ranges from 1 to 12
+// Day ranges from 1 to the maximum number of days in the month
 
 class DateObjectModel {
   constructor(yearValue, monthValue, dayValue) {
     this.dateValue = new Date()
-    this.dateValue.setUTCFullYear(yearValue, monthValue, dayValue)
+    this.dateValue.setUTCFullYear(yearValue, monthValue - 1, dayValue)
     this.dateValue.setUTCHours(0, 0, 0, 0)
   }
 
@@ -27,7 +30,7 @@ class DateObjectModel {
   }
 
   get monthValue() {
-    return this.dateValue.getUTCMonth()
+    return this.dateValue.getUTCMonth() + 1
   }
 
   get dayValue() {
@@ -39,7 +42,7 @@ class DateObjectModel {
   }
 
   format() {
-    return `${dayNames[this.dayOfWeekValue]}, ${monthNames[this.monthValue]} ${this.dayValue}, ${this.yearValue}`
+    return `${monthNames[this.monthValue - 1]} ${this.dayValue}, ${this.yearValue}`
   }
 
   equals(dateObj) {
