@@ -25,3 +25,4 @@
 
 - Thanks to Brenda Gallo for the font [Happy Monkey](https://fonts.google.com/specimen/Happy+Monkey), licensed under [SIL Open Font License, version 1.1](https://openfontlicense.org/open-font-license-official-text/).
 - Thanks to Pablo Impallari for the font [Libre Baskerville](https://fonts.google.com/specimen/Libre+Baskerville), licensed under [SIL Open Font License, version 1.1](https://openfontlicense.org/open-font-license-official-text/).
+- Thanks to Dalton Maag for the font [Ubuntu](https://fonts.google.com/specimen/Ubuntu), licensed under [UBUNTU Font License Version 1.0](https://ubuntu.com/legal/font-licence).
