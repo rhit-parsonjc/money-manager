@@ -1,6 +1,5 @@
 <script setup>
 import BankRecordForm from '@/components/BankRecordForm.vue';
-import useDataStore from '@/store/DataStore';
 </script>
 
 <template>
