@@ -6,7 +6,7 @@ const recordUrl = "/records/" + record.id;
 
 <template>
     <li class="record">
-        <RouterLink :to="recordUrl" class="libre-baskerville-regular recordText">
+        <RouterLink :to="recordUrl" class="ubuntu-regular recordText">
             {{ record.name }} ({{ formatCurrency(record.amount) }})
         </RouterLink>
     </li>

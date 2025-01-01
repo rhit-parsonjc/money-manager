@@ -8,28 +8,26 @@ const {record} = defineProps(["record"])
 const dataStore = useDataStore();
 const router = useRouter();
 
-function returnToRecord() {
-    router.push(`/records/${record.id}`)
-}
-
-function confirmUpdate() {
-    dataStore.updateRecord(record.id, {
-        year: yearValue.value,
-        month: monthNames.indexOf(monthNameValue.value) + 1,
-        day: dayValue.value,
-        amount: amountValue.value,
-        name: nameValue.value,
-    })
-    returnToRecord()
-}
-
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+const initialValues = (record === null) ? {
+    monthValue: 1,
+    dayValue: 1,
+    yearValue: 0,
+    amountValue: 0,
+    nameValue: "",
+} : {
+    monthValue: record.dateObj.monthValue,
+    dayValue: record.dateObj.dayValue,
+    yearValue: record.dateObj.yearValue,
+    amountValue: record.amount.toFixed(2),
+    nameValue: record.name,
+}
 
-let monthNameValue = ref(monthNames[record.dateObj.monthValue - 1])
-let dayValue = ref(record.dateObj.dayValue)
-let yearValue = ref(record.dateObj.yearValue)
-let amountValue = ref(record.amount.toFixed(2))
-let nameValue = ref(record.name)
+let monthNameValue = ref(monthNames[initialValues.monthValue - 1])
+let dayValue = ref(initialValues.dayValue)
+let yearValue = ref(initialValues.yearValue)
+let amountValue = ref(initialValues.amountValue)
+let nameValue = ref(initialValues.nameValue)
 
 const daysInMonth = computed(() => {
     const isLeapYear = (yearValue.value % 400 === 0) || (yearValue.value % 100 !== 0 && yearValue.value % 4 === 0)
@@ -50,25 +48,68 @@ const daysInMonth = computed(() => {
     return daysPerMonth[monthNameValue.value]
 })
 
+function createNewRecord() {
+    return {
+        year: yearValue.value,
+        month: monthNames.indexOf(monthNameValue.value) + 1,
+        day: dayValue.value,
+        amount: amountValue.value,
+        name: nameValue.value,
+    }
+}
+
+function returnToRecord() {
+    router.push(`/records/${record.id}`)
+}
+
+function returnToRecords() {
+    router.push("/records/")
+}
+
+function returnAction() {
+    if (record === null) {
+        returnToRecords();
+    } else {
+        returnToRecord();
+    }
+}
+
+function confirmUpdate() {
+    dataStore.updateRecord(record.id, createNewRecord())
+}
+
+function confirmCreate() {
+    dataStore.createRecord(createNewRecord())
+}
+
+function confirmAction() {
+    if (record === null) {
+        confirmCreate();
+    } else {
+        confirmUpdate();
+    }
+    returnAction();
+}
+
 </script>
 
 <template>
     <input class="happy-monkey-regular nameInput" v-model="nameValue">
     <div class="inputLine">
-        <p class="libre-baskerville-regular">Date:</p>
-        <select class="libre-baskerville-regular" v-model="monthNameValue">
+        <p class="ubuntu-regular">Date:</p>
+        <select class="ubuntu-regular" v-model="monthNameValue">
             <option v-for="monthName of monthNames" :key="monthName">{{ monthName }}</option>
         </select>
-        <input class="libre-baskerville-regular" type="number" v-model="dayValue" min="1" :max="daysInMonth">
-        <input class="libre-baskerville-regular" type="number" v-model="yearValue">
+        <input class="ubuntu-regular" type="number" v-model="dayValue" min="1" :max="daysInMonth">
+        <input class="ubuntu-regular" type="number" v-model="yearValue">
     </div>
     <div class="inputLine">
-        <p class="libre-baskerville-regular">Amount: $</p>
-        <input class="libre-baskerville-regular" v-model="amountValue">
+        <p class="ubuntu-regular">Amount: $</p>
+        <input class="ubuntu-regular" v-model="amountValue">
     </div>
     <div id="bankRecordButtons">
-        <button class="libre-baskerville-regular" id="confirmButton" @click="confirmUpdate">Confirm</button>
-        <button class="libre-baskerville-regular" id="cancelButton" @click="returnToRecord">Cancel</button>
+        <button class="ubuntu-regular" id="confirmButton" @click="confirmAction">Confirm</button>
+        <button class="ubuntu-regular" id="cancelButton" @click="returnAction">Cancel</button>
     </div>
 </template>
 

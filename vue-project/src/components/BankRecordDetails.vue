@@ -24,12 +24,12 @@ function deleteRecord() {
 
 <template>
     <h1 class="happy-monkey-regular">{{ record.name }}</h1>
-    <p class="libre-baskerville-regular">Date: {{ record.dateObj.format() }}</p>
-    <p class="libre-baskerville-regular">Amount: {{ formatCurrency(record.amount) }}</p>
+    <p class="ubuntu-regular">Date: {{ record.dateObj.format() }}</p>
+    <p class="ubuntu-regular">Amount: {{ formatCurrency(record.amount) }}</p>
     <div id="bankRecordButtons">
-        <button class="libre-baskerville-regular" id="editButton" @click="editRecord">Edit</button>
-        <button class="libre-baskerville-regular" id="backButton" @click="returnToRecords">Back</button>
-        <button class="libre-baskerville-regular" id="deleteButton" @click="deleteRecord">Delete</button>
+        <button class="ubuntu-regular" id="editButton" @click="editRecord">Edit</button>
+        <button class="ubuntu-regular" id="backButton" @click="returnToRecords">Back</button>
+        <button class="ubuntu-regular" id="deleteButton" @click="deleteRecord">Delete</button>
     </div>
 </template>
 

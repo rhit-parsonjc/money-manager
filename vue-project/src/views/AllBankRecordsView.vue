@@ -3,6 +3,7 @@ import DateRecord from '@/components/DateRecord.vue';
 import useDataStore from '@/store/DataStore';
 import { organizeRecordsByDate } from '@/model/DateRecordModel';
 import { watch } from 'vue';
+import { RouterLink } from 'vue-router';
 
 const dataStore = useDataStore();
 dataStore.loadRecords();
@@ -17,7 +18,8 @@ watch(() => dataStore.retrievalStatus,
 </script>
 
 <template>
-  <h1>Records</h1>
+  <h1 class="libre-baskerville-regular">Records</h1>
+  <RouterLink to="/create/record" class="libre-baskerville-regular" id="addNewRecordButton">Add New Record</RouterLink>
   <p v-if="dataStore.retrievalStatus === 'LOADING'">
     Loading Records...
   </p>
@@ -38,5 +40,14 @@ watch(() => dataStore.retrievalStatus,
 #dateRecordList {
   list-style-type: none;
   padding-left: 0rem;
+}
+#addNewRecordButton {
+  text-decoration: none;
+  color: #050;
+  display: block;
+  text-align: center;
+}
+#addNewRecordButton:hover {
+  text-decoration: underline;
 }
 </style>

@@ -9,10 +9,10 @@ dataStore.loadRecord(recordId);
 </script>
 
 <template>
-    <p v-if="dataStore.retrievalStatus === 'LOADING'">
+    <p class="ubuntu-regular" v-if="dataStore.retrievalStatus === 'LOADING'">
         Loading Record...
     </p>
-    <p v-else-if="dataStore.retrievalStatus === 'ERROR'">
+    <p class="ubuntu-regular" v-else-if="dataStore.retrievalStatus === 'ERROR'">
         Could not load record
     </p>
     <BankRecordDetails

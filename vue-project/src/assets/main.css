@@ -8,6 +8,15 @@ h2 {
   margin: 0;
 }
 
+p,
+input {
+  font-size: 12pt;
+}
+
+h1 {
+  font-size: 18pt;
+}
+
 body {
   margin: 0;
 }
@@ -20,6 +29,12 @@ body {
 
 .libre-baskerville-regular {
   font-family: 'Libre Baskerville', serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ubuntu-regular {
+  font-family: 'Ubuntu', serif;
   font-weight: 400;
   font-style: normal;
 }
