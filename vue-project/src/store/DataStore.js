@@ -69,7 +69,17 @@ const useDataStore = defineStore('data', () => {
       .catch((error) => console.error(error))
   }
 
-  return { data, retrievalStatus, loadRecords, loadRecord, deleteRecord }
+  function updateRecord(id, record) {
+    axios
+      .put(`http://localhost:8080/api/v1/bankrecord/${id}`, record)
+      .then(() => {
+        data.value = null
+        retrievalStatus.value = 'NONE'
+      })
+      .catch((error) => console.error(error))
+  }
+
+  return { data, retrievalStatus, loadRecords, loadRecord, deleteRecord, updateRecord }
 })
 
 export default useDataStore
