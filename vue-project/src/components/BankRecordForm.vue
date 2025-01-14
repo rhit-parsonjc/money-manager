@@ -1,15 +1,21 @@
 <script setup>
-import useDataStore from '@/store/DataStore';
-import { useRouter } from 'vue-router';
-import { computed, ref } from 'vue';
+/**
+ * BankRecordForm provides a form for users to create or update
+ * An individual BankRecord
+ * Props:
+ * - record (type BankRecordModel)
+ */
+import useDataStore from '@/store/DataStore'
+import { monthNames, daysPerMonth, monthNameFromNumber } from '@/model/DateObjectModel'
+import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
 
 const {record} = defineProps(["record"])
 
-const dataStore = useDataStore();
-const router = useRouter();
+const dataStore = useDataStore()
+const router = useRouter()
 
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-const initialValues = (record === null) ? {
+const initialFormValues = (record === null) ? {
     monthValue: 1,
     dayValue: 1,
     yearValue: 0,
@@ -23,30 +29,13 @@ const initialValues = (record === null) ? {
     nameValue: record.name,
 }
 
-let monthNameValue = ref(monthNames[initialValues.monthValue - 1])
-let dayValue = ref(initialValues.dayValue)
-let yearValue = ref(initialValues.yearValue)
-let amountValue = ref(initialValues.amountValue)
-let nameValue = ref(initialValues.nameValue)
+let monthNameValue = ref(monthNameFromNumber(initialFormValues.monthValue))
+let dayValue = ref(initialFormValues.dayValue)
+let yearValue = ref(initialFormValues.yearValue)
+let amountValue = ref(initialFormValues.amountValue)
+let nameValue = ref(initialFormValues.nameValue)
 
-const daysInMonth = computed(() => {
-    const isLeapYear = (yearValue.value % 400 === 0) || (yearValue.value % 100 !== 0 && yearValue.value % 4 === 0)
-    const daysPerMonth = {
-        "January": 31,
-        "February": (isLeapYear ? 29 : 28),
-        "March": 31,
-        "April": 30,
-        "May": 30,
-        "June": 31,
-        "July": 31,
-        "August": 31,
-        "September": 30,
-        "October": 31,
-        "November": 30,
-        "December": 31
-    }
-    return daysPerMonth[monthNameValue.value]
-})
+const daysInMonth = computed(() => daysPerMonth(monthNameValue.value, yearValue.value))
 
 function createNewRecord() {
     return {
@@ -58,37 +47,33 @@ function createNewRecord() {
     }
 }
 
-function returnToRecord() {
-    router.push(`/records/${record.id}`)
+function goToRecordsAsync() {
+    return router.push("/records/")
 }
 
-function returnToRecords() {
-    router.push("/records/")
+function goToRecordAsync(id) {
+    return () => router.push(`/records/${id}`)
 }
 
 function returnAction() {
+    dataStore.expireData()
     if (record === null) {
-        returnToRecords();
+        goToRecordsAsync().then(dataStore.resetData)
     } else {
-        returnToRecord();
+        goToRecordAsync(record.id)().then(dataStore.resetData)
     }
-}
-
-function confirmUpdate() {
-    dataStore.updateRecord(record.id, createNewRecord())
-}
-
-function confirmCreate() {
-    dataStore.createRecord(createNewRecord())
 }
 
 function confirmAction() {
     if (record === null) {
-        confirmCreate();
+        dataStore.createRecordAsync(createNewRecord())
+            .then(goToRecordsAsync)
+            .then(dataStore.resetData)
     } else {
-        confirmUpdate();
+        dataStore.updateRecordAsync(record.id, createNewRecord())
+            .then(goToRecordAsync(record.id))
+            .then(dataStore.resetData)
     }
-    returnAction();
 }
 
 </script>

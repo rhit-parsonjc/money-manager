@@ -1,39 +1,34 @@
 <script setup>
-import DateRecord from '@/components/DateRecord.vue';
+import DataMessages from '@/components/DataMessages.vue';
 import useDataStore from '@/store/DataStore';
-import { organizeRecordsByDate } from '@/model/DateRecordModel';
 import { watch } from 'vue';
-import { RouterLink } from 'vue-router';
+import { useRouter } from 'vue-router';
+import DateRecordList from '@/components/DateRecordList.vue';
 
 const dataStore = useDataStore();
-dataStore.loadRecords();
+const router = useRouter();
 
 watch(() => dataStore.retrievalStatus,
   (newRetrievalStatus) => {
-    if (newRetrievalStatus === 'NONE') {
+    if (newRetrievalStatus === 'NOT LOADED') {
       dataStore.loadRecords();
     }
   },
-  {immediate: true});
+  {immediate: true})
+
+function goToCreateRecordPage() {
+  dataStore.expireData()
+  router.push("/create/record").then(dataStore.resetData)
+}
 </script>
 
 <template>
   <h1 class="libre-baskerville-regular">Records</h1>
-  <RouterLink to="/create/record" class="libre-baskerville-regular" id="addNewRecordButton">Add New Record</RouterLink>
-  <p v-if="dataStore.retrievalStatus === 'LOADING'">
-    Loading Records...
-  </p>
-  <p v-else-if="dataStore.retrievalStatus === 'ERROR'">
-    Could Not Load Records
-  </p>
-  <ul id="dateRecordList"
-    v-else-if="dataStore.retrievalStatus === 'DONE'">
-    <DateRecord
-      v-for="(dateRecord, i) of organizeRecordsByDate(dataStore.data)"
-      :dateRecord="dateRecord"
-      :key={i}
-    />
-  </ul>
+  <a @click="goToCreateRecordPage" class="libre-baskerville-regular" id="addNewRecordButton">Add New Record</a>
+  <DataMessages :retrievalStatus="dataStore.retrievalStatus"
+  loadingMessage="Loading Records..." errorMessage="Could Not Load Records">
+    <DateRecordList :bankRecords="dataStore.data"/>
+  </DataMessages>
 </template>
 
 <style scoped>

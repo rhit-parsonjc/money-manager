@@ -15,29 +15,14 @@ const baseUrl = 'http://localhost:8080/api/v1'
 const useDataStore = defineStore('data', () => {
   /*
    * Use the following retrieval status values:
-   * NONE - No data has been loaded yet
-   * DONE - All data, if any, is loaded
-   * LOADING - Data is currently being loaded
-   * ERROR - Data could not be loaded
+   * NOT LOADED - No data has been loaded yet
+   * LOADING - The request for data is pending
+   * ERROR - The request for data has failed
+   * LOADED - The request for data has loaded
+   * EXPIRED - The data is no longer valid
    */
-  const data = ref(null)
-  const retrievalStatus = ref('NONE')
-
-  function loadData(relativeUrl, responseToData) {
-    data.value = null
-    console.log('Loading data from ' + baseUrl + relativeUrl)
-    axios
-      .get(baseUrl + relativeUrl)
-      .then((response) => {
-        data.value = responseToData(response)
-        retrievalStatus.value = 'DONE'
-      })
-      .catch((error) => {
-        console.log(error)
-        retrievalStatus.value = 'ERROR'
-      })
-    retrievalStatus.value = 'LOADING'
-  }
+  const data = ref()
+  const retrievalStatus = ref('NOT LOADED')
 
   function bankRecordsToData(response) {
     return response.data.map((record) => {
@@ -51,52 +36,78 @@ const useDataStore = defineStore('data', () => {
     return new BankRecordModel(id, name, yearValue, monthValue, dayValue, amount)
   }
 
+  function resetData() {
+    console.log('Set data to NOT LOADED')
+    retrievalStatus.value = 'NOT LOADED'
+  }
+
+  function expireData() {
+    console.log('Set data to EXPIRED')
+    retrievalStatus.value = 'EXPIRED'
+  }
+
+  function loadData(relativeUrl, responseToData) {
+    data.value = null
+    const urlToLoadFrom = baseUrl + relativeUrl
+    console.log(`Loading data from ${urlToLoadFrom}`)
+    axios
+      .get(urlToLoadFrom)
+      .then((response) => {
+        data.value = responseToData(response)
+        retrievalStatus.value = 'LOADED'
+        console.log('Retrieved data from ' + urlToLoadFrom)
+        console.log('Data =', data.value)
+      })
+      .catch((error) => {
+        console.error(error)
+        retrievalStatus.value = 'ERROR'
+      })
+    retrievalStatus.value = 'LOADING'
+  }
+
   function loadRecords() {
-    loadData('/bankrecord/', bankRecordsToData)
+    return loadData('/bankrecord/', bankRecordsToData)
   }
 
   function loadRecord(id) {
-    loadData(`/bankrecord/${id}`, bankRecordToData)
+    return loadData(`/bankrecord/${id}`, bankRecordToData)
   }
 
-  function deleteRecord(id) {
-    axios
-      .delete(`http://localhost:8080/api/v1/bankrecord/${id}`)
-      .then(() => {
-        data.value = null
-        retrievalStatus.value = 'NONE'
-      })
-      .catch((error) => console.error(error))
+  async function modifyDataAsync(promise) {
+    try {
+      await promise
+    } catch (error) {
+      console.error(error)
+    }
+    expireData()
   }
 
-  function updateRecord(id, record) {
-    axios
-      .put(`http://localhost:8080/api/v1/bankrecord/${id}`, record)
-      .then(() => {
-        data.value = null
-        retrievalStatus.value = 'NONE'
-      })
-      .catch((error) => console.error(error))
+  function deleteRecordAsync(id) {
+    return modifyDataAsync(axios.delete(`http://localhost:8080/api/v1/bankrecord/${id}`))
   }
 
-  function createRecord(record) {
-    axios
-      .post(`http://localhost:8080/api/v1/bankrecord/`, record)
-      .then(() => {
-        data.value = null
-        retrievalStatus.value = 'NONE'
-      })
-      .catch((error) => console.error(error))
+  function updateRecordAsync(id, record) {
+    return modifyDataAsync(axios.put(`http://localhost:8080/api/v1/bankrecord/${id}`, record))
+  }
+
+  function createRecordAsync(record) {
+    return modifyDataAsync(axios.post(`http://localhost:8080/api/v1/bankrecord/`, record))
   }
 
   return {
     data,
     retrievalStatus,
+    // This sets the data status to NOT LOADED
+    resetData,
+    // This sets the data status to EXPIRED
+    expireData,
+    // These load data, but do not finish when the function returns
     loadRecords,
     loadRecord,
-    deleteRecord,
-    updateRecord,
-    createRecord,
+    // These return a promise that resolves after the request finishes
+    deleteRecordAsync,
+    updateRecordAsync,
+    createRecordAsync,
   }
 })
 

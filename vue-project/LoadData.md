@@ -83,4 +83,5 @@ follow the following rules:
 1. Whenever a request is sent to the database to load data, once it suceeds, mark the data as Loaded.
 2. Whenever a request is sent to the database to load data, if it fails, mark the data as Error.
 3. Whenever the data's status is Not Loaded, request the data from the database.
-4. When the data is marked as Expired, only reload the data if a page redirection is not occuring.
+4. Whenever an update is made to the data, mark the data as Expired.
+5. Redirect to a page before marking the data as Not Loaded.

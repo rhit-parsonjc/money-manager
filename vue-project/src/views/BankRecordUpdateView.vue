@@ -1,23 +1,27 @@
 <script setup>
 import BankRecordForm from '@/components/BankRecordForm.vue';
+import DataMessages from '@/components/DataMessages.vue';
 import useDataStore from '@/store/DataStore';
+import { watch } from 'vue';
 
 const {recordId} = defineProps(["recordId"]);
 
 const dataStore = useDataStore();
-dataStore.loadRecord(recordId);
+
+watch(() => dataStore.retrievalStatus,
+  (newRetrievalStatus) => {
+    if (newRetrievalStatus === 'NOT LOADED') {
+      dataStore.loadRecord(recordId);
+    }
+  },
+  {immediate: true});
 </script>
 
 <template>
-    <p class="ubuntu-regular" v-if="dataStore.retrievalStatus === 'LOADING'">
-        Loading Record...
-    </p>
-    <p class="ubuntu-regular" v-else-if="dataStore.retrievalStatus === 'ERROR'">
-        Could not load record
-    </p>
-    <BankRecordForm
-        v-else-if="dataStore.retrievalStatus === 'DONE'"
-        :record="dataStore.data"/>
+    <DataMessages :retrievalStatus="dataStore.retrievalStatus"
+    loadingMessage="Loading Record..." errorMessage="Could Not Load Record">
+    <BankRecordForm :record="dataStore.data"/>
+    </DataMessages>
 </template>
 
 <style scoped>

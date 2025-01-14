@@ -62,4 +62,27 @@ class DateObjectModel {
   }
 }
 
-export { DateObjectModel }
+function monthNameFromNumber(monthValue) {
+  return monthNames[monthValue - 1]
+}
+
+function daysPerMonth(monthName, yearValue) {
+  const isLeapYear = yearValue % 400 === 0 || (yearValue % 100 !== 0 && yearValue % 4 === 0)
+  const daysPerMonth = {
+    January: 31,
+    February: isLeapYear ? 29 : 28,
+    March: 31,
+    April: 30,
+    May: 30,
+    June: 31,
+    July: 31,
+    August: 31,
+    September: 30,
+    October: 31,
+    November: 30,
+    December: 31,
+  }
+  return daysPerMonth[monthName]
+}
+
+export { monthNames, DateObjectModel, monthNameFromNumber, daysPerMonth }

@@ -1,23 +1,33 @@
 <script setup>
-const {record} = defineProps(["record"])
-import useDataStore from '@/store/DataStore';
-import { formatCurrency } from '@/utilities/utilities';
-import { useRouter } from 'vue-router';
+/**
+ * BankRecordDetails displays in-depth information about a single bank record.
+ * Props:
+ * - record (type BankRecordModel)
+ */
+ 
+import { useRouter } from 'vue-router'
+import useDataStore from '@/store/DataStore'
+import { formatCurrency } from '@/utilities/utilities'
 
-const dataStore = useDataStore();
-const router = useRouter();
+const {record} = defineProps(["record"])
+
+const dataStore = useDataStore()
+const router = useRouter()
 
 function editRecord() {
-    router.push(`/records/${record.id}/update`)
+    dataStore.expireData()
+    router.push(`/records/${record.id}/update`).then(dataStore.resetData)
 }
 
 function returnToRecords() {
-    router.push("/records");
+    dataStore.expireData()
+    router.push("/records").then(dataStore.resetData)
 }
 
 function deleteRecord() {
-    dataStore.deleteRecord(record.id);
-    returnToRecords();
+    dataStore.deleteRecordAsync(record.id)
+        .then(() => router.push("/records"))
+        .then(dataStore.resetData)
 }
 
 </script>

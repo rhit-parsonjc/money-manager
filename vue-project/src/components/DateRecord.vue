@@ -1,7 +1,13 @@
 <script setup>
-import BankRecord from './BankRecord.vue';
+/**
+ * DateRecord displays a single date record, comprised of
+ * a date plus a list of bank records.
+ * Props:
+ * - dateRecord (type DateRecordModel)
+ */
+import BankRecord from './BankRecord.vue'
 
-const {dateRecord} = defineProps(["dateRecord"]);
+const {dateRecord} = defineProps(["dateRecord"])
 </script>
 
 <template>
