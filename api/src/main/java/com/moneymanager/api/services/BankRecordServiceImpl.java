@@ -64,7 +64,7 @@ public class BankRecordServiceImpl implements BankRecordService {
     @Override
     public BankRecordDto updateBankRecord(Long id, BankRecordRequest request) {
         Optional<BankRecord> bankRecordOptional = bankRecordRepository.findById(id);
-        if (!bankRecordOptional.isPresent()) {
+        if (bankRecordOptional.isEmpty()) {
             throw new ResourceNotFoundException("Bank record not found");
         }
         BankRecord bankRecord = bankRecordOptional.get();
@@ -72,12 +72,17 @@ public class BankRecordServiceImpl implements BankRecordService {
         bankRecord.setMonth(request.getMonth());
         bankRecord.setDay(request.getDay());
         bankRecord.setAmount(request.getAmount());
+        bankRecord.setName(request.getName());
         BankRecord savedBankRecord = bankRecordRepository.save(bankRecord);
         return mapBankRecordToDto(savedBankRecord);
     }
 
     @Override
     public void deleteBankRecord(Long id) {
+        Optional<BankRecord> bankRecordOptional = bankRecordRepository.findById(id);
+        if (bankRecordOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Bank record not found");
+        }
         bankRecordRepository.deleteById(id);
     }
 }

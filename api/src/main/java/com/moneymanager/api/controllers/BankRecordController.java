@@ -22,9 +22,9 @@ public class BankRecordController {
     public ResponseEntity createBankRecord(@RequestBody BankRecordRequest request) {
         try {
             BankRecordDto bankRecordDto = bankRecordService.createBankRecord(request);
-            return ResponseEntity.ok(bankRecordDto);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<BankRecordDto>(bankRecordDto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -32,31 +32,45 @@ public class BankRecordController {
     public ResponseEntity getBankRecordById(@PathVariable Long id) {
         try {
             BankRecordDto bankRecordDto = bankRecordService.getBankRecordById(id);
-            return ResponseEntity.ok(bankRecordDto);
+            return new ResponseEntity<BankRecordDto>(bankRecordDto, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/")
     public ResponseEntity getBankRecords() {
-        List<BankRecordDto> bankRecordDtos = bankRecordService.getBankRecords();
-        return ResponseEntity.ok(bankRecordDtos);
+        try {
+            List<BankRecordDto> bankRecordDtos = bankRecordService.getBankRecords();
+            return new ResponseEntity<List<BankRecordDto>>(bankRecordDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateBankRecord(@PathVariable Long id, @RequestBody BankRecordRequest request) {
         try {
             BankRecordDto bankRecordDto = bankRecordService.updateBankRecord(id, request);
-            return ResponseEntity.ok(bankRecordDto);
+            return new ResponseEntity<BankRecordDto>(bankRecordDto, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteBankRecord(@PathVariable Long id) {
-        bankRecordService.deleteBankRecord(id);
-        return ResponseEntity.ok("Deletion successful");
+        try {
+            bankRecordService.deleteBankRecord(id);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
