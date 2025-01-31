@@ -11,7 +11,7 @@ const router = useRouter();
 watch(() => dataStore.retrievalStatus,
   (newRetrievalStatus) => {
     if (newRetrievalStatus === 'NOT LOADED') {
-      dataStore.loadRecords();
+      dataStore.loadDateAndBankRecords();
     }
   },
   {immediate: true})
@@ -27,7 +27,7 @@ function goToCreateRecordPage() {
   <a @click="goToCreateRecordPage" class="libre-baskerville-regular" id="addNewRecordButton">Add New Record</a>
   <DataMessages :retrievalStatus="dataStore.retrievalStatus"
   loadingMessage="Loading Records..." errorMessage="Could Not Load Records">
-    <DateRecordList :bankRecords="dataStore.data"/>
+    <DateRecordList :bankRecords="dataStore.data.bankRecords" :dateAmounts="dataStore.data.dateAmounts"/>
   </DataMessages>
 </template>
 

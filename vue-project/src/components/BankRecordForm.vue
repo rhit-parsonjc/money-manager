@@ -66,11 +66,11 @@ function returnAction() {
 
 function confirmAction() {
     if (record === null) {
-        dataStore.createRecordAsync(createNewRecord())
+        dataStore.createBankRecordAsync(createNewRecord())
             .then(goToRecordsAsync)
             .then(dataStore.resetData)
     } else {
-        dataStore.updateRecordAsync(record.id, createNewRecord())
+        dataStore.updateBankRecordAsync(record.id, createNewRecord())
             .then(goToRecordAsync(record.id))
             .then(dataStore.resetData)
     }
@@ -79,18 +79,18 @@ function confirmAction() {
 </script>
 
 <template>
-    <input class="happy-monkey-regular nameInput" v-model="nameValue">
+    <input id="nameInputForm" class="happy-monkey-regular nameInput" v-model="nameValue">
     <div class="inputLine">
         <p class="ubuntu-regular">Date:</p>
         <select class="ubuntu-regular" v-model="monthNameValue">
             <option v-for="monthName of monthNames" :key="monthName">{{ monthName }}</option>
         </select>
-        <input class="ubuntu-regular" type="number" v-model="dayValue" min="1" :max="daysInMonth">
-        <input class="ubuntu-regular" type="number" v-model="yearValue">
+        <input id="dayInputForm" class="ubuntu-regular" type="number" v-model="dayValue" min="1" :max="daysInMonth">
+        <input id="yearInputForm" class="ubuntu-regular" type="number" v-model="yearValue">
     </div>
     <div class="inputLine">
         <p class="ubuntu-regular">Amount: $</p>
-        <input class="ubuntu-regular" v-model="amountValue">
+        <input id="amountInputForm" class="ubuntu-regular" v-model="amountValue">
     </div>
     <div id="bankRecordButtons">
         <button class="ubuntu-regular" id="confirmButton" @click="confirmAction">Confirm</button>
@@ -99,6 +99,18 @@ function confirmAction() {
 </template>
 
 <style scoped>
+#nameInputForm {
+    width: 14em;
+}
+#dayInputForm {
+    width: 3em;
+}
+#yearInputForm {
+    width: 5em;
+}
+#amountInputForm {
+    width: 10em;
+}
 #bankRecordButtons button {
     background-color: white;
     font-size: 12pt;

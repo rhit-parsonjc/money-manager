@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import axios from 'axios'
 
 import { BankRecordModel } from '@/model/BankRecordModel'
-import axios from 'axios'
+import { DateAmountModel } from '@/model/DateAmountModel'
 
 const baseUrl = 'http://localhost:8080/api/v1'
 
@@ -24,16 +25,22 @@ const useDataStore = defineStore('data', () => {
   const data = ref()
   const retrievalStatus = ref('NOT LOADED')
 
-  function bankRecordsToData(response) {
-    return response.data.map((record) => {
-      const { id, name, amount, year: yearValue, month: monthValue, day: dayValue } = record
-      return new BankRecordModel(id, name, yearValue, monthValue, dayValue, amount)
-    })
+  function bankRecordToData(record) {
+    const { id, name, amount, year: yearValue, month: monthValue, day: dayValue } = record
+    return new BankRecordModel(id, name, yearValue, monthValue, dayValue, amount)
   }
 
-  function bankRecordToData(response) {
-    const { id, name, amount, year: yearValue, month: monthValue, day: dayValue } = response.data
-    return new BankRecordModel(id, name, yearValue, monthValue, dayValue, amount)
+  function bankRecordsToData(records) {
+    return records.map(bankRecordToData)
+  }
+
+  function dateAmountToData(amount) {
+    const { id, year: yearValue, month: monthValue, day: dayValue, amount: amountValue } = amount
+    return new DateAmountModel(id, yearValue, monthValue, dayValue, amountValue)
+  }
+
+  function dateAmountsToData(amounts) {
+    return amounts.map(dateAmountToData)
   }
 
   function resetData() {
@@ -46,17 +53,22 @@ const useDataStore = defineStore('data', () => {
     retrievalStatus.value = 'EXPIRED'
   }
 
-  function loadData(relativeUrl, responseToData) {
-    data.value = null
-    const urlToLoadFrom = baseUrl + relativeUrl
-    console.log(`Loading data from ${urlToLoadFrom}`)
-    axios
-      .get(urlToLoadFrom)
-      .then((response) => {
-        data.value = responseToData(response)
+  function loadDataFromMultipleSources(sources) {
+    data.value = {}
+    const promises = []
+    for (const source of sources) {
+      promises.push(axios.get(baseUrl + source.relativeUrl))
+    }
+    Promise.all(promises)
+      .then((responses) => {
+        console.log(responses)
+        for (const i in responses) {
+          const response = responses[i]
+          const source = sources[i]
+          data.value[source.name] = source.mapFunction(response.data)
+        }
+        console.log('Set data to LOADED')
         retrievalStatus.value = 'LOADED'
-        console.log('Retrieved data from ' + urlToLoadFrom)
-        console.log('Data =', data.value)
       })
       .catch((error) => {
         console.error(error)
@@ -65,12 +77,29 @@ const useDataStore = defineStore('data', () => {
     retrievalStatus.value = 'LOADING'
   }
 
-  function loadRecords() {
-    return loadData('/bankrecord/', bankRecordsToData)
+  function loadDateAndBankRecords() {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecords',
+        relativeUrl: '/bankrecord/',
+        mapFunction: bankRecordsToData,
+      },
+      {
+        name: 'dateAmounts',
+        relativeUrl: '/daterecord/',
+        mapFunction: dateAmountsToData,
+      },
+    ])
   }
 
-  function loadRecord(id) {
-    return loadData(`/bankrecord/${id}`, bankRecordToData)
+  function loadSingleBankRecord(id) {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecord',
+        relativeUrl: `/bankrecord/${id}`,
+        mapFunction: bankRecordToData,
+      },
+    ])
   }
 
   async function modifyDataAsync(promise) {
@@ -82,16 +111,32 @@ const useDataStore = defineStore('data', () => {
     expireData()
   }
 
-  function deleteRecordAsync(id) {
-    return modifyDataAsync(axios.delete(`http://localhost:8080/api/v1/bankrecord/${id}`))
+  function deleteBankRecordAsync(id) {
+    return modifyDataAsync(axios.delete(`${baseUrl}/bankrecord/${id}`))
   }
 
-  function updateRecordAsync(id, record) {
-    return modifyDataAsync(axios.put(`http://localhost:8080/api/v1/bankrecord/${id}`, record))
+  function updateBankRecordAsync(id, record) {
+    return modifyDataAsync(axios.put(`${baseUrl}/bankrecord/${id}`, record))
   }
 
-  function createRecordAsync(record) {
-    return modifyDataAsync(axios.post(`http://localhost:8080/api/v1/bankrecord/`, record))
+  function createBankRecordAsync(record) {
+    return modifyDataAsync(axios.post(`${baseUrl}/bankrecord/`, record))
+  }
+
+  function deleteDateRecordAsync(yearValue, monthValue, dayValue) {
+    return modifyDataAsync(
+      axios.delete(`${baseUrl}/daterecord/${yearValue}/${monthValue}/${dayValue}`),
+    )
+  }
+
+  function updateDateRecordAsync(yearValue, monthValue, dayValue, amount) {
+    return modifyDataAsync(
+      axios.put(`${baseUrl}/daterecord/${yearValue}/${monthValue}/${dayValue}`, { amount }),
+    )
+  }
+
+  function createDateRecordAsync(dateRecord) {
+    return modifyDataAsync(axios.post(`${baseUrl}/daterecord/`, dateRecord))
   }
 
   return {
@@ -102,12 +147,15 @@ const useDataStore = defineStore('data', () => {
     // This sets the data status to EXPIRED
     expireData,
     // These load data, but do not finish when the function returns
-    loadRecords,
-    loadRecord,
+    loadDateAndBankRecords,
+    loadSingleBankRecord,
     // These return a promise that resolves after the request finishes
-    deleteRecordAsync,
-    updateRecordAsync,
-    createRecordAsync,
+    deleteBankRecordAsync,
+    updateBankRecordAsync,
+    createBankRecordAsync,
+    deleteDateRecordAsync,
+    updateDateRecordAsync,
+    createDateRecordAsync,
   }
 })
 

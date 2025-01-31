@@ -25,7 +25,7 @@ function returnToRecords() {
 }
 
 function deleteRecord() {
-    dataStore.deleteRecordAsync(record.id)
+    dataStore.deleteBankRecordAsync(record.id)
         .then(() => router.push("/records"))
         .then(dataStore.resetData)
 }

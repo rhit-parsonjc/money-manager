@@ -11,7 +11,7 @@ const dataStore = useDataStore();
 watch(() => dataStore.retrievalStatus,
   (newRetrievalStatus) => {
     if (newRetrievalStatus === 'NOT LOADED') {
-      dataStore.loadRecord(recordId);
+      dataStore.loadSingleBankRecord(recordId);
     }
   },
   {immediate: true});
@@ -20,7 +20,7 @@ watch(() => dataStore.retrievalStatus,
 <template>
     <DataMessages :retrievalStatus="dataStore.retrievalStatus"
     loadingMessage="Loading Record..." errorMessage="Could Not Load Record">
-    <BankRecordForm :record="dataStore.data"/>
+    <BankRecordForm :record="dataStore.data.bankRecord"/>
     </DataMessages>
 </template>
 
