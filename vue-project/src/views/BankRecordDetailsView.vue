@@ -1,12 +1,13 @@
 <script setup>
+import { watch } from 'vue';
+
 import BankRecordDetails from '@/components/BankRecordDetails.vue';
 import DataMessages from '@/components/DataMessages.vue';
 import useDataStore from '@/store/DataStore';
-import { watch } from 'vue';
-
-const {recordId} = defineProps(["recordId"]);
 
 const dataStore = useDataStore();
+
+const {recordId} = defineProps(["recordId"]);
 
 watch(() => dataStore.retrievalStatus,
   (newRetrievalStatus) => {

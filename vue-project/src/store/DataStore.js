@@ -81,12 +81,57 @@ const useDataStore = defineStore('data', () => {
     loadDataFromMultipleSources([
       {
         name: 'bankRecords',
-        relativeUrl: '/bankrecord/',
+        relativeUrl: '/bankrecords',
         mapFunction: bankRecordsToData,
       },
       {
         name: 'dateAmounts',
-        relativeUrl: '/daterecord/',
+        relativeUrl: '/dateamounts',
+        mapFunction: dateAmountsToData,
+      },
+    ])
+  }
+
+  function loadDateAndBankRecordsDuringYear(year) {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecords',
+        relativeUrl: `/bankrecords?year=${year}`,
+        mapFunction: bankRecordsToData,
+      },
+      {
+        name: 'dateAmounts',
+        relativeUrl: `/dateamounts?year=${year}`,
+        mapFunction: dateAmountsToData,
+      },
+    ])
+  }
+
+  function loadDateAndBankRecordsDuringMonth(year, month) {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecords',
+        relativeUrl: `/bankrecords?year=${year}&month=${month}`,
+        mapFunction: bankRecordsToData,
+      },
+      {
+        name: 'dateAmounts',
+        relativeUrl: `/dateamounts?year=${year}&month=${month}`,
+        mapFunction: dateAmountsToData,
+      },
+    ])
+  }
+
+  function loadDateAndBankRecordsDuringDay(year, month, day) {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecords',
+        relativeUrl: `/bankrecords?year=${year}&month=${month}&day=${day}`,
+        mapFunction: bankRecordsToData,
+      },
+      {
+        name: 'dateAmounts',
+        relativeUrl: `/dateamounts?year=${year}&month=${month}&day=${day}`,
         mapFunction: dateAmountsToData,
       },
     ])
@@ -96,7 +141,7 @@ const useDataStore = defineStore('data', () => {
     loadDataFromMultipleSources([
       {
         name: 'bankRecord',
-        relativeUrl: `/bankrecord/${id}`,
+        relativeUrl: `/bankrecords/${id}`,
         mapFunction: bankRecordToData,
       },
     ])
@@ -112,31 +157,31 @@ const useDataStore = defineStore('data', () => {
   }
 
   function deleteBankRecordAsync(id) {
-    return modifyDataAsync(axios.delete(`${baseUrl}/bankrecord/${id}`))
+    return modifyDataAsync(axios.delete(`${baseUrl}/bankrecords/${id}`))
   }
 
   function updateBankRecordAsync(id, record) {
-    return modifyDataAsync(axios.put(`${baseUrl}/bankrecord/${id}`, record))
+    return modifyDataAsync(axios.put(`${baseUrl}/bankrecords/${id}`, record))
   }
 
   function createBankRecordAsync(record) {
-    return modifyDataAsync(axios.post(`${baseUrl}/bankrecord/`, record))
+    return modifyDataAsync(axios.post(`${baseUrl}/bankrecords/`, record))
   }
 
-  function deleteDateRecordAsync(yearValue, monthValue, dayValue) {
+  function deleteDateAmountAsync(yearValue, monthValue, dayValue) {
     return modifyDataAsync(
-      axios.delete(`${baseUrl}/daterecord/${yearValue}/${monthValue}/${dayValue}`),
+      axios.delete(`${baseUrl}/dateamounts/${yearValue}/${monthValue}/${dayValue}`),
     )
   }
 
-  function updateDateRecordAsync(yearValue, monthValue, dayValue, amount) {
+  function updateDateAmountAsync(yearValue, monthValue, dayValue, amount) {
     return modifyDataAsync(
-      axios.put(`${baseUrl}/daterecord/${yearValue}/${monthValue}/${dayValue}`, { amount }),
+      axios.put(`${baseUrl}/dateamounts/${yearValue}/${monthValue}/${dayValue}`, { amount }),
     )
   }
 
-  function createDateRecordAsync(dateRecord) {
-    return modifyDataAsync(axios.post(`${baseUrl}/daterecord/`, dateRecord))
+  function createDateAmountAsync(dateRecord) {
+    return modifyDataAsync(axios.post(`${baseUrl}/dateamounts`, dateRecord))
   }
 
   return {
@@ -148,14 +193,17 @@ const useDataStore = defineStore('data', () => {
     expireData,
     // These load data, but do not finish when the function returns
     loadDateAndBankRecords,
+    loadDateAndBankRecordsDuringYear,
+    loadDateAndBankRecordsDuringMonth,
+    loadDateAndBankRecordsDuringDay,
     loadSingleBankRecord,
     // These return a promise that resolves after the request finishes
     deleteBankRecordAsync,
     updateBankRecordAsync,
     createBankRecordAsync,
-    deleteDateRecordAsync,
-    updateDateRecordAsync,
-    createDateRecordAsync,
+    deleteDateAmountAsync,
+    updateDateAmountAsync,
+    createDateAmountAsync,
   }
 })
 

@@ -85,4 +85,33 @@ function daysPerMonth(monthName, yearValue) {
   return daysPerMonth[monthName]
 }
 
-export { monthNames, DateObjectModel, monthNameFromNumber, daysPerMonth }
+function getFirstDayOfYear(yearValue) {
+  return new DateObjectModel(yearValue, 1, 1)
+}
+
+function getLastDayOfYear(yearValue) {
+  return new DateObjectModel(yearValue, 12, 31)
+}
+
+function getFirstDayOfMonth(yearValue, monthValue) {
+  return new DateObjectModel(yearValue, monthValue, 1)
+}
+
+function getLastDayOfMonth(yearValue, monthValue) {
+  return new DateObjectModel(
+    yearValue,
+    monthValue,
+    daysPerMonth(monthNames[monthValue - 1], yearValue),
+  )
+}
+
+export {
+  monthNames,
+  DateObjectModel,
+  monthNameFromNumber,
+  daysPerMonth,
+  getFirstDayOfYear,
+  getLastDayOfYear,
+  getFirstDayOfMonth,
+  getLastDayOfMonth,
+}

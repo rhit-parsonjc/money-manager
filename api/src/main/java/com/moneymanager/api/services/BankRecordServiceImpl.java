@@ -27,6 +27,10 @@ public class BankRecordServiceImpl implements BankRecordService {
         return bankRecordDto;
     }
 
+    private List<BankRecordDto> mapBankRecordsToDto(List<BankRecord> bankRecords) {
+        return bankRecords.stream().map(this::mapBankRecordToDto).toList();
+    }
+
     private BankRecord mapBankRecordRequestToRecord(BankRecordRequest bankRecordRequest) {
         BankRecord bankRecord = new BankRecord();
         bankRecord.setYear(bankRecordRequest.getYear());
@@ -57,8 +61,22 @@ public class BankRecordServiceImpl implements BankRecordService {
 
     @Override
     public List<BankRecordDto> getBankRecords() {
-        List<BankRecord> bankRecords = bankRecordRepository.findAll();
-        return bankRecords.stream().map(this::mapBankRecordToDto).toList();
+        return mapBankRecordsToDto(bankRecordRepository.findAll());
+    }
+
+    @Override
+    public List<BankRecordDto> getBankRecordsForYear(Integer year) {
+        return mapBankRecordsToDto(bankRecordRepository.findByYear(year));
+    }
+
+    @Override
+    public List<BankRecordDto> getBankRecordsForMonth(Integer year, Integer month) {
+        return mapBankRecordsToDto(bankRecordRepository.findByYearAndMonth(year, month));
+    }
+
+    @Override
+    public List<BankRecordDto> getBankRecordsForDay(Integer year, Integer month, Integer day) {
+        return mapBankRecordsToDto(bankRecordRepository.findByYearAndMonthAndDay(year, month, day));
     }
 
     @Override

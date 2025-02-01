@@ -1,10 +1,9 @@
-package com.moneymanager.api.dtos;
+package com.moneymanager.api.requests;
 
 import lombok.Data;
 
 @Data
-public class DateRecordDto {
-    private Long id;
+public class DateAmountCreateRequest {
     private Integer year;
     private Integer month;
     private Integer day;

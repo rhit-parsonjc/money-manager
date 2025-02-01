@@ -7,7 +7,7 @@
  * - loadingMessage (text)
  * - errorMessage (text)
  */
-const { retrievalStatus, loadingMessage, errorMessage } = defineProps(["retrievalStatus", "loadingMessage", "errorMessage"])
+const { retrievalStatus, loadingMessage, errorMessage } = defineProps(["retrievalStatus", "loadingMessage", "errorMessage"]);
 </script>
 
 <template>

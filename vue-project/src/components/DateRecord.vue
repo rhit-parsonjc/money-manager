@@ -6,10 +6,10 @@
  * - dateRecord (type DateRecordModel)
  */
 import { ref } from 'vue';
+
 import BankRecord from './BankRecord.vue';
 import { formatCurrency } from '@/utilities/utilities';
 import useDataStore from '@/store/DataStore';
-import { monthNames } from '@/model/DateObjectModel';
 
 const dataStore = useDataStore();
 
@@ -30,14 +30,14 @@ function confirmAddOrEdit() {
     month: dateRecord.dateObj.monthValue,
     day: dateRecord.dateObj.dayValue,
     amount: amountValue.value,
-  }
+  };
   if (hasAmount) {
     dataStore
-      .updateDateRecordAsync(newAmount.year, newAmount.month, newAmount.day, newAmount.amount)
+      .updateDateAmountAsync(newAmount.year, newAmount.month, newAmount.day, newAmount.amount)
       .then(dataStore.resetData);
   } else {
     dataStore
-      .createDateRecordAsync(newAmount)
+      .createDateAmountAsync(newAmount)
       .then(dataStore.resetData);
   }
 }
@@ -45,7 +45,7 @@ function confirmAddOrEdit() {
 function clearAmount() {
   const {yearValue, monthValue, dayValue} = dateRecord.dateObj;
   dataStore
-    .deleteDateRecordAsync(yearValue, monthValue, dayValue)
+    .deleteDateAmountAsync(yearValue, monthValue, dayValue)
     .then(dataStore.resetData);
 }
 

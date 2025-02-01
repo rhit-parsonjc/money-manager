@@ -1,41 +1,38 @@
 # Controllers
 
+Base URL: _/api/v1_
+
 ## Status Codes Used
 
 - **200 OK**
 - **201 Created**
 - **204 No Content**
+- **400 Bad Request**
 - **404 Not Found**
 - **409 Conflict**
 - **500 Internal Server Error**
 
-## Bank Record (_/api/v1/bankrecord_)
+## Bank Records
 
-**POST** to _/_: creates a new bank record based on the specified body, can return **201** or **500**
+**POST** to _/bankrecords_: creates a new bank record based on the specified body, can return **201** or **500**
 
-**GET** to _/{id}_: gets the bank record with the specified id, can return **200**, **404**, or **500**
+**GET** to _/bankrecords/{id}_: gets the bank record with the specified id, can return **200**, **404**, or **500**
 
-**GET** to _/_: gets all of the bank records, can return **200** or **500**
+**GET** to _/bankrecords?year={year}&month={month}&day={day}_: gets all of the bank records, can filter by year and month, can return **200**, **400**, or **500**
 
-**PUT** to _/{id}_: replaces the bank record with the specified id with the specified body, can return **200**, **404**, or **500**
+**PUT** to _/bankrecords/{id}_: replaces the bank record with the specified id with the specified body, can return **200**, **404**, or **500**
 
-**DELETE** to _/{id}_: deletes the bank record with the specified id, can return **204**, **404**, or **500**
+**DELETE** to _/bankrecords/{id}_: deletes the bank record with the specified id, can return **204**, **404**, or **500**
 
-## Date Record (_/api/v1/daterecord_)
+## Date Amounts (_/api/v1/daterecord_)
 
-**POST** to _/_: create a new date record based on the specified body, can return **201**, **409**, or **500**
+**POST** to _/dateamounts_: create a new date amount based on the specified body, can return **201**, **409**, or **500**
 
-**GET** to _/_: gets all of the date records, can return **200** or **500**
+**GET** to _/dateamounts?year={year}&month={month}&day={day}_: gets all of the date amounts, can filter by year and month, can return **200**, **400**, or **500**
 
-**GET** to _/{year}_: gets all of the date records during the specified year, can return **200** or **500**
+**PUT** to _/dateamounts/{year}/{month}/{day}_: replaces the date record for the specified day with the specified body, can return **200**, **404**, or **500**
 
-**GET** to _/{year}/{month}_: gets all of the date records during the specified month, can return **200** or **500**
-
-**GET** to _/{year}/{month}/{day}_: gets all of the date records during the specified day, can return **200**, **404**, or **500**
-
-**PUT** to _/{year}/{month}/{day}_: replaces the date record for the specified day with the specified body, can return **200**, **404**, or **500**
-
-**DELETE** to _/{year}/{month}/{day}_: deletes the date record with the specified day, can return **204**, **404**, or **500**
+**DELETE** to _/dateamounts/{year}/{month}/{day}_: deletes the date record with the specified day, can return **204**, **404**, or **500**
 
 # Models
 

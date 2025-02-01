@@ -13,12 +13,12 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1/bankrecord")
+@RequestMapping("/api/v1/bankrecords")
 @RequiredArgsConstructor
 public class BankRecordController {
     private final BankRecordService bankRecordService;
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity createBankRecord(@RequestBody BankRecordRequest request) {
         try {
             BankRecordDto bankRecordDto = bankRecordService.createBankRecord(request);
@@ -40,10 +40,23 @@ public class BankRecordController {
         }
     }
 
-    @GetMapping("/")
-    public ResponseEntity getBankRecords() {
+    @GetMapping("")
+    public ResponseEntity getBankRecords(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestParam(required = false) Integer day) {
         try {
-            List<BankRecordDto> bankRecordDtos = bankRecordService.getBankRecords();
+            List<BankRecordDto> bankRecordDtos = null;
+            if (year == null && month == null && day == null) {
+                bankRecordDtos = bankRecordService.getBankRecords();
+            } else if (year != null && month == null && day == null) {
+                bankRecordDtos = bankRecordService.getBankRecordsForYear(year);
+            } else if (year != null && month != null) {
+                if (day == null) {
+                    bankRecordDtos = bankRecordService.getBankRecordsForMonth(year, month);
+                } else {
+                    bankRecordDtos = bankRecordService.getBankRecordsForDay(year, month, day);
+                }
+            } else {
+                return new ResponseEntity<String>("Invalid query parameters", HttpStatus.BAD_REQUEST);
+            }
             return new ResponseEntity<List<BankRecordDto>>(bankRecordDtos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);

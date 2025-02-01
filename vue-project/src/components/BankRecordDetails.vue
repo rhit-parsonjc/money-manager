@@ -5,29 +5,30 @@
  * - record (type BankRecordModel)
  */
  
-import { useRouter } from 'vue-router'
-import useDataStore from '@/store/DataStore'
-import { formatCurrency } from '@/utilities/utilities'
+import { useRouter } from 'vue-router';
 
-const {record} = defineProps(["record"])
+import useDataStore from '@/store/DataStore';
+import { formatCurrency } from '@/utilities/utilities';
 
-const dataStore = useDataStore()
-const router = useRouter()
+const dataStore = useDataStore();
+const router = useRouter();
+
+const {record} = defineProps(["record"]);
 
 function editRecord() {
-    dataStore.expireData()
-    router.push(`/records/${record.id}/update`).then(dataStore.resetData)
+    dataStore.expireData();
+    router.push(`/records/${record.id}/update`).then(dataStore.resetData);
 }
 
 function returnToRecords() {
-    dataStore.expireData()
-    router.push("/records").then(dataStore.resetData)
+    dataStore.expireData();
+    router.push("/records").then(dataStore.resetData);
 }
 
 function deleteRecord() {
     dataStore.deleteBankRecordAsync(record.id)
         .then(() => router.push("/records"))
-        .then(dataStore.resetData)
+        .then(dataStore.resetData);
 }
 
 </script>

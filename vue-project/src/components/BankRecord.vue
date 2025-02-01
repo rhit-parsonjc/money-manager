@@ -4,21 +4,23 @@
  * Used in a list view.
  * Props:
  * - record (type BankRecordModel)
- */
-import useDataStore from '@/store/DataStore';
-import { formatCurrency } from '@/utilities/utilities'
+*/
+
 import { useRouter } from 'vue-router';
 
-const {record} = defineProps(["record"])
+import useDataStore from '@/store/DataStore';
+import { formatCurrency } from '@/utilities/utilities';
 
-const router = useRouter()
-const dataStore = useDataStore()
+const router = useRouter();
+const dataStore = useDataStore();
+
+const {record} = defineProps(["record"]);
 
 const recordUrl = "/records/" + record.id;
 
 function goToRecord() {
-    dataStore.expireData()
-    router.push(recordUrl).then(dataStore.resetData)
+    dataStore.expireData();
+    router.push(recordUrl).then(dataStore.resetData);
 }
 </script>
 

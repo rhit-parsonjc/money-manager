@@ -4,16 +4,18 @@
  * An individual BankRecord
  * Props:
  * - record (type BankRecordModel)
- */
-import useDataStore from '@/store/DataStore'
-import { monthNames, daysPerMonth, monthNameFromNumber } from '@/model/DateObjectModel'
-import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+*/
 
-const {record} = defineProps(["record"])
+import { useRouter } from 'vue-router';
+import { computed, ref } from 'vue';
 
-const dataStore = useDataStore()
-const router = useRouter()
+import useDataStore from '@/store/DataStore';
+import { monthNames, daysPerMonth, monthNameFromNumber } from '@/model/DateObjectModel';
+
+const dataStore = useDataStore();
+const router = useRouter();
+
+const {record} = defineProps(["record"]);
 
 const initialFormValues = (record === null) ? {
     monthValue: 1,
@@ -27,15 +29,15 @@ const initialFormValues = (record === null) ? {
     yearValue: record.dateObj.yearValue,
     amountValue: record.amount.toFixed(2),
     nameValue: record.name,
-}
+};
 
-let monthNameValue = ref(monthNameFromNumber(initialFormValues.monthValue))
-let dayValue = ref(initialFormValues.dayValue)
-let yearValue = ref(initialFormValues.yearValue)
-let amountValue = ref(initialFormValues.amountValue)
-let nameValue = ref(initialFormValues.nameValue)
+const monthNameValue = ref(monthNameFromNumber(initialFormValues.monthValue));
+const dayValue = ref(initialFormValues.dayValue);
+const yearValue = ref(initialFormValues.yearValue);
+const amountValue = ref(initialFormValues.amountValue);
+const nameValue = ref(initialFormValues.nameValue);
 
-const daysInMonth = computed(() => daysPerMonth(monthNameValue.value, yearValue.value))
+const daysInMonth = computed(() => daysPerMonth(monthNameValue.value, yearValue.value));
 
 function createNewRecord() {
     return {
@@ -44,23 +46,23 @@ function createNewRecord() {
         day: dayValue.value,
         amount: amountValue.value,
         name: nameValue.value,
-    }
+    };
 }
 
 function goToRecordsAsync() {
-    return router.push("/records/")
+    return router.push("/records/");
 }
 
 function goToRecordAsync(id) {
-    return () => router.push(`/records/${id}`)
+    return () => router.push(`/records/${id}`);
 }
 
 function returnAction() {
-    dataStore.expireData()
+    dataStore.expireData();
     if (record === null) {
-        goToRecordsAsync().then(dataStore.resetData)
+        goToRecordsAsync().then(dataStore.resetData);
     } else {
-        goToRecordAsync(record.id)().then(dataStore.resetData)
+        goToRecordAsync(record.id)().then(dataStore.resetData);
     }
 }
 
@@ -68,11 +70,11 @@ function confirmAction() {
     if (record === null) {
         dataStore.createBankRecordAsync(createNewRecord())
             .then(goToRecordsAsync)
-            .then(dataStore.resetData)
+            .then(dataStore.resetData);
     } else {
         dataStore.updateBankRecordAsync(record.id, createNewRecord())
             .then(goToRecordAsync(record.id))
-            .then(dataStore.resetData)
+            .then(dataStore.resetData);
     }
 }
 
@@ -83,7 +85,7 @@ function confirmAction() {
     <div class="BankRecordForm-input-line">
         <p class="ubuntu-regular">Date:</p>
         <select class="ubuntu-regular" v-model="monthNameValue">
-            <option v-for="monthName of monthNames" :key="monthName">{{ monthName }}</option>
+            <option v-for="monthName of monthNames" :key="monthName" class="ubuntu-regular">{{ monthName }}</option>
         </select>
         <input class="ubuntu-regular BankRecordForm-day-input" type="number" v-model="dayValue" min="1" :max="daysInMonth">
         <input class="ubuntu-regular BankRecordForm-year-input" type="number" v-model="yearValue">

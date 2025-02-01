@@ -6,6 +6,7 @@
 
 - Thanks to [Chinthaka Dinadasa](https://www.javatodev.com/spring-boot-mysql/) for describing how to connect MySQL to Spring Boot and how to set up a REST API in Spring Boot.
 - Also thanks to [Simpson Alfred's dream-shops repository](https://github.com/dailycodework/dream-shops).
+- Thanks to [baledung](https://www.baeldung.com/spring-request-param) for describing how to use the @RequestParam annotation.
 
 ### Lombok Annotations in IntelliJ
 
