@@ -5,6 +5,3 @@ import BankRecordForm from '@/components/BankRecordForm.vue';
 <template>
     <BankRecordForm :record="null" />
 </template>
-
-<style scoped>
-</style>

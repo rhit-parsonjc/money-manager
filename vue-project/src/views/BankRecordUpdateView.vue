@@ -23,6 +23,3 @@ watch(() => dataStore.retrievalStatus,
     <BankRecordForm :record="dataStore.data.bankRecord"/>
     </DataMessages>
 </template>
-
-<style scoped>
-</style>

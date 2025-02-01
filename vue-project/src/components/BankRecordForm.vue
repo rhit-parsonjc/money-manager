@@ -79,60 +79,58 @@ function confirmAction() {
 </script>
 
 <template>
-    <input id="nameInputForm" class="happy-monkey-regular nameInput" v-model="nameValue">
-    <div class="inputLine">
+    <input class="happy-monkey-regular BankRecordForm-name-input" v-model="nameValue">
+    <div class="BankRecordForm-input-line">
         <p class="ubuntu-regular">Date:</p>
         <select class="ubuntu-regular" v-model="monthNameValue">
             <option v-for="monthName of monthNames" :key="monthName">{{ monthName }}</option>
         </select>
-        <input id="dayInputForm" class="ubuntu-regular" type="number" v-model="dayValue" min="1" :max="daysInMonth">
-        <input id="yearInputForm" class="ubuntu-regular" type="number" v-model="yearValue">
+        <input class="ubuntu-regular BankRecordForm-day-input" type="number" v-model="dayValue" min="1" :max="daysInMonth">
+        <input class="ubuntu-regular BankRecordForm-year-input" type="number" v-model="yearValue">
     </div>
-    <div class="inputLine">
+    <div class="BankRecordForm-input-line">
         <p class="ubuntu-regular">Amount: $</p>
-        <input id="amountInputForm" class="ubuntu-regular" v-model="amountValue">
+        <input id="BankRecordForm-amount-input" class="ubuntu-regular" v-model="amountValue">
     </div>
-    <div id="bankRecordButtons">
-        <button class="ubuntu-regular" id="confirmButton" @click="confirmAction">Confirm</button>
-        <button class="ubuntu-regular" id="cancelButton" @click="returnAction">Cancel</button>
+    <div class="BankRecordForm-buttons">
+        <button class="ubuntu-regular" id="BankRecordForm-confirm-button" @click="confirmAction">Confirm</button>
+        <button class="ubuntu-regular" @click="returnAction">Cancel</button>
     </div>
 </template>
 
 <style scoped>
-#nameInputForm {
+.BankRecordForm-name-input {
+    font-size: 18pt;
     width: 14em;
 }
-#dayInputForm {
+.BankRecordForm-input-line {
+    display: flex;
+    flex-direction: row;
+}
+.BankRecordForm-day-input {
     width: 3em;
 }
-#yearInputForm {
+.BankRecordForm-year-input {
     width: 5em;
 }
-#amountInputForm {
+.BankRecordForm-amount-input {
     width: 10em;
 }
-#bankRecordButtons button {
+.BankRecordForm-buttons button {
     background-color: white;
     font-size: 12pt;
     border-width: 0px;
 }
-#bankRecordButtons button:hover {
+.BankRecordForm-buttons button:hover {
     text-decoration: underline;
     cursor: pointer;
 }
-#bankRecordButtons {
+.BankRecordForm-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
-#confirmButton {
+.BankRecordForm-confirm-button {
     color: #050;
-}
-.inputLine {
-    display: flex;
-    flex-direction: row;
-}
-.nameInput {
-    font-size: 18pt;
 }
 </style>

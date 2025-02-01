@@ -36,32 +36,32 @@ function deleteRecord() {
     <h1 class="happy-monkey-regular">{{ record.name }}</h1>
     <p class="ubuntu-regular">Date: {{ record.dateObj.format() }}</p>
     <p class="ubuntu-regular">Amount: {{ formatCurrency(record.amount) }}</p>
-    <div id="bankRecordButtons">
-        <button class="ubuntu-regular" id="editButton" @click="editRecord">Edit</button>
-        <button class="ubuntu-regular" id="backButton" @click="returnToRecords">Back</button>
-        <button class="ubuntu-regular" id="deleteButton" @click="deleteRecord">Delete</button>
+    <div class="BankRecordDetails-buttons">
+        <button class="ubuntu-regular BankRecordDetails-edit-button" @click="editRecord">Edit</button>
+        <button class="ubuntu-regular" @click="returnToRecords">Back</button>
+        <button class="ubuntu-regular BankRecordDetails-delete-button" @click="deleteRecord">Delete</button>
     </div>
 </template>
 
 <style scoped>
-#bankRecordButtons button {
+.BankRecordDetails-buttons button {
     background-color: white;
     font-size: 12pt;
     border-width: 0px;
 }
-#bankRecordButtons button:hover {
+.BankRecordDetails-buttons button:hover {
     text-decoration: underline;
     cursor: pointer;
 }
-#bankRecordButtons {
+.BankRecordDetails-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
-#editButton {
+.BankRecordDetails-edit-button {
     color: #050;
 }
-#deleteButton {
+.BankRecordDetails-delete-button {
     color: #c00;
 }
 </style>

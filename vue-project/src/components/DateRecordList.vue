@@ -6,7 +6,7 @@ const { bankRecords, dateAmounts } = defineProps(["bankRecords", "dateAmounts"])
 </script>
 
 <template>
-    <ul id="dateRecordList">
+    <ul class="DateRecordList-list">
       <DateRecord
         v-for="(dateRecord, i) of organizeRecordsByDate(bankRecords, dateAmounts)"
         :dateRecord="dateRecord"
@@ -14,3 +14,10 @@ const { bankRecords, dateAmounts } = defineProps(["bankRecords", "dateAmounts"])
       />
     </ul>
 </template>
+
+<style scoped>
+.DateRecordList-list {
+  list-style-type: none;
+  padding-left: 0rem;
+}
+</style>

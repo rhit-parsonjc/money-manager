@@ -23,23 +23,23 @@ function goToRecord() {
 </script>
 
 <template>
-    <li class="record">
-        <a @click="goToRecord" class="ubuntu-regular recordText">
+    <li class="BankRecord-record">
+        <a @click="goToRecord" class="ubuntu-regular BankRecord-text">
             {{ record.name }} ({{ formatCurrency(record.amount) }})
         </a>
     </li>
 </template>
 
 <style scoped>
-.record {
+.BankRecord-record {
     margin: 0.5rem 0em;
 }
-.recordText {
+.BankRecord-text {
     font-size: 12pt;
     color: black;
     text-decoration: none;
 }
-.recordText:hover {
+.BankRecord-text:hover {
     text-decoration: underline;
 }
 </style>

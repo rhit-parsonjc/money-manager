@@ -24,7 +24,7 @@ function goToCreateRecordPage() {
 
 <template>
   <h1 class="libre-baskerville-regular">Records</h1>
-  <a @click="goToCreateRecordPage" class="libre-baskerville-regular" id="addNewRecordButton">Add New Record</a>
+  <a @click="goToCreateRecordPage" class="libre-baskerville-regular AllBankRecordsView-add-button">Add New Bank Record</a>
   <DataMessages :retrievalStatus="dataStore.retrievalStatus"
   loadingMessage="Loading Records..." errorMessage="Could Not Load Records">
     <DateRecordList :bankRecords="dataStore.data.bankRecords" :dateAmounts="dataStore.data.dateAmounts"/>
@@ -32,17 +32,10 @@ function goToCreateRecordPage() {
 </template>
 
 <style scoped>
-#dateRecordList {
-  list-style-type: none;
-  padding-left: 0rem;
-}
-#addNewRecordButton {
+.AllBankRecordsView-add-button {
   text-decoration: none;
   color: #050;
   display: block;
   text-align: center;
-}
-#addNewRecordButton:hover {
-  text-decoration: underline;
 }
 </style>
