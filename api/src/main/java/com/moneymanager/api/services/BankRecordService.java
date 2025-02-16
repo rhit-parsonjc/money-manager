@@ -17,4 +17,5 @@ public interface BankRecordService {
     public BankRecordDto updateBankRecord(Long id, BankRecordRequest request);
 
     public void deleteBankRecord(Long id);
+    public void deleteBankRecords();
 }

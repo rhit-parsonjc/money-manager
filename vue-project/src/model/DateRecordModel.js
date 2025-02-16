@@ -18,6 +18,7 @@ function organizeRecordsByDate(records, amounts, firstDateObj = null, lastDateOb
     Otherwise, use the earliest date in the amounts and records
     And the latest date in the amounts and records
   */
+  const recordsPerDate = []
   if (firstDateObj == null) {
     if (sortedAmounts.length > 0) {
       firstDateObj = sortedAmounts[0].dateObj
@@ -26,14 +27,13 @@ function organizeRecordsByDate(records, amounts, firstDateObj = null, lastDateOb
     if (sortedRecords.length > 0) {
       const firstRecordDateObj = sortedRecords[0].dateObj
       const lastRecordDateObj = sortedRecords[sortedRecords.length - 1].dateObj
-      if (firstDateObj === null || firstRecordDateObj.dateValue < firstDateObj.dateValue)
+      if (firstDateObj === null || firstDateObj.after(firstRecordDateObj))
         firstDateObj = firstRecordDateObj
-      if (lastDateObj === null || lastRecordDateObj.dateValue > lastDateObj.dateValue)
+      if (lastDateObj === null || lastRecordDateObj.after(lastDateObj))
         lastDateObj = lastRecordDateObj
     }
     if (firstDateObj === null) return recordsPerDate
   }
-  const recordsPerDate = []
   // Go through all of the days...
   let recordIndex = 0
   let amountIndex = 0

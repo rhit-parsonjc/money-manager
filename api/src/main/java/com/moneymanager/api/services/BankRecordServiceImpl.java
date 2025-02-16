@@ -103,4 +103,9 @@ public class BankRecordServiceImpl implements BankRecordService {
         }
         bankRecordRepository.deleteById(id);
     }
+
+    @Override
+    public void deleteBankRecords() {
+        bankRecordRepository.deleteAll();
+    }
 }

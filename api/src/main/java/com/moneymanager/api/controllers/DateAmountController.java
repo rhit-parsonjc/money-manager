@@ -21,9 +21,9 @@ public class DateAmountController {
     private final DateAmountService dateAmountService;
 
     @PostMapping("")
-    public ResponseEntity createDateRecord(@RequestBody DateAmountCreateRequest request) {
+    public ResponseEntity createDateAmount(@RequestBody DateAmountCreateRequest request) {
         try {
-            DateAmountDto dateAmountDto = dateAmountService.createDateRecord(request);
+            DateAmountDto dateAmountDto = dateAmountService.createDateAmount(request);
             return new ResponseEntity<DateAmountDto>(dateAmountDto, HttpStatus.OK);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
@@ -33,18 +33,18 @@ public class DateAmountController {
     }
 
     @GetMapping("")
-    public ResponseEntity getDateRecords(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestBody(required = false) Integer day) {
+    public ResponseEntity getDateAmounts(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestBody(required = false) Integer day) {
         try {
             List<DateAmountDto> dateAmountDtos = null;
             if (year == null && month == null && day == null) {
-                dateAmountDtos = dateAmountService.getDateRecords();
+                dateAmountDtos = dateAmountService.getDateAmounts();
             } else if (year != null && month == null & day == null) {
-                dateAmountDtos = dateAmountService.getDateRecordsByYear(year);
+                dateAmountDtos = dateAmountService.getDateAmountsByYear(year);
             } else if (year != null && month != null) {
                 if (day == null) {
-                    dateAmountDtos = dateAmountService.getDateRecordsByMonth(year, month);
+                    dateAmountDtos = dateAmountService.getDateAmountsByMonth(year, month);
                 } else {
-                    dateAmountDtos = dateAmountService.getDateRecordByDay(year, month, day);
+                    dateAmountDtos = dateAmountService.getDateAmountsByDay(year, month, day);
                 }
             }
             return new ResponseEntity<List<DateAmountDto>>(dateAmountDtos, HttpStatus.OK);
@@ -54,9 +54,9 @@ public class DateAmountController {
     }
 
     @PutMapping("/{year}/{month}/{day}")
-    public ResponseEntity updateDateRecord(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day, @RequestBody DateAmountUpdateRequest request) {
+    public ResponseEntity updateDateAmount(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day, @RequestBody DateAmountUpdateRequest request) {
         try {
-            DateAmountDto dateAmountDto = dateAmountService.updateDateRecord(year, month, day, request);
+            DateAmountDto dateAmountDto = dateAmountService.updateDateAmount(year, month, day, request);
             return new ResponseEntity<DateAmountDto>(dateAmountDto, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -66,12 +66,22 @@ public class DateAmountController {
     }
 
     @DeleteMapping("/{year}/{month}/{day}")
-    public ResponseEntity deleteDateRecord(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day) {
+    public ResponseEntity deleteDateAmount(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day) {
         try {
-            dateAmountService.deleteDateRecord(year, month, day);
+            dateAmountService.deleteDateAmount(year, month, day);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity deleteDateRecords() {
+        try {
+            dateAmountService.deleteDateAmounts();
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }

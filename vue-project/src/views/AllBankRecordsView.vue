@@ -83,6 +83,10 @@ const criterionInvalid = computed(() => {
       return true;
   }
 })
+
+async function populateData() {
+  await dataStore.populateDataAsync();
+}
 </script>
 
 <template>
@@ -101,6 +105,7 @@ const criterionInvalid = computed(() => {
     <input type="date" class="ubuntu-regular" v-model="dayValue" v-if="criterionTypeValue === 'Day'">
     <button class="ubuntu-regular AllBankRecordsView-apply-filter" @click="dataStore.resetData" :disabled="criterionInvalid">Apply Filter</button>
   </div>
+  <button @click="populateData">Populate Data</button>
   <DataMessages :retrievalStatus="dataStore.retrievalStatus"
   loadingMessage="Loading Records..." errorMessage="Could Not Load Records">
     <DateRecordList :bankRecords="dataStore.data.bankRecords" :dateAmounts="dataStore.data.dateAmounts" :criterionType="criterionType" :criterion="criterion"/>

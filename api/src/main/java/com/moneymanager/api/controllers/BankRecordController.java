@@ -86,4 +86,14 @@ public class BankRecordController {
             return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("")
+    public ResponseEntity deleteBankRecords() {
+        try {
+            bankRecordService.deleteBankRecords();
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Unknown server error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -20,25 +20,13 @@ const monthNames = [
 
 class DateObjectModel {
   constructor(yearValue, monthValue, dayValue) {
-    this.dateValue = new Date()
-    this.dateValue.setUTCFullYear(yearValue, monthValue - 1, dayValue)
-    this.dateValue.setUTCHours(0, 0, 0, 0)
-  }
-
-  get yearValue() {
-    return this.dateValue.getUTCFullYear()
-  }
-
-  get monthValue() {
-    return this.dateValue.getUTCMonth() + 1
-  }
-
-  get dayValue() {
-    return this.dateValue.getUTCDate()
-  }
-
-  get dayOfWeekValue() {
-    return this.dateValue.getUTCDay()
+    if (isValid(yearValue, monthValue, dayValue)) {
+      this.yearValue = yearValue
+      this.monthValue = monthValue
+      this.dayValue = dayValue
+    } else {
+      console.error('Invalid date', { yearValue, monthValue, dayValue })
+    }
   }
 
   format() {
@@ -46,20 +34,42 @@ class DateObjectModel {
   }
 
   equals(dateObj) {
-    return this.dateValue.getTime() === dateObj.dateValue.getTime()
+    return (
+      this.yearValue === dateObj.yearValue &&
+      this.monthValue === dateObj.monthValue &&
+      this.dayValue === dateObj.dayValue
+    )
   }
 
   after(dateObj) {
-    return this.dateValue > dateObj.dateValue
+    if (this.yearValue > dateObj.yearValue) return true
+    if (this.yearValue < dateObj.yearValue) return false
+    if (this.monthValue > dateObj.monthValue) return true
+    if (this.monthValue < dateObj.monthValue) return false
+    return this.dayValue > dateObj.dayValue
   }
 
   increment() {
-    this.dateValue.setDate(this.dateValue.getDate() + 1)
+    this.dayValue++
+    if (this.dayValue > daysPerMonth(monthNames[this.monthValue - 1], this.yearValue)) {
+      this.dayValue = 1
+      this.monthValue++
+      if (this.monthValue > 12) {
+        this.monthValue = 1
+        this.yearValue++
+      }
+    }
   }
 
   clone() {
     return new DateObjectModel(this.yearValue, this.monthValue, this.dayValue)
   }
+}
+
+function isValid(yearValue, monthValue, dayValue) {
+  if (monthValue < 1 || monthValue > 12) return false
+  if (dayValue < 1 || dayValue > daysPerMonth(monthNames[monthValue - 1], yearValue)) return false
+  return true
 }
 
 function monthNameFromNumber(monthValue) {
@@ -73,8 +83,8 @@ function daysPerMonth(monthName, yearValue) {
     February: isLeapYear ? 29 : 28,
     March: 31,
     April: 30,
-    May: 30,
-    June: 31,
+    May: 31,
+    June: 30,
     July: 31,
     August: 31,
     September: 30,

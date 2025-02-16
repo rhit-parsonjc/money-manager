@@ -24,6 +24,8 @@ Base URL: _/api/v1_
 
 **DELETE** to _/bankrecords/{id}_: deletes the bank record with the specified id, can return **204**, **404**, or **500**
 
+**DELETE** to _/bankrecords_: deletes all bank records, can return **204** or **500**
+
 ## Date Amounts (_/api/v1/daterecord_)
 
 **POST** to _/dateamounts_: create a new date amount based on the specified body, can return **201**, **409**, or **500**
@@ -33,6 +35,8 @@ Base URL: _/api/v1_
 **PUT** to _/dateamounts/{year}/{month}/{day}_: replaces the date record for the specified day with the specified body, can return **200**, **404**, or **500**
 
 **DELETE** to _/dateamounts/{year}/{month}/{day}_: deletes the date record with the specified day, can return **204**, **404**, or **500**
+
+**DELETE** to _/dateamounts_: deletes all date amounts, can return **204** or **500**
 
 # Models
 

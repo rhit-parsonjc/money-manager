@@ -165,7 +165,7 @@ const useDataStore = defineStore('data', () => {
   }
 
   function createBankRecordAsync(record) {
-    return modifyDataAsync(axios.post(`${baseUrl}/bankrecords/`, record))
+    return modifyDataAsync(axios.post(`${baseUrl}/bankrecords`, record))
   }
 
   function deleteDateAmountAsync(yearValue, monthValue, dayValue) {
@@ -182,6 +182,103 @@ const useDataStore = defineStore('data', () => {
 
   function createDateAmountAsync(dateRecord) {
     return modifyDataAsync(axios.post(`${baseUrl}/dateamounts`, dateRecord))
+  }
+
+  // Populate the data asynchronously
+  async function populateDataAsync() {
+    expireData()
+
+    // Get a random amount
+    function getRandomAmount() {
+      const LOW_AMOUNT = 1000
+      const HIGH_AMOUNT = 9999
+      const RANGE = HIGH_AMOUNT - LOW_AMOUNT + 1
+      return (Math.floor(Math.random() * RANGE) + LOW_AMOUNT) / 100
+    }
+
+    // Return a random element of the array
+    function selectRandom(arr) {
+      const index = Math.floor(Math.random() * arr.length)
+      return arr[index]
+    }
+
+    // Return an action that adds money to the account
+    function getPositiveAction() {
+      return selectRandom(['Tax Refund', 'Gift', 'Interest', 'Income'])
+    }
+
+    // Return an action that removes money from the account
+    function getNegativeAction() {
+      return selectRandom([
+        'Breakfast',
+        'Lunch',
+        'Dinner',
+        'Movie',
+        'Video Game',
+        'Souvenir',
+        'Plush',
+        'Groceries',
+        'Rent',
+      ])
+    }
+
+    // Determine the number of financial transactions for a given day
+    function getTransactionCount() {
+      const value = Math.random()
+      if (value < 0.9) {
+        return 0
+      } else if (value < 0.95) {
+        return 1
+      } else if (value < 0.98) {
+        return 2
+      } else {
+        return 3
+      }
+    }
+
+    let bankAmount = 1000
+
+    let daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    for (var year = 2022; year <= 2024; year++) {
+      // Update the days per month for leap years
+      const isLeapYear = year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)
+      daysPerMonth[1] = isLeapYear ? 29 : 28
+
+      for (var month = 1; month <= 12; month++) {
+        for (var dayValue = 1; dayValue <= daysPerMonth[month - 1]; dayValue++) {
+          const transactionCount = getTransactionCount()
+
+          for (var i = 0; i < transactionCount; i++) {
+            const amount = getRandomAmount()
+            const positiveAction = Math.random() < 0.5
+            const name = positiveAction ? getPositiveAction() : getNegativeAction()
+            const record = {
+              year,
+              month,
+              day: dayValue,
+              amount: positiveAction ? amount : -amount,
+              name,
+            }
+            await axios.post(`${baseUrl}/bankrecords`, record)
+            if (positiveAction) {
+              bankAmount += amount
+            } else {
+              bankAmount -= amount
+            }
+          }
+
+          if (Math.random() < 0.1) {
+            const amount = {
+              year,
+              month,
+              day: dayValue,
+              amount: bankAmount,
+            }
+            await axios.post(`${baseUrl}/dateamounts`, amount)
+          }
+        }
+      }
+    }
   }
 
   return {
@@ -204,6 +301,8 @@ const useDataStore = defineStore('data', () => {
     deleteDateAmountAsync,
     updateDateAmountAsync,
     createDateAmountAsync,
+    // This populates the data
+    populateDataAsync,
   }
 })
 

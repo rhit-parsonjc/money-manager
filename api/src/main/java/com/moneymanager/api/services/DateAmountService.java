@@ -7,14 +7,15 @@ import com.moneymanager.api.requests.DateAmountUpdateRequest;
 import java.util.List;
 
 public interface DateAmountService {
-    public DateAmountDto createDateRecord(DateAmountCreateRequest request);
+    public DateAmountDto createDateAmount(DateAmountCreateRequest request);
 
-    public List<DateAmountDto> getDateRecords();
-    public List<DateAmountDto> getDateRecordsByYear(Integer year);
-    public List<DateAmountDto> getDateRecordsByMonth(Integer year, Integer month);
-    public List<DateAmountDto> getDateRecordByDay(Integer year, Integer month, Integer day);
+    public List<DateAmountDto> getDateAmounts();
+    public List<DateAmountDto> getDateAmountsByYear(Integer year);
+    public List<DateAmountDto> getDateAmountsByMonth(Integer year, Integer month);
+    public List<DateAmountDto> getDateAmountsByDay(Integer year, Integer month, Integer day);
 
-    public DateAmountDto updateDateRecord(Integer year, Integer month, Integer day, DateAmountUpdateRequest request);
+    public DateAmountDto updateDateAmount(Integer year, Integer month, Integer day, DateAmountUpdateRequest request);
 
-    public void deleteDateRecord(Integer year, Integer month, Integer day);
+    public void deleteDateAmount(Integer year, Integer month, Integer day);
+    public void deleteDateAmounts();
 }
