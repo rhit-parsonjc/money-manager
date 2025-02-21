@@ -1,10 +1,12 @@
 package com.moneymanager.api.controllers;
 
 import com.moneymanager.api.dtos.BankRecordDto;
+import com.moneymanager.api.dtos.FinancialTransactionDto;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
 import com.moneymanager.api.requests.BankRecordRequest;
+import com.moneymanager.api.requests.FinancialTransactionRequest;
 import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.BankRecordService;
+import com.moneymanager.api.services.FinancialTransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +16,16 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1/bankrecords")
+@RequestMapping("/api/v1/financialtransactions")
 @RequiredArgsConstructor
-public class BankRecordController {
-    private final BankRecordService bankRecordService;
+public class FinancialTransactionController {
+    private final FinancialTransactionService financialTransactionService;
 
     @PostMapping("")
-    public ResponseEntity<DataOrErrorResponse> createBankRecord(@RequestBody BankRecordRequest request) {
+    public ResponseEntity<DataOrErrorResponse> createFinancialTransaction(@RequestBody FinancialTransactionRequest request) {
         try {
-            BankRecordDto bankRecordDto = bankRecordService.createBankRecord(request);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDto);
+            FinancialTransactionDto financialTransactionDto = financialTransactionService.createFinancialTransaction(request);
+            DataOrErrorResponse response = new DataOrErrorResponse(true, financialTransactionDto);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             DataOrErrorResponse response = new DataOrErrorResponse(false, "Unknown server error occurred");
@@ -32,10 +34,10 @@ public class BankRecordController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DataOrErrorResponse> getBankRecordById(@PathVariable Long id) {
+    public ResponseEntity<DataOrErrorResponse> getFinancialTransactionById(@PathVariable Long id) {
         try {
-            BankRecordDto bankRecordDto = bankRecordService.getBankRecordById(id);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDto);
+            FinancialTransactionDto financialTransactionDto = financialTransactionService.getFinancialTransactionById(id);
+            DataOrErrorResponse response = new DataOrErrorResponse(true, financialTransactionDto);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
@@ -47,24 +49,24 @@ public class BankRecordController {
     }
 
     @GetMapping("")
-    public ResponseEntity<DataOrErrorResponse> getBankRecords(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestParam(required = false) Integer day) {
+    public ResponseEntity<DataOrErrorResponse> getFinancialTransactions(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestParam(required = false) Integer day) {
         try {
-            List<BankRecordDto> bankRecordDtos = null;
+            List<FinancialTransactionDto> financialTransactionDtos = null;
             if (year == null && month == null && day == null) {
-                bankRecordDtos = bankRecordService.getBankRecords();
+                financialTransactionDtos = financialTransactionService.getFinancialTransactions();
             } else if (year != null && month == null && day == null) {
-                bankRecordDtos = bankRecordService.getBankRecordsForYear(year);
+                financialTransactionDtos = financialTransactionService.getFinancialTransactionsForYear(year);
             } else if (year != null && month != null) {
                 if (day == null) {
-                    bankRecordDtos = bankRecordService.getBankRecordsForMonth(year, month);
+                    financialTransactionDtos = financialTransactionService.getFinancialTransactionsForMonth(year, month);
                 } else {
-                    bankRecordDtos = bankRecordService.getBankRecordsForDay(year, month, day);
+                    financialTransactionDtos = financialTransactionService.getFinancialTransactionsForDay(year, month, day);
                 }
             } else {
                 DataOrErrorResponse response = new DataOrErrorResponse(false, "Invalid query parameters");
                 return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.BAD_REQUEST);
             }
-            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDtos);
+            DataOrErrorResponse response = new DataOrErrorResponse(true, financialTransactionDtos);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
         } catch (Exception e) {
             DataOrErrorResponse response = new DataOrErrorResponse(false, "Unknown server error occurred");
@@ -73,10 +75,10 @@ public class BankRecordController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DataOrErrorResponse> updateBankRecord(@PathVariable Long id, @RequestBody BankRecordRequest request) {
+    public ResponseEntity<DataOrErrorResponse> updateFinancialTransaction(@PathVariable Long id, @RequestBody FinancialTransactionRequest request) {
         try {
-            BankRecordDto bankRecordDto = bankRecordService.updateBankRecord(id, request);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDto);
+            FinancialTransactionDto financialTransactionDto = financialTransactionService.updateFinancialTransaction(id, request);
+            DataOrErrorResponse response = new DataOrErrorResponse(true, financialTransactionDto);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
@@ -88,9 +90,9 @@ public class BankRecordController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DataOrErrorResponse> deleteBankRecord(@PathVariable Long id) {
+    public ResponseEntity<DataOrErrorResponse> deleteFinancialTransaction(@PathVariable Long id) {
         try {
-            bankRecordService.deleteBankRecord(id);
+            financialTransactionService.deleteFinancialTransaction(id);
             DataOrErrorResponse response = new DataOrErrorResponse(true, null);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
         } catch (ResourceNotFoundException e) {
@@ -103,9 +105,9 @@ public class BankRecordController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<DataOrErrorResponse> deleteBankRecords() {
+    public ResponseEntity<DataOrErrorResponse> deleteFinancialTransactions() {
         try {
-            bankRecordService.deleteBankRecords();
+            financialTransactionService.deleteFinancialTransactions();
             DataOrErrorResponse response = new DataOrErrorResponse(true, null);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
         } catch (Exception e) {

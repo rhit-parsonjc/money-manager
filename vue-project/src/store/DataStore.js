@@ -62,13 +62,24 @@ const useDataStore = defineStore('data', () => {
     Promise.all(promises)
       .then((responses) => {
         console.log(responses)
-        for (const i in responses) {
-          const response = responses[i]
-          const source = sources[i]
-          data.value[source.name] = source.mapFunction(response.data)
+        let errorMessage = null
+        for (const response of responses) {
+          if (!response.data.success) {
+            errorMessage = response.data.data
+          }
         }
-        console.log('Set data to LOADED')
-        retrievalStatus.value = 'LOADED'
+        if (errorMessage !== null) {
+          console.error(errorMessage)
+          retrievalStatus.value = 'ERROR'
+        } else {
+          for (const i in responses) {
+            const response = responses[i]
+            const source = sources[i]
+            data.value[source.name] = source.mapFunction(response.data.data)
+          }
+          console.log('Set data to LOADED')
+          retrievalStatus.value = 'LOADED'
+        }
       })
       .catch((error) => {
         console.error(error)

@@ -18,7 +18,7 @@ Base URL: _/api/v1_
 
 **GET** to _/bankrecords/{id}_: gets the bank record with the specified id, can return **200**, **404**, or **500**
 
-**GET** to _/bankrecords?year={year}&month={month}&day={day}_: gets all of the bank records, can filter by year and month, can return **200**, **400**, or **500**
+**GET** to _/bankrecords?year={year}&month={month}&day={day}_: gets all of the bank records, can filter by year, month, and day, can return **200**, **400**, or **500**
 
 **PUT** to _/bankrecords/{id}_: replaces the bank record with the specified id with the specified body, can return **200**, **404**, or **500**
 
@@ -38,6 +38,20 @@ Base URL: _/api/v1_
 
 **DELETE** to _/dateamounts_: deletes all date amounts, can return **204** or **500**
 
+## Financial Transactions
+
+**POST** to _/financialtransactions_: creates a new financial transaction based on the specified body, can return **201** or **500**
+
+**GET** to _/financialtransactions/{id}_: gets the financial transaction with the specified id, can return **200**, **404**, or **500**
+
+**GET** to _/financialtransactions?year={year}&month={month}&day={day}_: gets all of the financial transactions, can filter by year, month, and day, can return **200**, **400**, or **500**
+
+**PUT** to _/financialtransactions/{id}_: replaces the financial transaction with the specified id with the specified body, can return **200**, **404**, or **500**
+
+**DELETE** to _/financialtransactions/{id}_: deletes the financial transaction with the specified id, can return **204**, **404**, or **500**
+
+**DELETE** to _/financialtransactions_: deletes all financial transactions, can return **204** or **500**
+
 # Models
 
 ## Bank Record
@@ -56,3 +70,12 @@ Base URL: _/api/v1_
 - month
 - day
 - amount
+
+## Financial Transaction
+
+- id
+- year
+- month
+- day
+- amount
+- name

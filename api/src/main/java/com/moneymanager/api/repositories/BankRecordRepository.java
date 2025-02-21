@@ -1,7 +1,6 @@
 package com.moneymanager.api.repositories;
 
 import com.moneymanager.api.models.BankRecord;
-import com.moneymanager.api.models.DateAmount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
