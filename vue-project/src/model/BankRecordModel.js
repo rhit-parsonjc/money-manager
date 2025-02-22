@@ -1,3 +1,7 @@
+/*
+ * A BankRecordModel contains an id, name, dateObj, and amount
+ */
+
 import { DateObjectModel } from './DateObjectModel'
 
 class BankRecordModel {
@@ -10,7 +14,7 @@ class BankRecordModel {
 }
 
 function sortRecordModels(recordOne, recordTwo) {
-  return recordOne.dateObj.dateValue - recordTwo.dateObj.dateValue
+  return recordOne.dateObj.compareTo(recordTwo.dateObj)
 }
 
 export { BankRecordModel, sortRecordModels }

@@ -1,3 +1,7 @@
+/*
+ * A DateObjectModel represents a day of the year
+ */
+
 const monthNames = [
   'January',
   'February',
@@ -13,12 +17,8 @@ const monthNames = [
   'December',
 ]
 
-// const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-// Month ranges from 1 to 12
-// Day ranges from 1 to the maximum number of days in the month
-
 class DateObjectModel {
+  // Constructs a DateObjectModel with the specified year, month, and day
   constructor(yearValue, monthValue, dayValue) {
     if (isValid(yearValue, monthValue, dayValue)) {
       this.yearValue = yearValue
@@ -29,10 +29,12 @@ class DateObjectModel {
     }
   }
 
+  // Formats a date object in Month Day, Year format
   format() {
-    return `${monthNames[this.monthValue - 1]} ${this.dayValue}, ${this.yearValue}`
+    return `${monthNameFromNumber(this.monthValue)} ${this.dayValue}, ${this.yearValue}`
   }
 
+  // Returns whether this equals the other date object
   equals(dateObj) {
     return (
       this.yearValue === dateObj.yearValue &&
@@ -41,14 +43,19 @@ class DateObjectModel {
     )
   }
 
-  after(dateObj) {
-    if (this.yearValue > dateObj.yearValue) return true
-    if (this.yearValue < dateObj.yearValue) return false
-    if (this.monthValue > dateObj.monthValue) return true
-    if (this.monthValue < dateObj.monthValue) return false
-    return this.dayValue > dateObj.dayValue
+  // Converts to YYYYMMDD format
+  toNumber() {
+    return this.yearValue * 10000 + this.monthValue * 100 + this.dayValue
   }
 
+  // Returns a positive number if this comes after dateObj
+  // Returns zero if this equals dateObj
+  // Returns a negative number if this comes before dateObj
+  compareTo(dateObj) {
+    return this.toNumber() - dateObj.toNumber()
+  }
+
+  // Increments this to the next day
   increment() {
     this.dayValue++
     if (this.dayValue > daysPerMonth(monthNames[this.monthValue - 1], this.yearValue)) {
@@ -61,21 +68,25 @@ class DateObjectModel {
     }
   }
 
+  // Creates a clone of this DateObjectModel
   clone() {
     return new DateObjectModel(this.yearValue, this.monthValue, this.dayValue)
   }
 }
 
+// Returns whether this is a valid date
 function isValid(yearValue, monthValue, dayValue) {
   if (monthValue < 1 || monthValue > 12) return false
   if (dayValue < 1 || dayValue > daysPerMonth(monthNames[monthValue - 1], yearValue)) return false
   return true
 }
 
+// Maps a month value (1-12) to the month of the year
 function monthNameFromNumber(monthValue) {
   return monthNames[monthValue - 1]
 }
 
+// Returns the number of days given the month name and year
 function daysPerMonth(monthName, yearValue) {
   const isLeapYear = yearValue % 400 === 0 || (yearValue % 100 !== 0 && yearValue % 4 === 0)
   const daysPerMonth = {
@@ -95,23 +106,27 @@ function daysPerMonth(monthName, yearValue) {
   return daysPerMonth[monthName]
 }
 
+// Returns a DateObjectModel representing the first day of the year
 function getFirstDayOfYear(yearValue) {
   return new DateObjectModel(yearValue, 1, 1)
 }
 
+// Returns a DateObjectModel representing the last day of the year
 function getLastDayOfYear(yearValue) {
   return new DateObjectModel(yearValue, 12, 31)
 }
 
+// Returns a DateObjectModel representing the first day of the month
 function getFirstDayOfMonth(yearValue, monthValue) {
   return new DateObjectModel(yearValue, monthValue, 1)
 }
 
+// Returns a DateObejctModel representing the last day of the month
 function getLastDayOfMonth(yearValue, monthValue) {
   return new DateObjectModel(
     yearValue,
     monthValue,
-    daysPerMonth(monthNames[monthValue - 1], yearValue),
+    daysPerMonth(monthNameFromNumber(monthValue), yearValue),
   )
 }
 

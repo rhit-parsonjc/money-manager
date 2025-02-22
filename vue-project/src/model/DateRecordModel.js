@@ -27,9 +27,9 @@ function organizeRecordsByDate(records, amounts, firstDateObj = null, lastDateOb
     if (sortedRecords.length > 0) {
       const firstRecordDateObj = sortedRecords[0].dateObj
       const lastRecordDateObj = sortedRecords[sortedRecords.length - 1].dateObj
-      if (firstDateObj === null || firstDateObj.after(firstRecordDateObj))
+      if (firstDateObj === null || firstRecordDateObj.compareTo(firstDateObj) < 0)
         firstDateObj = firstRecordDateObj
-      if (lastDateObj === null || lastRecordDateObj.after(lastDateObj))
+      if (lastDateObj === null || lastRecordDateObj.compareTo(lastDateObj) > 0)
         lastDateObj = lastRecordDateObj
     }
     if (firstDateObj === null) return recordsPerDate
@@ -37,7 +37,11 @@ function organizeRecordsByDate(records, amounts, firstDateObj = null, lastDateOb
   // Go through all of the days...
   let recordIndex = 0
   let amountIndex = 0
-  for (const dateObj = firstDateObj.clone(); !dateObj.after(lastDateObj); dateObj.increment()) {
+  for (
+    const dateObj = firstDateObj.clone();
+    dateObj.compareTo(lastDateObj) <= 0;
+    dateObj.increment()
+  ) {
     // Find all of the records that are on this date.
     const recordList = []
     while (
