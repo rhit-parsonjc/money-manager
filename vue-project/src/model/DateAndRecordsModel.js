@@ -1,10 +1,10 @@
 import { sortRecordModels } from './BankRecordModel'
 import { sortAmountModels } from './DateAmountModel'
 
-class DateRecordModel {
-  constructor(dateObj, records, amount) {
+class DateAndRecordsModel {
+  constructor(dateObj, bankRecords, amount) {
     this.dateObj = dateObj
-    this.records = records
+    this.bankRecords = bankRecords
     this.amount = amount
   }
 }
@@ -57,10 +57,10 @@ function organizeRecordsByDate(records, amounts, firstDateObj = null, lastDateOb
       amount = sortedAmounts[amountIndex].amount
       amountIndex++
     }
-    // Create a new date record.
-    recordsPerDate.push(new DateRecordModel(dateObj.clone(), recordList, amount))
+    // Create a new DateAndRecords object.
+    recordsPerDate.push(new DateAndRecordsModel(dateObj.clone(), recordList, amount))
   }
   return recordsPerDate
 }
 
-export { DateRecordModel, organizeRecordsByDate }
+export { DateAndRecordsModel, organizeRecordsByDate }

@@ -9,7 +9,7 @@ class DateAmountModel {
 }
 
 function sortAmountModels(amountOne, amountTwo) {
-  return amountOne.dateObj.dateValue - amountTwo.dateObj.dateValue
+  return amountOne.dateObj.compareTo(amountTwo.dateObj)
 }
 
 export { sortAmountModels, DateAmountModel }

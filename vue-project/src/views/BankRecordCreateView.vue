@@ -1,5 +1,5 @@
 <script setup>
-import BankRecordForm from '@/components/BankRecordForm.vue';
+import BankRecordForm from '@/components/BankRecordOrFinancialTransactionForm/BankRecordForm.vue';
 </script>
 
 <template>

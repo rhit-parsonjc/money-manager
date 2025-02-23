@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import { BankRecordModel } from '@/model/BankRecordModel'
 import { DateAmountModel } from '@/model/DateAmountModel'
+import { FinancialTransactionModel } from '@/model/FinancialTransactionModel'
 
 const baseUrl = 'http://localhost:8080/api/v1'
 
@@ -43,6 +44,15 @@ const useDataStore = defineStore('data', () => {
     return amounts.map(dateAmountToData)
   }
 
+  function financialTransactionToData(transaction) {
+    const { id, name, amount, year: yearValue, month: monthValue, day: dayValue } = transaction
+    return new FinancialTransactionModel(id, name, yearValue, monthValue, dayValue, amount)
+  }
+
+  function financialTransactionsToData(transactions) {
+    return transactions.map(financialTransactionToData)
+  }
+
   function resetData() {
     console.log('Set data to NOT LOADED')
     retrievalStatus.value = 'NOT LOADED'
@@ -78,6 +88,7 @@ const useDataStore = defineStore('data', () => {
             data.value[source.name] = source.mapFunction(response.data.data)
           }
           console.log('Set data to LOADED')
+          console.log(data.value)
           retrievalStatus.value = 'LOADED'
         }
       })
@@ -158,6 +169,56 @@ const useDataStore = defineStore('data', () => {
     ])
   }
 
+  function loadFinancialTransactions() {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransactions',
+        relativeUrl: '/financialtransactions',
+        mapFunction: financialTransactionsToData,
+      },
+    ])
+  }
+
+  function loadFinancialTransactionsDuringYear(year) {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransactions',
+        relativeUrl: `/financialtransactions?year=${year}`,
+        mapFunction: financialTransactionsToData,
+      },
+    ])
+  }
+
+  function loadFinancialTransactionsDuringMonth(year, month) {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransactions',
+        relativeUrl: `/financialtransactions?year=${year}&month=${month}`,
+        mapFunction: financialTransactionsToData,
+      },
+    ])
+  }
+
+  function loadFinancialTransactionsDuringDay(year, month, day) {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransactions',
+        relativeUrl: `/financialtransactions?year=${year}&month=${month}&day=${day}`,
+        mapFunction: financialTransactionsToData,
+      },
+    ])
+  }
+
+  function loadSingleFinancialTransaction(id) {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransaction',
+        relativeUrl: `/financialtransactions/${id}`,
+        mapFunction: financialTransactionToData,
+      },
+    ])
+  }
+
   async function modifyDataAsync(promise) {
     try {
       await promise
@@ -167,32 +228,57 @@ const useDataStore = defineStore('data', () => {
     expireData()
   }
 
+  function createBankRecordAsync(bankRecord) {
+    console.log('Create Bank Record', { bankRecord })
+    return modifyDataAsync(axios.post(`${baseUrl}/bankrecords`, bankRecord))
+  }
+
+  function createDateAmountAsync(dateAmount) {
+    console.log('Create Date Amount', { dateAmount })
+    return modifyDataAsync(axios.post(`${baseUrl}/dateamounts`, dateAmount))
+  }
+
+  function createFinancialTransactionAsync(financialTransaction) {
+    console.log('Create Financial Transactions', { financialTransaction })
+    return modifyDataAsync(axios.post(`${baseUrl}/financialtransactions`, financialTransaction))
+  }
+
+  function updateBankRecordAsync(id, bankRecord) {
+    console.log('Update Bank Record', { id, bankRecord })
+    return modifyDataAsync(axios.put(`${baseUrl}/bankrecords/${id}`, bankRecord))
+  }
+
+  function updateDateAmountAsync(yearValue, monthValue, dayValue, dateAmount) {
+    console.log('Update Date Amount', { yearValue, monthValue, dayValue, dateAmount })
+    return modifyDataAsync(
+      axios.put(`${baseUrl}/dateamounts/${yearValue}/${monthValue}/${dayValue}`, {
+        amount: dateAmount,
+      }),
+    )
+  }
+
+  function updateFinancialTransactionAsync(id, financialTransaction) {
+    console.log('Update Financial Transaction', { id, financialTransaction })
+    return modifyDataAsync(
+      axios.put(`${baseUrl}/financialtransactions/${id}`, financialTransaction),
+    )
+  }
+
   function deleteBankRecordAsync(id) {
+    console.log('Delete Bank Record', { id })
     return modifyDataAsync(axios.delete(`${baseUrl}/bankrecords/${id}`))
   }
 
-  function updateBankRecordAsync(id, record) {
-    return modifyDataAsync(axios.put(`${baseUrl}/bankrecords/${id}`, record))
-  }
-
-  function createBankRecordAsync(record) {
-    return modifyDataAsync(axios.post(`${baseUrl}/bankrecords`, record))
-  }
-
   function deleteDateAmountAsync(yearValue, monthValue, dayValue) {
+    console.log('Delete Date Amount', { yearValue, monthValue, dayValue })
     return modifyDataAsync(
       axios.delete(`${baseUrl}/dateamounts/${yearValue}/${monthValue}/${dayValue}`),
     )
   }
 
-  function updateDateAmountAsync(yearValue, monthValue, dayValue, amount) {
-    return modifyDataAsync(
-      axios.put(`${baseUrl}/dateamounts/${yearValue}/${monthValue}/${dayValue}`, { amount }),
-    )
-  }
-
-  function createDateAmountAsync(dateRecord) {
-    return modifyDataAsync(axios.post(`${baseUrl}/dateamounts`, dateRecord))
+  function deleteFinancialTransactionAsync(id) {
+    console.log('Delete Financial Transaction', { id })
+    return modifyDataAsync(axios.delete(`${baseUrl}/financialtransactions/${id}`))
   }
 
   // Populate the data asynchronously
@@ -305,13 +391,21 @@ const useDataStore = defineStore('data', () => {
     loadDateAndBankRecordsDuringMonth,
     loadDateAndBankRecordsDuringDay,
     loadSingleBankRecord,
+    loadFinancialTransactions,
+    loadFinancialTransactionsDuringYear,
+    loadFinancialTransactionsDuringMonth,
+    loadFinancialTransactionsDuringDay,
+    loadSingleFinancialTransaction,
     // These return a promise that resolves after the request finishes
-    deleteBankRecordAsync,
-    updateBankRecordAsync,
     createBankRecordAsync,
-    deleteDateAmountAsync,
-    updateDateAmountAsync,
     createDateAmountAsync,
+    createFinancialTransactionAsync,
+    updateBankRecordAsync,
+    updateDateAmountAsync,
+    updateFinancialTransactionAsync,
+    deleteBankRecordAsync,
+    deleteDateAmountAsync,
+    deleteFinancialTransactionAsync,
     // This populates the data
     populateDataAsync,
   }

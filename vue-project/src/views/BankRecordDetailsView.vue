@@ -1,7 +1,7 @@
 <script setup>
 import { watch } from 'vue';
 
-import BankRecordDetails from '@/components/BankRecordDetails.vue';
+import BankRecordDetails from '@/components/BankRecordOrFinancialTransactionDetails/BankRecordDetails.vue';
 import DataMessages from '@/components/DataMessages.vue';
 import useDataStore from '@/store/DataStore';
 
@@ -19,8 +19,8 @@ watch(() => dataStore.retrievalStatus,
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.retrievalStatus"
-    loadingMessage="Loading Record..." errorMessage="Could Not Load Record">
+  <DataMessages :retrievalStatus="dataStore.retrievalStatus"
+  loadingMessage="Loading Record..." errorMessage="Could Not Load Record">
     <BankRecordDetails :record="dataStore.data.bankRecord"/>
-    </DataMessages>
+  </DataMessages>
 </template>

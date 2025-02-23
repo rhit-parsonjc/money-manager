@@ -1,18 +1,18 @@
 <script setup>
 import { watch } from 'vue';
 
-import BankRecordForm from '@/components/BankRecordOrFinancialTransactionForm/BankRecordForm.vue';
+import FinancialTransactionForm from '@/components/BankRecordOrFinancialTransactionForm/FinancialTransactionForm.vue';
 import DataMessages from '@/components/DataMessages.vue';
 import useDataStore from '@/store/DataStore';
 
 const dataStore = useDataStore();
 
-const {recordId} = defineProps(["recordId"]);
+const {transactionId} = defineProps(["transactionId"]);
 
 watch(() => dataStore.retrievalStatus,
   (newRetrievalStatus) => {
     if (newRetrievalStatus === 'NOT LOADED') {
-      dataStore.loadSingleBankRecord(recordId);
+      dataStore.loadSingleFinancialTransaction(transactionId);
     }
   },
   {immediate: true});
@@ -20,7 +20,7 @@ watch(() => dataStore.retrievalStatus,
 
 <template>
   <DataMessages :retrievalStatus="dataStore.retrievalStatus"
-  loadingMessage="Loading Record..." errorMessage="Could Not Load Record">
-    <BankRecordForm :record="dataStore.data.bankRecord"/>
+  loadingMessage="Loading Transaction..." errorMessage="Could Not Load Transaction">
+    <FinancialTransactionForm :transaction="dataStore.data.financialTransaction"/>
   </DataMessages>
 </template>

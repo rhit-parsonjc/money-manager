@@ -4,7 +4,7 @@ function formatCurrency(value) {
   } else if (value < 0) {
     return `-$${(-value).toFixed(2)}`
   } else {
-    return '-$0.00'
+    return '$0.00'
   }
 }
 

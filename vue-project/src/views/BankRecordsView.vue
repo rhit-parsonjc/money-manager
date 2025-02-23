@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 
 import DataMessages from '@/components/DataMessages.vue';
 import useDataStore from '@/store/DataStore';
-import DateRecordList from '@/components/DateRecordList.vue';
+import DateItemAndRecordsList from '@/components/DateItemList/DateItemAndRecordsList.vue';
 import DateFilter from '@/components/DateFilter.vue';
 
 const dataStore = useDataStore();
@@ -27,7 +27,6 @@ function goToCreateRecordPage() {
 }
 
 function reloadData(criterionInfo) {
-  console.log(criterionInfo)
   criterionType.value = criterionInfo.criterionType
   criterion.value = criterionInfo.criterion
   dataStore.resetData();
@@ -62,7 +61,11 @@ async function populateData() {
   <button @click="populateData">Populate Data</button>
   <DataMessages :retrievalStatus="dataStore.retrievalStatus"
   loadingMessage="Loading Records..." errorMessage="Could Not Load Records">
-    <DateRecordList :bankRecords="dataStore.data.bankRecords" :dateAmounts="dataStore.data.dateAmounts" :criterionType="criterionType" :criterion="criterion"/>
+    <DateItemAndRecordsList
+      :bankRecords="dataStore.data.bankRecords"
+      :dateAmounts="dataStore.data.dateAmounts"
+      :criterionType="criterionType"
+      :criterion="criterion"/>
   </DataMessages>
 </template>
 
