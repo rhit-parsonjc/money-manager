@@ -1,20 +1,27 @@
 package com.moneymanager.api.services;
 
+import com.moneymanager.api.dtos.BankRecordDetailsDto;
 import com.moneymanager.api.dtos.BankRecordDto;
+import com.moneymanager.api.dtos.FinancialTransactionDto;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
 import com.moneymanager.api.models.BankRecord;
+import com.moneymanager.api.models.FinancialTransaction;
 import com.moneymanager.api.repositories.BankRecordRepository;
+import com.moneymanager.api.repositories.FinancialTransactionRepository;
 import com.moneymanager.api.requests.BankRecordRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BankRecordServiceImpl implements BankRecordService {
     private final BankRecordRepository bankRecordRepository;
+    private final FinancialTransactionRepository financialTransactionRepository;
 
     private BankRecordDto mapBankRecordToDto(BankRecord bankRecord) {
         BankRecordDto bankRecordDto = new BankRecordDto();
@@ -25,6 +32,34 @@ public class BankRecordServiceImpl implements BankRecordService {
         bankRecordDto.setAmount(bankRecord.getAmount());
         bankRecordDto.setName(bankRecord.getName());
         return bankRecordDto;
+    }
+
+    private FinancialTransactionDto mapFinancialTransactionToDto(FinancialTransaction financialTransaction) {
+        FinancialTransactionDto financialTransactionDto = new FinancialTransactionDto();
+        financialTransactionDto.setId(financialTransaction.getId());
+        financialTransactionDto.setYear(financialTransaction.getYear());
+        financialTransactionDto.setMonth(financialTransaction.getMonth());
+        financialTransactionDto.setDay(financialTransaction.getDay());
+        financialTransactionDto.setAmount(financialTransaction.getAmount());
+        financialTransactionDto.setName(financialTransaction.getName());
+        return financialTransactionDto;
+    }
+
+    private BankRecordDetailsDto mapBankRecordToDetailsDto(BankRecord bankRecord) {
+        BankRecordDetailsDto bankRecordDetailsDto = new BankRecordDetailsDto();
+        bankRecordDetailsDto.setId(bankRecord.getId());
+        bankRecordDetailsDto.setYear(bankRecord.getYear());
+        bankRecordDetailsDto.setMonth(bankRecord.getMonth());
+        bankRecordDetailsDto.setDay(bankRecord.getDay());
+        bankRecordDetailsDto.setAmount(bankRecord.getAmount());
+        bankRecordDetailsDto.setName(bankRecord.getName());
+        Set<FinancialTransactionDto> financialTransactionDtos = bankRecord
+                .getFinancialTransactions()
+                .stream()
+                .map(this::mapFinancialTransactionToDto)
+                .collect(Collectors.toSet());
+        bankRecordDetailsDto.setFinancialTransactions(financialTransactionDtos);
+        return bankRecordDetailsDto;
     }
 
     private List<BankRecordDto> mapBankRecordsToDto(List<BankRecord> bankRecords) {
@@ -49,11 +84,11 @@ public class BankRecordServiceImpl implements BankRecordService {
     }
 
     @Override
-    public BankRecordDto getBankRecordById(Long id) {
+    public BankRecordDetailsDto getBankRecordById(Long id) {
         Optional<BankRecord> bankRecordOptional = bankRecordRepository.findById(id);
         if (bankRecordOptional.isPresent()) {
             BankRecord bankRecord = bankRecordOptional.get();
-            return mapBankRecordToDto(bankRecord);
+            return mapBankRecordToDetailsDto(bankRecord);
         } else {
             throw new ResourceNotFoundException("Bank record not found");
         }
@@ -101,11 +136,17 @@ public class BankRecordServiceImpl implements BankRecordService {
         if (bankRecordOptional.isEmpty()) {
             throw new ResourceNotFoundException("Bank record not found");
         }
+        BankRecord bankRecord = bankRecordOptional.get();
+        bankRecord.getFinancialTransactions().clear();
         bankRecordRepository.deleteById(id);
     }
 
     @Override
     public void deleteBankRecords() {
+        List<BankRecord> bankRecords = bankRecordRepository.findAll();
+        for (BankRecord bankRecord : bankRecords) {
+            bankRecord.getFinancialTransactions().clear();
+        }
         bankRecordRepository.deleteAll();
     }
 }

@@ -1,10 +1,9 @@
 package com.moneymanager.api.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Set;
 
 @Data
 @Entity
@@ -19,4 +18,7 @@ public class FinancialTransaction {
 
     private Double amount;
     private String name;
+
+    @ManyToMany
+    Set<BankRecord> bankRecords;
 }

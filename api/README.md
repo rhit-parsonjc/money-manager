@@ -52,6 +52,12 @@ Base URL: _/api/v1_
 
 **DELETE** to _/financialtransactions_: deletes all financial transactions, can return **204** or **500**
 
+## Record-Transaction Connections
+
+**POST** to _/recordtransactions/{recordId}/{transactionId}_: creates a new connection between a bank record and a financial transaction, can return **201**, **404**, **409**, or **500**
+
+**DELETE** to _/recordtransactions/{recordId}/{transactionId}_: deletes a connection between a bank record and a financial transaction, can return **204**, **404**, or **500**
+
 # Models
 
 ## Bank Record

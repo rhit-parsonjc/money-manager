@@ -1,5 +1,6 @@
 package com.moneymanager.api.controllers;
 
+import com.moneymanager.api.dtos.BankRecordDetailsDto;
 import com.moneymanager.api.dtos.BankRecordDto;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
 import com.moneymanager.api.requests.BankRecordRequest;
@@ -34,8 +35,8 @@ public class BankRecordController {
     @GetMapping("/{id}")
     public ResponseEntity<DataOrErrorResponse> getBankRecordById(@PathVariable Long id) {
         try {
-            BankRecordDto bankRecordDto = bankRecordService.getBankRecordById(id);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDto);
+            BankRecordDetailsDto bankRecordDetailsDto = bankRecordService.getBankRecordById(id);
+            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDetailsDto);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
