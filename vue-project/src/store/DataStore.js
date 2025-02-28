@@ -283,11 +283,12 @@ const useDataStore = defineStore('data', () => {
 
   // Populate the data asynchronously
   async function populateDataAsync() {
+    const AMOUNT_PROPORTION = 0.2
     expireData()
 
     // Get a random amount
     function getRandomAmount() {
-      const LOW_AMOUNT = 1000
+      const LOW_AMOUNT = 100
       const HIGH_AMOUNT = 9999
       const RANGE = HIGH_AMOUNT - LOW_AMOUNT + 1
       return (Math.floor(Math.random() * RANGE) + LOW_AMOUNT) / 100
@@ -320,7 +321,7 @@ const useDataStore = defineStore('data', () => {
     }
 
     // Determine the number of financial transactions for a given day
-    function getTransactionCount() {
+    function getRecordCount() {
       const value = Math.random()
       if (value < 0.9) {
         return 0
@@ -333,9 +334,47 @@ const useDataStore = defineStore('data', () => {
       }
     }
 
+    // Separate a bank record into financial transactions
+    function separateBankRecord(record) {
+      const { year: yearValue, month: monthValue, day: dayValue, amount, name } = record
+      const transactions = []
+      const value = Math.random()
+      if (value < 0.5) {
+        const transaction = {
+          year: yearValue,
+          month: monthValue,
+          day: dayValue,
+          amount,
+          name,
+        }
+        transactions.push(transaction)
+      } else if (value < 0.75) {
+        const newAmount = Math.floor(Math.random() * amount * 100) / 100
+        const transactionOne = {
+          year: yearValue,
+          month: monthValue,
+          day: dayValue,
+          amount: newAmount,
+          name: name + ' I',
+        }
+        const transactionTwo = {
+          year: yearValue,
+          month: monthValue,
+          day: dayValue,
+          amount: amount - newAmount,
+          name: name + ' II',
+        }
+        transactions.push(transactionOne)
+        transactions.push(transactionTwo)
+      }
+      return transactions
+    }
+
     let bankAmount = 1000
 
     let daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    const bankRecords = []
+    const dateAmountPromises = []
     for (var year = 2022; year <= 2024; year++) {
       // Update the days per month for leap years
       const isLeapYear = year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)
@@ -343,9 +382,10 @@ const useDataStore = defineStore('data', () => {
 
       for (var month = 1; month <= 12; month++) {
         for (var dayValue = 1; dayValue <= daysPerMonth[month - 1]; dayValue++) {
-          const transactionCount = getTransactionCount()
+          const recordCount = getRecordCount()
 
-          for (var i = 0; i < transactionCount; i++) {
+          // Generate some random bank records
+          for (var i = 0; i < recordCount; i++) {
             const amount = getRandomAmount()
             const positiveAction = Math.random() < 0.5
             const name = positiveAction ? getPositiveAction() : getNegativeAction()
@@ -356,7 +396,7 @@ const useDataStore = defineStore('data', () => {
               amount: positiveAction ? amount : -amount,
               name,
             }
-            await axios.post(`${baseUrl}/bankrecords`, record)
+            bankRecords.push(record)
             if (positiveAction) {
               bankAmount += amount
             } else {
@@ -364,17 +404,54 @@ const useDataStore = defineStore('data', () => {
             }
           }
 
-          if (Math.random() < 0.1) {
+          // Generate the correct date amount
+          if (Math.random() < AMOUNT_PROPORTION) {
             const amount = {
               year,
               month,
               day: dayValue,
               amount: bankAmount,
             }
-            await axios.post(`${baseUrl}/dateamounts`, amount)
+            dateAmountPromises.push(axios.post(`${baseUrl}/dateamounts`, amount))
           }
         }
       }
+    }
+    console.log({ bankRecords })
+    // Create all of the bank records in a random order.
+    while (bankRecords.length > 0) {
+      const randomIndex = Math.floor(Math.random() * bankRecords.length)
+      const bankRecord = bankRecords.splice(randomIndex, 1)[0]
+      const bankRecordResponse = await axios.post(`${baseUrl}/bankrecords`, bankRecord)
+      if (!bankRecordResponse.data.success) {
+        console.error('Could not create', { bankRecord })
+      }
+      const savedBankRecord = bankRecordResponse.data.data
+      const financialTransactions = separateBankRecord(bankRecord)
+      for (const financialTransaction of financialTransactions) {
+        const financialTransactionResponse = await axios.post(
+          `${baseUrl}/financialtransactions`,
+          financialTransaction,
+        )
+        if (!financialTransactionResponse.data.success) {
+          console.error('Could not create', { financialTransaction })
+        }
+        const savedFinancialTransaction = financialTransactionResponse.data.data
+        if (bankRecordResponse.data.success && financialTransactionResponse.data.success) {
+          const savedBankRecordId = savedBankRecord.id
+          const savedFinancialTransactionId = savedFinancialTransaction.id
+          await axios.post(
+            `${baseUrl}/recordtransactions/${savedBankRecordId}/${savedFinancialTransactionId}`,
+          )
+        }
+      }
+    }
+
+    // Apply all of the date amount promises in a random order.
+    while (dateAmountPromises.length > 0) {
+      const randomIndex = Math.floor(Math.random() * dateAmountPromises.length)
+      const dateAmountPromise = dateAmountPromises.splice(randomIndex, 1)[0]
+      await dateAmountPromise
     }
   }
 
