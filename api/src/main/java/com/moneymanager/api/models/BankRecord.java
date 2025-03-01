@@ -3,10 +3,11 @@ package com.moneymanager.api.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class BankRecord {
     @Id

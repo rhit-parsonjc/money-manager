@@ -53,12 +53,9 @@ public class BankRecordServiceImpl implements BankRecordService {
         bankRecordDetailsDto.setDay(bankRecord.getDay());
         bankRecordDetailsDto.setAmount(bankRecord.getAmount());
         bankRecordDetailsDto.setName(bankRecord.getName());
-        Set<FinancialTransactionDto> financialTransactionDtos = bankRecord
-                .getFinancialTransactions()
-                .stream()
-                .map(this::mapFinancialTransactionToDto)
-                .collect(Collectors.toSet());
-        bankRecordDetailsDto.setFinancialTransactions(financialTransactionDtos);
+        for (FinancialTransaction financialTransaction : bankRecord.getFinancialTransactions()) {
+            bankRecordDetailsDto.getFinancialTransactions().add(mapFinancialTransactionToDto(financialTransaction));
+        }
         return bankRecordDetailsDto;
     }
 
@@ -136,17 +133,11 @@ public class BankRecordServiceImpl implements BankRecordService {
         if (bankRecordOptional.isEmpty()) {
             throw new ResourceNotFoundException("Bank record not found");
         }
-        BankRecord bankRecord = bankRecordOptional.get();
-        bankRecord.getFinancialTransactions().clear();
         bankRecordRepository.deleteById(id);
     }
 
     @Override
     public void deleteBankRecords() {
-        List<BankRecord> bankRecords = bankRecordRepository.findAll();
-        for (BankRecord bankRecord : bankRecords) {
-            bankRecord.getFinancialTransactions().clear();
-        }
         bankRecordRepository.deleteAll();
     }
 }

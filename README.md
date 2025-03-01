@@ -23,6 +23,11 @@
 - [Learn CORS In 6 Minutes](https://www.youtube.com/watch?v=PNtFSVU-YTI)
 - Thanks to [Sébastien Deleuze](https://spring.io/blog/2015/06/08/cors-support-in-spring-framework) for the solution.
 
+### Stack Overflow
+
+- Thanks to [Andrey B. Panfilov](https://stackoverflow.com/questions/73078524/java-lang-stackoverflowerror-while-saving-jpa-entities) for addressing a Stack Overflow exception.
+- Thanks to [Grzegorz Oledzki and damian](https://stackoverflow.com/questions/1082095/how-to-remove-entity-with-manytomany-relationship-in-jpa-and-corresponding-join?rq=3) for handling a Many-to-Many relationship.
+
 ### Fonts
 
 - Thanks to Brenda Gallo for the font [Happy Monkey](https://fonts.google.com/specimen/Happy+Monkey), licensed under [SIL Open Font License, version 1.1](https://openfontlicense.org/open-font-license-official-text/).

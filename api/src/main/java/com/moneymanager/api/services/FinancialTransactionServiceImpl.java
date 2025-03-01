@@ -57,12 +57,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         financialTransactionDetailsDto.setDay(financialTransaction.getDay());
         financialTransactionDetailsDto.setAmount(financialTransaction.getAmount());
         financialTransactionDetailsDto.setName(financialTransaction.getName());
-        Set<BankRecordDto> bankRecordDtos = financialTransaction
-                .getBankRecords()
-                .stream()
-                .map(this::mapBankRecordToDto)
-                .collect(Collectors.toSet());
-        financialTransactionDetailsDto.setBankRecords(bankRecordDtos);
+        for (BankRecord bankRecord : financialTransaction.getBankRecords()) {
+            financialTransactionDetailsDto.getBankRecords().add(mapBankRecordToDto(bankRecord));
+        }
         return financialTransactionDetailsDto;
     }
 
@@ -136,17 +133,11 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         if (financialTransactionOptional.isEmpty()) {
             throw new ResourceNotFoundException("Financial transaction not found");
         }
-        FinancialTransaction financialTransaction = financialTransactionOptional.get();
-        financialTransaction.getBankRecords().clear();
         financialTransactionRepository.deleteById(id);
     }
 
     @Override
     public void deleteFinancialTransactions() {
-        List<FinancialTransaction> financialTransactions = financialTransactionRepository.findAll();
-        for (FinancialTransaction financialTransaction : financialTransactions) {
-            financialTransaction.getBankRecords().clear();
-        }
         financialTransactionRepository.deleteAll();
     }
 }

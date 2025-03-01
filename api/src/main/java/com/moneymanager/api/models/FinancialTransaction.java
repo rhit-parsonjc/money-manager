@@ -1,11 +1,15 @@
 package com.moneymanager.api.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class FinancialTransaction {
     @Id
@@ -19,6 +23,13 @@ public class FinancialTransaction {
     private Double amount;
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "financialTransactions")
     Set<BankRecord> bankRecords;
+
+    @PreRemove
+    private void disconnectBankRecords() {
+        for (BankRecord bankRecord : bankRecords) {
+            bankRecord.getFinancialTransactions().remove(this);
+        }
+    }
 }

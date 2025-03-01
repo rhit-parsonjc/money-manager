@@ -38,6 +38,8 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
         } else {
             bankRecord.getFinancialTransactions().add(financialTransaction);
             financialTransaction.getBankRecords().add(bankRecord);
+            bankRecordRepository.save(bankRecord);
+            financialTransactionRepository.save(financialTransaction);
         }
     }
 
@@ -62,6 +64,8 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
         } else {
             bankRecord.getFinancialTransactions().remove(financialTransaction);
             financialTransaction.getBankRecords().remove(bankRecord);
+            bankRecordRepository.save(bankRecord);
+            financialTransactionRepository.save(financialTransaction);
         }
     }
 }

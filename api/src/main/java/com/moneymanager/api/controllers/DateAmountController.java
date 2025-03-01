@@ -31,7 +31,7 @@ public class DateAmountController {
             DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CONFLICT);
         } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, "Unknown server error occurred");
+            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -54,7 +54,7 @@ public class DateAmountController {
             DataOrErrorResponse response = new DataOrErrorResponse(true, dateAmountDtos);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
         } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, "Unknown server error occurred");
+            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -69,7 +69,7 @@ public class DateAmountController {
             DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, "Unknown server error occurred");
+            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -84,7 +84,7 @@ public class DateAmountController {
             DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, "Unknown server error occurred");
+            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -96,7 +96,7 @@ public class DateAmountController {
             DataOrErrorResponse response = new DataOrErrorResponse(true, null);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, "Unknown server error occurred");
+            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

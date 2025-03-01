@@ -84,6 +84,7 @@ const useDataStore = defineStore('data', () => {
         } else {
           for (const i in responses) {
             const response = responses[i]
+            console.log('Data', response)
             const source = sources[i]
             data.value[source.name] = source.mapFunction(response.data.data)
           }
@@ -427,6 +428,7 @@ const useDataStore = defineStore('data', () => {
         console.error('Could not create', { bankRecord })
       }
       const savedBankRecord = bankRecordResponse.data.data
+      console.log({ savedBankRecord })
       const financialTransactions = separateBankRecord(bankRecord)
       for (const financialTransaction of financialTransactions) {
         const financialTransactionResponse = await axios.post(
@@ -437,12 +439,16 @@ const useDataStore = defineStore('data', () => {
           console.error('Could not create', { financialTransaction })
         }
         const savedFinancialTransaction = financialTransactionResponse.data.data
+        console.log({ savedFinancialTransaction })
         if (bankRecordResponse.data.success && financialTransactionResponse.data.success) {
           const savedBankRecordId = savedBankRecord.id
           const savedFinancialTransactionId = savedFinancialTransaction.id
-          await axios.post(
+          const recordTransactionConnection = await axios.post(
             `${baseUrl}/recordtransactions/${savedBankRecordId}/${savedFinancialTransactionId}`,
           )
+          if (!recordTransactionConnection.data.success) {
+            console.error('Could not connect', { savedBankRecordId, savedFinancialTransactionId })
+          }
         }
       }
     }
