@@ -7,6 +7,8 @@ import FinancialTransactionCreateView from './views/FinancialTransactionCreateVi
 import FinancialTransactionDetailsView from './views/FinancialTransactionDetailsView.vue'
 import FinancialTransactionUpdateView from './views/FinancialTransactionUpdateView.vue'
 import FinancialTransactionsView from './views/FinancialTransactionsView.vue'
+import AttachRecordsView from './views/AttachRecordsView.vue'
+import AttachTransactionsView from './views/AttachTransactionsView.vue'
 
 const routes = [
   {
@@ -32,6 +34,12 @@ const routes = [
     props: true,
   },
   {
+    path: '/records/:recordId/transactions',
+    name: 'attach-transactions',
+    component: AttachTransactionsView,
+    props: true,
+  },
+  {
     path: '/create/transaction',
     name: 'transaction-create',
     component: FinancialTransactionCreateView,
@@ -51,6 +59,12 @@ const routes = [
     path: '/transactions/:transactionId/update',
     name: 'transaction-update',
     component: FinancialTransactionUpdateView,
+    props: true,
+  },
+  {
+    path: '/transactions/:transactionId/records',
+    name: 'attach-records',
+    component: AttachRecordsView,
     props: true,
   },
 ]

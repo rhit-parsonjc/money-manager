@@ -35,7 +35,7 @@ public class RecordTransactionController {
     }
 
     @DeleteMapping("/{recordId}/{transactionId}")
-    public ResponseEntity<DataOrErrorResponse> deleteConnection(Long recordId, Long transactionId) {
+    public ResponseEntity<DataOrErrorResponse> deleteConnection(@PathVariable Long recordId, @PathVariable Long transactionId) {
         try {
             recordTransactionConnectionService.deleteConnection(recordId, transactionId);
             DataOrErrorResponse response = new DataOrErrorResponse(true, null);

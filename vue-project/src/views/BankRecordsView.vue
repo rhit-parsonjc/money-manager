@@ -27,8 +27,8 @@ function goToCreateRecordPage() {
 }
 
 function reloadData(criterionInfo) {
-  criterionType.value = criterionInfo.criterionType
-  criterion.value = criterionInfo.criterion
+  criterionType.value = criterionInfo.criterionType;
+  criterion.value = criterionInfo.criterion;
   dataStore.resetData();
 }
 

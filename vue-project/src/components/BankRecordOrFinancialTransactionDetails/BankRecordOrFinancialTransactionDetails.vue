@@ -11,6 +11,9 @@ import { useRouter } from 'vue-router';
 import useDataStore from '@/store/DataStore';
 import { formatCurrency } from '@/utilities/utilities';
 
+import BankRecordItem from '../BankRecordOrFinancialTransactionItem/BankRecordItem.vue';
+import FinancialTransactionItem from '../BankRecordOrFinancialTransactionItem/FinancialTransactionItem.vue';
+
 const dataStore = useDataStore();
 const router = useRouter();
 
@@ -39,6 +42,16 @@ function deleteItem() {
             .then(dataStore.resetData);
 }
 
+function attachSubitems() {
+    dataStore.expireData();
+    if (isBankRecord)
+        router.push(`/records/${data.id}/transactions`)
+            .then(dataStore.resetData);
+    else
+        router.push(`/transactions/${data.id}/records`)
+            .then(dataStore.resetData);
+}
+
 </script>
 
 <template>
@@ -50,15 +63,28 @@ function deleteItem() {
         <button class="ubuntu-regular" @click="goBack">Back</button>
         <button class="ubuntu-regular BankRecordOrFinancialTransactionDetails-delete-button" @click="deleteItem">Delete</button>
     </div>
+    <div v-if="isBankRecord">
+        <p class="ubuntu-regular">Transactions</p>
+        <FinancialTransactionItem v-for="financialTransaction of data.financialTransactions" :key="financialTransaction.id" :recordId="data.id" :transaction="financialTransaction" :isAttached="true"/>
+    </div>
+    <div v-else>
+        <p class="ubuntu-regular">Records</p>
+        <BankRecordItem v-for="bankRecord of data.bankRecords" :key="bankRecord.id" :transactionId="data.id" :record="bankRecord" :isAttached="true"/>
+    </div>
+    <div class="BankRecordOrFinancialTransactionDetails-link-buttons">
+        <button class="ubuntu-regular" @click="attachSubitems">Attach</button>
+    </div>
 </template>
 
 <style scoped>
-.BankRecordOrFinancialTransactionDetails-buttons button {
+.BankRecordOrFinancialTransactionDetails-buttons button,
+.BankRecordOrFinancialTransactionDetails-link-buttons button {
     background-color: white;
     font-size: 12pt;
     border-width: 0px;
 }
-.BankRecordOrFinancialTransactionDetails-buttons button:hover {
+.BankRecordOrFinancialTransactionDetails-buttons button:hover,
+.BankRecordOrFinancialTransactionDetails-link-buttons button:hover {
     text-decoration: underline;
     cursor: pointer;
 }
@@ -72,5 +98,10 @@ function deleteItem() {
 }
 .BankRecordOrFinancialTransactionDetails-delete-button {
     color: #c00;
+}
+.BankRecordOrFinancialTransactionDetails-link-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 </style>

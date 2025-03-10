@@ -5,7 +5,6 @@
 * Props
 * - transaction (FinancialTransactionModel)
 */
-
 import BankRecordOrFinancialTransactionDetails from './BankRecordOrFinancialTransactionDetails.vue';
 
 const { transaction } = defineProps(["transaction"]);

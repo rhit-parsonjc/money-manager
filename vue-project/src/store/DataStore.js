@@ -26,13 +26,26 @@ const useDataStore = defineStore('data', () => {
   const data = ref()
   const retrievalStatus = ref('NOT LOADED')
 
-  function bankRecordToData(record) {
+  function bankRecordToData(record, includesTransactions) {
     const { id, name, amount, year: yearValue, month: monthValue, day: dayValue } = record
-    return new BankRecordModel(id, name, yearValue, monthValue, dayValue, amount)
+    let mappedFinancialTransactions = null
+    if (includesTransactions) {
+      const { financialTransactions } = record
+      mappedFinancialTransactions = financialTransactionsToData(financialTransactions, false)
+    }
+    return new BankRecordModel(
+      id,
+      name,
+      yearValue,
+      monthValue,
+      dayValue,
+      amount,
+      mappedFinancialTransactions,
+    )
   }
 
-  function bankRecordsToData(records) {
-    return records.map(bankRecordToData)
+  function bankRecordsToData(records, includesTransactions) {
+    return records.map((record) => bankRecordToData(record, includesTransactions))
   }
 
   function dateAmountToData(amount) {
@@ -44,13 +57,28 @@ const useDataStore = defineStore('data', () => {
     return amounts.map(dateAmountToData)
   }
 
-  function financialTransactionToData(transaction) {
+  function financialTransactionToData(transaction, includesRecords) {
     const { id, name, amount, year: yearValue, month: monthValue, day: dayValue } = transaction
-    return new FinancialTransactionModel(id, name, yearValue, monthValue, dayValue, amount)
+    let mappedBankRecords = null
+    if (includesRecords) {
+      const { bankRecords } = transaction
+      mappedBankRecords = bankRecordsToData(bankRecords, false)
+    }
+    return new FinancialTransactionModel(
+      id,
+      name,
+      yearValue,
+      monthValue,
+      dayValue,
+      amount,
+      mappedBankRecords,
+    )
   }
 
-  function financialTransactionsToData(transactions) {
-    return transactions.map(financialTransactionToData)
+  function financialTransactionsToData(transactions, includesRecords) {
+    return transactions.map((transaction) =>
+      financialTransactionToData(transaction, includesRecords),
+    )
   }
 
   function resetData() {
@@ -105,7 +133,7 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'bankRecords',
         relativeUrl: '/bankrecords',
-        mapFunction: bankRecordsToData,
+        mapFunction: (bankRecords) => bankRecordsToData(bankRecords, false),
       },
       {
         name: 'dateAmounts',
@@ -120,7 +148,7 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'bankRecords',
         relativeUrl: `/bankrecords?year=${year}`,
-        mapFunction: bankRecordsToData,
+        mapFunction: (bankRecords) => bankRecordsToData(bankRecords, false),
       },
       {
         name: 'dateAmounts',
@@ -135,7 +163,7 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'bankRecords',
         relativeUrl: `/bankrecords?year=${year}&month=${month}`,
-        mapFunction: bankRecordsToData,
+        mapFunction: (bankRecords) => bankRecordsToData(bankRecords, false),
       },
       {
         name: 'dateAmounts',
@@ -150,7 +178,7 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'bankRecords',
         relativeUrl: `/bankrecords?year=${year}&month=${month}&day=${day}`,
-        mapFunction: bankRecordsToData,
+        mapFunction: (bankRecords) => bankRecordsToData(bankRecords, false),
       },
       {
         name: 'dateAmounts',
@@ -165,7 +193,7 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'bankRecord',
         relativeUrl: `/bankrecords/${id}`,
-        mapFunction: bankRecordToData,
+        mapFunction: (bankRecord) => bankRecordToData(bankRecord, true),
       },
     ])
   }
@@ -175,7 +203,8 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'financialTransactions',
         relativeUrl: '/financialtransactions',
-        mapFunction: financialTransactionsToData,
+        mapFunction: (financialTransactions) =>
+          financialTransactionsToData(financialTransactions, false),
       },
     ])
   }
@@ -185,7 +214,8 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'financialTransactions',
         relativeUrl: `/financialtransactions?year=${year}`,
-        mapFunction: financialTransactionsToData,
+        mapFunction: (financialTransactions) =>
+          financialTransactionsToData(financialTransactions, false),
       },
     ])
   }
@@ -195,7 +225,8 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'financialTransactions',
         relativeUrl: `/financialtransactions?year=${year}&month=${month}`,
-        mapFunction: financialTransactionsToData,
+        mapFunction: (financialTransactions) =>
+          financialTransactionsToData(financialTransactions, false),
       },
     ])
   }
@@ -205,7 +236,8 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'financialTransactions',
         relativeUrl: `/financialtransactions?year=${year}&month=${month}&day=${day}`,
-        mapFunction: financialTransactionsToData,
+        mapFunction: (financialTransactions) =>
+          financialTransactionsToData(financialTransactions, false),
       },
     ])
   }
@@ -215,7 +247,136 @@ const useDataStore = defineStore('data', () => {
       {
         name: 'financialTransaction',
         relativeUrl: `/financialtransactions/${id}`,
-        mapFunction: financialTransactionToData,
+        mapFunction: (financialTransaction) =>
+          financialTransactionToData(financialTransaction, true),
+      },
+    ])
+  }
+
+  function loadBankRecordAndFinancialTransactions(id) {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecord',
+        relativeUrl: `/bankrecords/${id}`,
+        mapFunction: (bankRecord) => bankRecordToData(bankRecord, true),
+      },
+      {
+        name: 'financialTransactions',
+        relativeUrl: '/financialtransactions',
+        mapFunction: (financialTransactions) =>
+          financialTransactionsToData(financialTransactions, false),
+      },
+    ])
+  }
+
+  function loadBankRecordAndFinancialTransactionsDuringYear(id, year) {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecord',
+        relativeUrl: `/bankrecords/${id}`,
+        mapFunction: (bankRecord) => bankRecordToData(bankRecord, true),
+      },
+      {
+        name: 'financialTransactions',
+        relativeUrl: `/financialtransactions?year=${year}`,
+        mapFunction: (financialTransactions) =>
+          financialTransactionsToData(financialTransactions, false),
+      },
+    ])
+  }
+
+  function loadBankRecordAndFinancialTransactionsDuringMonth(id, year, month) {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecord',
+        relativeUrl: `/bankrecords/${id}`,
+        mapFunction: (bankRecord) => bankRecordToData(bankRecord, true),
+      },
+      {
+        name: 'financialTransactions',
+        relativeUrl: `/financialtransactions?year=${year}&month=${month}`,
+        mapFunction: (financialTransactions) =>
+          financialTransactionsToData(financialTransactions, false),
+      },
+    ])
+  }
+
+  function loadBankRecordsAndFinancialTransactionsDuringDay(id, year, month, day) {
+    loadDataFromMultipleSources([
+      {
+        name: 'bankRecord',
+        relativeUrl: `/bankrecords/${id}`,
+        mapFunction: (bankRecord) => bankRecordToData(bankRecord, true),
+      },
+      {
+        name: 'financialTransactions',
+        relativeUrl: `/financialtransactions?year=${year}&month=${month}&day=${day}`,
+        mapFunction: (financialTransactions) =>
+          financialTransactionsToData(financialTransactions, false),
+      },
+    ])
+  }
+
+  function loadFinancialTransactionAndBankRecords(id) {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransaction',
+        relativeUrl: `/financialtransactions/${id}`,
+        mapFunction: (financialTransaction) =>
+          financialTransactionToData(financialTransaction, true),
+      },
+      {
+        name: 'bankRecords',
+        relativeUrl: '/bankrecords',
+        mapFunction: (bankRecords) => bankRecordsToData(bankRecords, false),
+      },
+    ])
+  }
+
+  function loadFinancialTransactionAndBankRecordsDuringYear(id, year) {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransaction',
+        relativeUrl: `/financialtransactions/${id}`,
+        mapFunction: (financialTransaction) =>
+          financialTransactionToData(financialTransaction, true),
+      },
+      {
+        name: 'bankRecords',
+        relativeUrl: `/bankrecords?year=${year}`,
+        mapFunction: (bankRecords) => bankRecordsToData(bankRecords, false),
+      },
+    ])
+  }
+
+  function loadFinancialTransactionAndBankRecordsDuringMonth(id, year, month) {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransaction',
+        relativeUrl: `/financialtransactions/${id}`,
+        mapFunction: (financialTransaction) =>
+          financialTransactionToData(financialTransaction, true),
+      },
+      {
+        name: 'bankRecords',
+        relativeUrl: `/bankrecords?year=${year}&month=${month}`,
+        mapFunction: (bankRecords) => bankRecordsToData(bankRecords, false),
+      },
+    ])
+  }
+
+  function loadFinancialTransactionAndBankRecordsDuringDay(id, year, month, day) {
+    loadDataFromMultipleSources([
+      {
+        name: 'financialTransaction',
+        relativeUrl: `/financialtransactions/${id}`,
+        mapFunction: (financialTransaction) =>
+          financialTransactionToData(financialTransaction, true),
+      },
+      {
+        name: 'bankRecords',
+        relativeUrl: `/bankrecords?year=${year}&month=${month}&day=${day}`,
+        mapFunction: (bankRecords) => bankRecordsToData(bankRecords, false),
       },
     ])
   }
@@ -280,6 +441,18 @@ const useDataStore = defineStore('data', () => {
   function deleteFinancialTransactionAsync(id) {
     console.log('Delete Financial Transaction', { id })
     return modifyDataAsync(axios.delete(`${baseUrl}/financialtransactions/${id}`))
+  }
+
+  function attachRecordAndTransaction(recordId, transactionId) {
+    console.log('Attach Record and Transaction', { recordId, transactionId })
+    return modifyDataAsync(axios.post(`${baseUrl}/recordtransactions/${recordId}/${transactionId}`))
+  }
+
+  function detachRecordAndTransaction(recordId, transactionId) {
+    console.log('Detach Record and Transaction', { recordId, transactionId })
+    return modifyDataAsync(
+      axios.delete(`${baseUrl}/recordtransactions/${recordId}/${transactionId}`),
+    )
   }
 
   // Populate the data asynchronously
@@ -479,6 +652,14 @@ const useDataStore = defineStore('data', () => {
     loadFinancialTransactionsDuringMonth,
     loadFinancialTransactionsDuringDay,
     loadSingleFinancialTransaction,
+    loadBankRecordAndFinancialTransactions,
+    loadBankRecordAndFinancialTransactionsDuringYear,
+    loadBankRecordAndFinancialTransactionsDuringMonth,
+    loadBankRecordsAndFinancialTransactionsDuringDay,
+    loadFinancialTransactionAndBankRecords,
+    loadFinancialTransactionAndBankRecordsDuringYear,
+    loadFinancialTransactionAndBankRecordsDuringMonth,
+    loadFinancialTransactionAndBankRecordsDuringDay,
     // These return a promise that resolves after the request finishes
     createBankRecordAsync,
     createDateAmountAsync,
@@ -489,6 +670,8 @@ const useDataStore = defineStore('data', () => {
     deleteBankRecordAsync,
     deleteDateAmountAsync,
     deleteFinancialTransactionAsync,
+    attachRecordAndTransaction,
+    detachRecordAndTransaction,
     // This populates the data
     populateDataAsync,
   }
