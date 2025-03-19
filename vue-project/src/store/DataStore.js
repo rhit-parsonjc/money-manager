@@ -405,6 +405,16 @@ const useDataStore = defineStore('data', () => {
     return modifyDataAsync(axios.post(`${baseUrl}/financialtransactions`, financialTransaction))
   }
 
+  function createFileAttachmentAsync(file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    return modifyDataAsync(
+      axios.post(`${baseUrl}/fileattachments`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+    )
+  }
+
   function updateBankRecordAsync(id, bankRecord) {
     console.log('Update Bank Record', { id, bankRecord })
     return modifyDataAsync(axios.put(`${baseUrl}/bankrecords/${id}`, bankRecord))
@@ -664,6 +674,7 @@ const useDataStore = defineStore('data', () => {
     createBankRecordAsync,
     createDateAmountAsync,
     createFinancialTransactionAsync,
+    createFileAttachmentAsync,
     updateBankRecordAsync,
     updateDateAmountAsync,
     updateFinancialTransactionAsync,

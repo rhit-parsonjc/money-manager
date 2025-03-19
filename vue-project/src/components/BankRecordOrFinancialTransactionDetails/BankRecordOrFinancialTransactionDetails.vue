@@ -13,6 +13,7 @@ import { formatCurrency } from '@/utilities/utilities';
 
 import BankRecordItem from '../BankRecordOrFinancialTransactionItem/BankRecordItem.vue';
 import FinancialTransactionItem from '../BankRecordOrFinancialTransactionItem/FinancialTransactionItem.vue';
+import axios from 'axios';
 
 const dataStore = useDataStore();
 const router = useRouter();
@@ -52,6 +53,16 @@ function attachSubitems() {
             .then(dataStore.resetData);
 }
 
+function uploadFile() {
+    const files = document.getElementById("BankRecordOrFinancialTransactionDetails-file-input").files;
+    if (files.length !== 1) {
+        return;
+    }
+    const file = files[0];
+    dataStore.createFileAttachmentAsync(file)
+        .then(dataStore.resetData);
+}
+
 </script>
 
 <template>
@@ -74,6 +85,9 @@ function attachSubitems() {
     <div class="BankRecordOrFinancialTransactionDetails-link-buttons">
         <button class="ubuntu-regular" @click="attachSubitems">Attach</button>
     </div>
+    <p class="ubuntu-regular">Files</p>
+    <input type="file" class="ubuntu-regular" id="BankRecordOrFinancialTransactionDetails-file-input">
+    <button class="ubuntu-regular" @click="uploadFile">Upload</button>
 </template>
 
 <style scoped>

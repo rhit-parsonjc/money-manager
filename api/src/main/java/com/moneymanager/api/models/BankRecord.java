@@ -22,5 +22,8 @@ public class BankRecord {
     private String name;
 
     @ManyToMany
-    Set<FinancialTransaction> financialTransactions;
+    private Set<FinancialTransaction> financialTransactions;
+
+    @ManyToMany
+    private Set<FileAttachment> fileAttachments;
 }

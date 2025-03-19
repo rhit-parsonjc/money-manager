@@ -32,4 +32,7 @@ public class FinancialTransaction {
             bankRecord.getFinancialTransactions().remove(this);
         }
     }
+
+    @ManyToMany
+    private Set<FileAttachment> fileAttachments;
 }

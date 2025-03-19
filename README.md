@@ -5,9 +5,15 @@
 ### Spring Boot Basics
 
 - Thanks to [Chinthaka Dinadasa](https://www.javatodev.com/spring-boot-mysql/) for describing how to connect MySQL to Spring Boot and how to set up a REST API in Spring Boot.
-- Also thanks to [Simpson Alfred's dream-shops repository](https://github.com/dailycodework/dream-shops).
+- Also thanks to [Simpson Alfred's dream-shops repository](https://github.com/dailycodework/dream-shops) for Spring Boot details.
 - Thanks to [baledung](https://www.baeldung.com/spring-request-param) for describing how to use the @RequestParam annotation.
 - Thanks to [Attila Fejér](https://www.baeldung.com/jpa-many-to-many) for describing how to use the @ManyToMany annotation
+
+### Images in Spring Boot
+
+- Thanks to [Lokesh Gupta](https://howtodoinjava.com/spring-boot/spring-boot-file-upload-rest-api/) for a bit about how to upload images to a REST API.
+- Thanks to [Spring](https://spring.io/guides/gs/uploading-files) for some assistance with uploading images, but not directly.
+- Thanks to [bezdoker](https://www.bezkoder.com/spring-boot-upload-file-database/) for describing how to upload images to a REST API. This is the one that is closest to my implementation, as well as Simpson Alfred's.
 
 ### Lombok Annotations in IntelliJ
 
@@ -37,3 +43,15 @@
 ### HTTP Status Codes
 
 - Thanks to [HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) for describing the meaning of HTTP status codes.
+
+### File Uploading
+
+- Thanks to [how to upload a file to my server using html](https://stackoverflow.com/questions/5628011/how-to-upload-a-file-to-my-server-using-html) for setting up a file upload form
+- Thanks to [API4AI](https://medium.com/@API4AI/post-a-file-via-http-request-the-ultimate-guide-b23fb70a3f73) for describing how to use axios to upload a file.
+
+## Images Used
+
+The following images are used to test the file UI.
+
+- [receipt-6404855_1280](https://pixabay.com/illustrations/receipt-money-payment-card-6404855/): Image by [Mudassar Iqbal](https://pixabay.com/users/kreatikar-8562930/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6404855) from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6404855)
+- [receipts-4542292_1280](https://pixabay.com/photos/receipts-tax-office-bank-notes-4542292/): Image by [Ioannis Karathanasis](https://pixabay.com/users/panals-3111125/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4542292) from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4542292)
