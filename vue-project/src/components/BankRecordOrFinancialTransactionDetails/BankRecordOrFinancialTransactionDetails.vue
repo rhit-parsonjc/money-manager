@@ -13,7 +13,6 @@ import { formatCurrency } from '@/utilities/utilities';
 
 import BankRecordItem from '../BankRecordOrFinancialTransactionItem/BankRecordItem.vue';
 import FinancialTransactionItem from '../BankRecordOrFinancialTransactionItem/FinancialTransactionItem.vue';
-import axios from 'axios';
 
 const dataStore = useDataStore();
 const router = useRouter();
@@ -59,8 +58,12 @@ function uploadFile() {
         return;
     }
     const file = files[0];
-    dataStore.createFileAttachmentAsync(file)
-        .then(dataStore.resetData);
+    if (isBankRecord)
+        dataStore.attachFileToBankRecordAsync(file, data.id)
+            .then(dataStore.resetData);
+    else
+        dataStore.attachFileToFinancialTransactionAsync(file, data.id)
+            .then(dataStore.resetData);
 }
 
 </script>

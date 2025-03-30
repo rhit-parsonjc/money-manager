@@ -20,19 +20,19 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
     @Override
     public void createConnection(Long recordId, Long transactionId) {
         Optional<BankRecord> bankRecordOptional = bankRecordRepository.findById(recordId);
-        if (bankRecordOptional.isEmpty()) {
+        if (bankRecordOptional.isEmpty())
             throw new ResourceNotFoundException("Bank record not found");
-        }
-        Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(transactionId);
-        if (financialTransactionOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Financial transaction not found");
-        }
         BankRecord bankRecord = bankRecordOptional.get();
+
+        Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(transactionId);
+        if (financialTransactionOptional.isEmpty())
+            throw new ResourceNotFoundException("Financial transaction not found");
         FinancialTransaction financialTransaction = financialTransactionOptional.get();
+
         boolean bankRecordHasFinancialTransaction = bankRecord.getFinancialTransactions().contains(financialTransaction);
         boolean financialTransactionHasBankRecord = financialTransaction.getBankRecords().contains(bankRecord);
         if (bankRecordHasFinancialTransaction && financialTransactionHasBankRecord) {
-            throw new AlreadyExistsException("Connection already present");
+            throw new AlreadyExistsException(AlreadyExistsException.CONNECTION_MESSAGE);
         } else if (bankRecordHasFinancialTransaction || financialTransactionHasBankRecord) {
             throw new RuntimeException("Invalid state");
         } else {
@@ -46,19 +46,19 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
     @Override
     public void deleteConnection(Long recordId, Long transactionId) {
         Optional<BankRecord> bankRecordOptional = bankRecordRepository.findById(recordId);
-        if (bankRecordOptional.isEmpty()) {
+        if (bankRecordOptional.isEmpty())
             throw new ResourceNotFoundException("Bank record not found");
-        }
-        Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(transactionId);
-        if (financialTransactionOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Financial transaction not found");
-        }
         BankRecord bankRecord = bankRecordOptional.get();
+
+        Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(transactionId);
+        if (financialTransactionOptional.isEmpty())
+            throw new ResourceNotFoundException("Financial transaction not found");
         FinancialTransaction financialTransaction = financialTransactionOptional.get();
+
         boolean bankRecordHasFinancialTransaction = bankRecord.getFinancialTransactions().contains(financialTransaction);
         boolean financialTransactionHasBankRecord = financialTransaction.getBankRecords().contains(bankRecord);
         if (!bankRecordHasFinancialTransaction && !financialTransactionHasBankRecord) {
-            throw new ResourceNotFoundException("Connection does not exist");
+            throw new ResourceNotFoundException(ResourceNotFoundException.CONNECTION_MESSAGE);
         } else if (!bankRecordHasFinancialTransaction || !financialTransactionHasBankRecord) {
             throw new RuntimeException("Invalid state");
         } else {

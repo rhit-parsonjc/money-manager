@@ -1,11 +1,12 @@
 package com.moneymanager.api.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class FinancialTransactionDetailsDto {
     private Long id;
     private Integer year;
@@ -13,5 +14,6 @@ public class FinancialTransactionDetailsDto {
     private Integer day;
     private Double amount;
     private String name;
-    private Set<BankRecordDto> bankRecords = new HashSet<>();
+    private List<BankRecordDto> bankRecords;
+    private List<FileAttachmentDto> fileAttachments;
 }

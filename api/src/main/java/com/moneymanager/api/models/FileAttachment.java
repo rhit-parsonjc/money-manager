@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Blob;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 public class FileAttachment {
@@ -30,13 +30,20 @@ public class FileAttachment {
     @ManyToMany(mappedBy = "fileAttachments")
     private Set<BankRecord> bankRecords;
 
+    public FileAttachment(String name, String type, Long size, byte[] contents) {
+        this.name = name;
+        this.type = type;
+        this.size = size;
+        this.contents = contents;
+        this.financialTransactions = new HashSet<FinancialTransaction>();
+        this.bankRecords = new HashSet<BankRecord>();
+    }
+
     @PreRemove
     private void disconnectBankRecordsAndFinancialTransactions() {
-        for (FinancialTransaction financialTransaction : financialTransactions) {
+        for (FinancialTransaction financialTransaction : financialTransactions)
             financialTransaction.getFileAttachments().remove(this);
-        }
-        for (BankRecord bankRecord : bankRecords) {
+        for (BankRecord bankRecord : bankRecords)
             bankRecord.getFileAttachments().remove(this);
-        }
     }
 }
