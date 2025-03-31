@@ -1,3 +1,11 @@
+/*
+ * A DateAndRecordsModel consists of
+ * - dateObj (DateObjectModel)
+ * - financialTransactions (FinancialTransactionModel list)
+ *
+ * This represents a date, with associated financial transactions.
+ */
+
 import { sortTransactionModels } from './FinancialTransactionModel'
 
 class DateAndTransactionsModel {

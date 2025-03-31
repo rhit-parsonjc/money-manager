@@ -60,7 +60,7 @@ function goToDetailsAsync(id) {
 function returnAction() {
     dataStore.expireData();
     if (data === null) {
-        goToDetailsAsync().then(dataStore.resetData);
+        goToListAsync().then(dataStore.resetData);
     } else {
         goToDetailsAsync(data.id)().then(dataStore.resetData);
     }

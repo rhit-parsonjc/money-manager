@@ -1,5 +1,10 @@
 /*
- * A DateObjectModel represents a day of the year
+ * A DateObjectModel consists of
+ * - yearValue (number)
+ * - monthValue (number)
+ * - dayValue (number)
+ *
+ * This represents a day of the year.
  */
 
 const monthNames = [

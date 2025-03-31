@@ -4,8 +4,8 @@
  * And the appropriate component for when the data is loaded
  * Props:
  * - retrievalStatus (one of the valid data statuses)
- * - loadingMessage (text)
- * - errorMessage (text)
+ * - loadingMessage (string)
+ * - errorMessage (string)
  */
 const { retrievalStatus, loadingMessage, errorMessage } = defineProps(["retrievalStatus", "loadingMessage", "errorMessage"]);
 </script>

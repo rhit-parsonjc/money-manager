@@ -1,3 +1,12 @@
+/*
+ * A DateAndRecordsModel consists of
+ * - dateObj (DateObjectModel)
+ * - bankRecords (BankRecordModel list)
+ * - amount (number or null)
+ *
+ * This represents a date, with associated amounts and bankRecords.
+ */
+
 import { sortRecordModels } from './BankRecordModel'
 import { sortAmountModels } from './DateAmountModel'
 

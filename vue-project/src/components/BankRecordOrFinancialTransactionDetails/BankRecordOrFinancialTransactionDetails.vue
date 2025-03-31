@@ -66,6 +66,11 @@ function uploadFile() {
             .then(dataStore.resetData);
 }
 
+function deleteFile(id) {
+    dataStore.deleteFileAttachmentAsync(id)
+        .then(dataStore.resetData);
+}
+
 </script>
 
 <template>
@@ -89,6 +94,12 @@ function uploadFile() {
         <button class="ubuntu-regular" @click="attachSubitems">Attach</button>
     </div>
     <p class="ubuntu-regular">Files</p>
+    <ul>
+        <li v-for="fileAttachment of data.fileAttachments" :key="fileAttachment.id">
+            <a :href="`http://localhost:8080/api/v1/fileattachments/${fileAttachment.id}`" class="ubuntu-regular">{{ fileAttachment.name }}</a>
+            <button class="ubuntu-regular" @click="deleteFile(fileAttachment.id)">Delete</button>
+        </li>
+    </ul>
     <input type="file" class="ubuntu-regular" id="BankRecordOrFinancialTransactionDetails-file-input">
     <button class="ubuntu-regular" @click="uploadFile">Upload</button>
 </template>

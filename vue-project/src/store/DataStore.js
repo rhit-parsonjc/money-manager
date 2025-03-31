@@ -5,13 +5,14 @@ import axios from 'axios'
 import { BankRecordModel } from '@/model/BankRecordModel'
 import { DateAmountModel } from '@/model/DateAmountModel'
 import { FinancialTransactionModel } from '@/model/FinancialTransactionModel'
+import { FileAttachmentModel } from '@/model/FileAttachmentModel'
 
 const baseUrl = 'http://localhost:8080/api/v1'
 
 /*
- * This data store is responsible for keeping track of data.
- * It needs to make sure any data provided is up-to-date with the database.
- * This does not need to retrieve updates from the database.
+ * This data store is responsible for all requests to the backend.
+ * This consists of data, which represents any data from the database
+ * And retrievalStatus, which represents the status of the data retrieval.
  */
 
 const useDataStore = defineStore('data', () => {
@@ -26,12 +27,23 @@ const useDataStore = defineStore('data', () => {
   const data = ref()
   const retrievalStatus = ref('NOT LOADED')
 
+  function fileAttachmentToData(fileAttachment) {
+    const { id, name } = fileAttachment
+    return new FileAttachmentModel(id, name)
+  }
+
+  function fileAttachmentsToData(fileAttachments) {
+    return fileAttachments.map(fileAttachmentToData)
+  }
+
   function bankRecordToData(record, includesTransactions) {
     const { id, name, amount, year: yearValue, month: monthValue, day: dayValue } = record
     let mappedFinancialTransactions = null
+    let mappedFileAttachments = null
     if (includesTransactions) {
-      const { financialTransactions } = record
+      const { financialTransactions, fileAttachments } = record
       mappedFinancialTransactions = financialTransactionsToData(financialTransactions, false)
+      mappedFileAttachments = fileAttachmentsToData(fileAttachments)
     }
     return new BankRecordModel(
       id,
@@ -41,6 +53,7 @@ const useDataStore = defineStore('data', () => {
       dayValue,
       amount,
       mappedFinancialTransactions,
+      mappedFileAttachments,
     )
   }
 
@@ -60,9 +73,11 @@ const useDataStore = defineStore('data', () => {
   function financialTransactionToData(transaction, includesRecords) {
     const { id, name, amount, year: yearValue, month: monthValue, day: dayValue } = transaction
     let mappedBankRecords = null
+    let mappedFileAttachments = null
     if (includesRecords) {
-      const { bankRecords } = transaction
+      const { bankRecords, fileAttachments } = transaction
       mappedBankRecords = bankRecordsToData(bankRecords, false)
+      mappedFileAttachments = fileAttachmentsToData(fileAttachments)
     }
     return new FinancialTransactionModel(
       id,
@@ -72,6 +87,7 @@ const useDataStore = defineStore('data', () => {
       dayValue,
       amount,
       mappedBankRecords,
+      mappedFileAttachments,
     )
   }
 
@@ -463,6 +479,11 @@ const useDataStore = defineStore('data', () => {
     return modifyDataAsync(axios.delete(`${baseUrl}/financialtransactions/${id}`))
   }
 
+  function deleteFileAttachmentAsync(id) {
+    console.log('Delete File Attachment', { id })
+    return modifyDataAsync(axios.delete(`${baseUrl}/fileattachments/${id}`))
+  }
+
   function attachRecordAndTransaction(recordId, transactionId) {
     console.log('Attach Record and Transaction', { recordId, transactionId })
     return modifyDataAsync(axios.post(`${baseUrl}/recordtransactions/${recordId}/${transactionId}`))
@@ -692,6 +713,7 @@ const useDataStore = defineStore('data', () => {
     deleteBankRecordAsync,
     deleteDateAmountAsync,
     deleteFinancialTransactionAsync,
+    deleteFileAttachmentAsync,
     attachRecordAndTransaction,
     detachRecordAndTransaction,
     // This populates the data

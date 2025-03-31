@@ -1,5 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue';
+/*
+* DateFilter represents a filter that specifies a date range to load data from.
+* The filter type is specified by criterionTypeValue, which can be either:
+* - None
+* - Year
+* - Month
+* - Day
+*/
 
 const yearValue = ref();
 const monthValue = ref();

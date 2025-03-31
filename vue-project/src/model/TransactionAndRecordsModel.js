@@ -1,3 +1,14 @@
+/*
+ * A TransactionAndRecordsModel consists of
+ * - financialTransaction (FinancialTransactionModel)
+ * - bankRecords (BankRecordModel list)
+ * - otherBankRecords (BankRecordModel list)
+ *
+ * This represents a financial transaction and separates all loaded bank
+ * records based on whether they are attached to this financial
+ * transaction (bankRecords) or not (otherBankRecords)
+ */
+
 import { sortRecordModels } from './BankRecordModel'
 
 class TransactionAndRecordsModel {

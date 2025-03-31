@@ -1,3 +1,12 @@
+/*
+ * A DateAmountModel consists of
+ * - id (number)
+ * - dateObj (DateObjectModel)
+ * - amount (number)
+ *
+ * This represents information for a single date amount.
+ */
+
 import { DateObjectModel } from './DateObjectModel'
 
 class DateAmountModel {
