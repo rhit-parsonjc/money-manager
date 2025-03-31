@@ -94,10 +94,10 @@ function deleteFile(id) {
         <button class="ubuntu-regular" @click="attachSubitems">Attach</button>
     </div>
     <p class="ubuntu-regular">Files</p>
-    <ul>
-        <li v-for="fileAttachment of data.fileAttachments" :key="fileAttachment.id">
+    <ul class="BankRecordOrFinancialTransactionsDetails-files">
+        <li v-for="fileAttachment of data.fileAttachments" :key="fileAttachment.id" class="BankRecordOrFinancialTransactionDetails-file-line">
             <a :href="`http://localhost:8080/api/v1/fileattachments/${fileAttachment.id}`" class="ubuntu-regular">{{ fileAttachment.name }}</a>
-            <button class="ubuntu-regular" @click="deleteFile(fileAttachment.id)">Delete</button>
+            <button class="ubuntu-regular BankRecordOrFinancialTransactionDetails-delete-file-button" @click="deleteFile(fileAttachment.id)">Delete</button>
         </li>
     </ul>
     <input type="file" class="ubuntu-regular" id="BankRecordOrFinancialTransactionDetails-file-input">
@@ -131,5 +131,18 @@ function deleteFile(id) {
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+.BankRecordOrFinancialTransactionsDetails-files {
+    margin: 0.5em 0em;
+    list-style-type: none;
+    padding-left: 0.5em;
+}
+.BankRecordOrFinancialTransactionDetails-file-line {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.BankRecordOrFinancialTransactionDetails-delete-file-button {
+    margin-left: 1em;
 }
 </style>

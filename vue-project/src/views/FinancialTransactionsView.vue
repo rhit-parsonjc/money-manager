@@ -51,8 +51,8 @@ function loadData() {
 </script>
 
 <template>
-  <h1 class="libre-baskerville-regular">Transactions</h1>
-  <a @click="goToCreateTransactionPage" class="libre-baskerville-regular FinancialTransactionsView-add-button">Add New Financial Transaction</a>
+  <h1 class="libre-baskerville-regular FinancialTransactionsView-header">Financial Transactions</h1>
+  <a @click="goToCreateTransactionPage" class="ubuntu-regular FinancialTransactionsView-add-button">Add New Financial Transaction</a>
   <DateFilter @applyFilter="reloadData" />
   <DataMessages :retrievalStatus="dataStore.retrievalStatus"
   loadingMessage="Loading Transactions..." errorMessage="Could Not Load Transactions">
@@ -64,10 +64,16 @@ function loadData() {
 </template>
 
 <style scoped>
+.FinancialTransactionsView-header {
+  text-align: center;
+  text-decoration: underline;
+  margin-bottom: 1rem;
+}
 .FinancialTransactionsView-add-button {
   text-decoration: none;
   color: #055;
   display: block;
   text-align: center;
+  margin-bottom: 0.5rem;
 }
 </style>

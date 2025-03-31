@@ -8,9 +8,12 @@
  * - fileAttachments (FileAttachmentModel list, null if nested)
  *
  * This represents information for a single financial transaction.
+ * The bank records and file attachments are sorted in the constructor.
  */
 
+import { sortRecordModels } from './BankRecordModel'
 import { DateObjectModel } from './DateObjectModel'
+import { sortFileAttachmentModels } from './FileAttachmentModel'
 
 class FinancialTransactionModel {
   constructor(id, name, yearValue, monthValue, dayValue, amount, bankRecords, fileAttachments) {
@@ -18,8 +21,11 @@ class FinancialTransactionModel {
     this.name = name
     this.dateObj = new DateObjectModel(yearValue, monthValue, dayValue)
     this.amount = amount
-    this.bankRecords = bankRecords
-    this.fileAttachments = fileAttachments
+    this.bankRecords = bankRecords === null ? bankRecords : [...bankRecords].sort(sortRecordModels)
+    this.fileAttachments =
+      fileAttachments === null
+        ? fileAttachments
+        : [...fileAttachments].sort(sortFileAttachmentModels)
   }
 }
 

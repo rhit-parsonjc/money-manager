@@ -90,6 +90,9 @@ function getCriterionInfo() {
 <style scoped>
 .DateFilter-filter {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 .DateFilter-filter * {
   margin-right: 0.5em;

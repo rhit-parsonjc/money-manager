@@ -55,10 +55,9 @@ async function populateData() {
 </script>
 
 <template>
-  <h1 class="libre-baskerville-regular">Records</h1>
-  <a @click="goToCreateRecordPage" class="libre-baskerville-regular AllBankRecordsView-add-button">Add New Bank Record</a>
+  <h1 class="libre-baskerville-regular BankRecordsView-header">Bank Records</h1>
+  <a @click="goToCreateRecordPage" class="ubuntu-regular BankRecordsView-add-record">Add New Bank Record</a>
   <DateFilter @applyFilter="reloadData" />
-  <button @click="populateData">Populate Data</button>
   <DataMessages :retrievalStatus="dataStore.retrievalStatus"
   loadingMessage="Loading Records..." errorMessage="Could Not Load Records">
     <DateItemAndRecordsList
@@ -70,10 +69,16 @@ async function populateData() {
 </template>
 
 <style scoped>
-.AllBankRecordsView-add-button {
+.BankRecordsView-header {
+  text-align: center;
+  text-decoration: underline;
+  margin-bottom: 1rem;
+}
+.BankRecordsView-add-record {
   text-decoration: none;
   color: #050;
   display: block;
   text-align: center;
+  margin-bottom: 0.5rem;
 }
 </style>

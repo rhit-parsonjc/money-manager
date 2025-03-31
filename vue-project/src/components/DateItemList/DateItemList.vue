@@ -59,5 +59,6 @@ const dateItems = computed(() => {
 .DateItemList-list {
   list-style-type: none;
   padding-left: 0rem;
+  margin: 0.5rem 0rem 0rem 0rem;
 }
 </style>

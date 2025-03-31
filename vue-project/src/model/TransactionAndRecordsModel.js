@@ -7,6 +7,8 @@
  * This represents a financial transaction and separates all loaded bank
  * records based on whether they are attached to this financial
  * transaction (bankRecords) or not (otherBankRecords)
+ *
+ * Both bankRecords and otherBankRecords are sorted.
  */
 
 import { sortRecordModels } from './BankRecordModel'

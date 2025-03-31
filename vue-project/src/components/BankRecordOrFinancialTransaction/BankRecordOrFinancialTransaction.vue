@@ -25,15 +25,15 @@ function goToDetailPage() {
 
 <template>
     <li class="BankRecordOrFinancialTransaction">
-        <a @click="goToDetailPage" class="ubuntu-regular BankRecordOrFinancialTransaction-text">
+        <a @click="goToDetailPage" class="happy-monkey-regular BankRecordOrFinancialTransaction-text">
             {{ data.name }} ({{ formatCurrency(data.amount) }})
         </a>
     </li>
 </template>
 
 <style scoped>
-.BankRecordOrFinacialTransaction {
-    margin: 0.5rem 0em;
+.BankRecordOrFinancialTransaction {
+    margin: 0.25rem 0em;
 }
 .BankRecordOrFinancialTransaction-text {
     font-size: 12pt;

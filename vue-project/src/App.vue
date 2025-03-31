@@ -6,17 +6,17 @@
 
 <style>
 .App-main-content {
-  padding: 0.75rem;
+  padding: 0.5rem;
 }
 * {
   box-sizing: border-box;
   font-family: 'Courier New';
 }
 a, p, button, input, select {
-  font-size: 12pt;
+  font-size: 14pt;
 }
 h1 {
-  font-size: 18pt;
+  font-size: 20pt;
 }
 h2 {
   font-size: 16pt;

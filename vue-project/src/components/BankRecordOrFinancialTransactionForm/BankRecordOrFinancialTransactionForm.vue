@@ -91,46 +91,62 @@ function confirmAction() {
 </script>
 
 <template>
-    <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-name-input" v-model="nameValue">
+    <h1 class="libre-baskerville-regular BankRecordOrFinancialTransactionForm-header">{{ (data === null ? "Create" : "Edit") + (isBankRecord ? " Bank Record" : " Financial Transaction") }}</h1>
+    <div class="BankRecordOrFinancialTransactionForm-input-line">
+        <p class="ubuntu-regular">Title:</p>
+        <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-name-input" v-model="nameValue">
+    </div>
     <div class="BankRecordOrFinancialTransactionForm-input-line">
         <p class="ubuntu-regular">Date:</p>
-        <select class="ubuntu-regular" v-model="monthNameValue">
-            <option v-for="monthName of monthNames" :key="monthName" class="ubuntu-regular">{{ monthName }}</option>
+        <select class="happy-monkey-regular BankRecordOrFinancialTransactionForm-month-input" v-model="monthNameValue">
+            <option v-for="monthName of monthNames" :key="monthName" class="happy-monkey-regular">{{ monthName }}</option>
         </select>
-        <input class="ubuntu-regular BankRecordOrFinancialTransactionForm-day-input" type="number" v-model="dayValue" min="1" :max="daysInMonth">
-        <input class="ubuntu-regular BankRecordOrFinancialTransactionForm-year-input" type="number" v-model="yearValue">
+        <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-day-input" type="number" v-model="dayValue" min="1" :max="daysInMonth">
+        <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-year-input" type="number" v-model="yearValue">
     </div>
     <div class="BankRecordOrFinancialTransactionForm-input-line">
-        <p class="ubuntu-regular">Amount: $</p>
-        <input id="BankRecordOrFinancialTransactionForm-amount-input" class="ubuntu-regular" v-model="amountValue">
+        <p class="ubuntu-regular">Amount ($):</p>
+        <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-amount-input" v-model="amountValue">
     </div>
     <div class="BankRecordOrFinancialTransactionForm-buttons">
-        <button class="ubuntu-regular" id="BankRecordForm-confirm-button" @click="confirmAction">Confirm</button>
+        <button class="ubuntu-regular BankRecordOrFinancialTransactionForm-confirm-button" @click="confirmAction">Confirm</button>
         <button class="ubuntu-regular" @click="returnAction">Cancel</button>
     </div>
 </template>
 
 <style scoped>
-.BankRecordOrFinancialTransactionForm-name-input {
-    font-size: 18pt;
-    width: 14em;
+.BankRecordOrFinancialTransactionForm-header {
+  text-align: center;
+  text-decoration: underline;
+  margin-bottom: 1rem;
 }
 .BankRecordOrFinancialTransactionForm-input-line {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+.BankRecordOrFinancialTransactionForm-name-input {
+    width: 14em;
+    margin-left: 1rem;
+}
+.BankRecordOrFinancialTransactionForm-month-input {
+    margin-left: 1rem;
 }
 .BankRecordOrFinancialTransactionForm-day-input {
     width: 3em;
+    margin-left: 0.5rem;
 }
 .BankRecordOrFinancialTransactionForm-year-input {
     width: 5em;
+    margin-left: 0.5rem;
 }
 .BankRecordOrFinancialTransactionForm-amount-input {
     width: 10em;
+    margin-left: 1rem;
 }
 .BankRecordOrFinancialTransactionForm-buttons button {
     background-color: white;
-    font-size: 12pt;
     border-width: 0px;
 }
 .BankRecordOrFinancialTransactionForm-buttons button:hover {
@@ -141,6 +157,7 @@ function confirmAction() {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-top: 1rem;
 }
 .BankRecordOrFinancialTransactionForm-confirm-button {
     color: #050;

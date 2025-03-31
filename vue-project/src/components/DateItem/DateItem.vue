@@ -57,60 +57,59 @@ function cancelAddOrEdit() {
 </script>
 
 <template>
-    <li>
-      <div :class="{
-        'DateItem-header': true,
-        'DateItem-record-header': displayBankRecords,
-        'DateItem-transaction-header': !displayBankRecords
-      }">
-        <h2 class="happy-monkey-regular DateItem-header-text">
-          {{data.dateObj.format()}}
-          {{ hasAmount ? ("(" + formatCurrency(amountValue) + ")") : ""}}
-        </h2>
-        <div v-if="displayBankRecords && !isEditing">
-          <button class="ubuntu-regular" @click="beginAddingOrEditing">
-            {{ hasAmount ? "Edit" : "Add" }}
-          </button>
-          <button class="ubuntu-regular" @click="clearAmount" v-if="hasAmount">
-            Clear
-          </button>
-        </div>
-        <div v-else-if="displayBankRecords && isEditing">
-          <input class="ubuntu-regular DateItem-amount-input" type="number" v-model="amountValue">
-          <button class="ubuntu-regular" @click="confirmAddOrEdit">Confirm</button>
-          <button class="ubuntu-regular" @click="cancelAddOrEdit">Cancel</button>
-        </div>
-      </div>
-      <ul class="DateItem-items" v-if="displayBankRecords">
-        <BankRecord
-          v-for="record of data.bankRecords"
-          :key="record.id"
-          :record="record"
-        />
-      </ul>
-      <ul class="DateItem-items" v-else>
-        <FinancialTransaction
-          v-for="transaction of data.financialTransactions"
-          :key="transaction.id"
-          :transaction="transaction"
-        />
-      </ul>
-    </li>
+  <li>
+    <div :class="{
+      'DateItem-header': true,
+      'DateItem-record-header': displayBankRecords,
+      'DateItem-transaction-header': !displayBankRecords
+    }">
+      <h2 class="happy-monkey-regular DateItem-header-text">
+        {{data.dateObj.format()}}
+        {{ hasAmount ? ("(" + formatCurrency(amount) + ")") : ""}}
+      </h2>
+      <button class="ubuntu-regular" @click="beginAddingOrEditing" v-if="displayBankRecords && !isEditing">
+        {{ hasAmount ? "Edit" : "Add" }}
+      </button>
+      <button class="ubuntu-regular" @click="clearAmount" v-if="hasAmount && displayBankRecords && !isEditing">
+        Clear
+      </button>
+      <input class="happy-monkey-regular DateItem-amount-input" type="number" v-model="amountValue" v-if="displayBankRecords && isEditing">
+      <button class="ubuntu-regular" @click="confirmAddOrEdit" v-if="displayBankRecords && isEditing">Confirm</button>
+      <button class="ubuntu-regular" @click="cancelAddOrEdit" v-if="displayBankRecords && isEditing">Cancel</button>
+    </div>
+    <ul class="DateItem-items" v-if="displayBankRecords && data.bankRecords.length > 0">
+      <BankRecord
+        v-for="record of data.bankRecords"
+        :key="record.id"
+        :record="record"
+      />
+    </ul>
+    <ul class="DateItem-items" v-else-if="!displayBankRecords && data.financialTransactions.length > 0">
+      <FinancialTransaction
+        v-for="transaction of data.financialTransactions"
+        :key="transaction.id"
+        :transaction="transaction"
+      />
+    </ul>
+  </li>
 </template>
 
 <style scoped>
 .DateItem-header {
   padding: 0.5rem;
-  margin: 0.5rem 0em;
-}
-@media screen and (min-width: 600px) {
-  .DateItem-header {
-    display: flex;
-    align-items: center;
-  }
+  margin: 0rem 0rem 0.25rem 0rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 .DateItem-header * {
+  margin-right: 0.5rem;
+}
+.DateItem-header *:first-child {
   margin-right: 1rem;
+}
+.DateItem-header *:last-child {
+  margin-right: 0rem;
 }
 .DateItem-record-header, .DateItem-record-header * {
   background-color: #0c0;
@@ -124,14 +123,12 @@ function cancelAddOrEdit() {
 .DateItem-transaction-header button:focus {
   background-color: #055;
 }
-.DateItem-header *:last-child {
-  margin-right: 0rem;
-}
 .DateItem-amount-input {
   width: 7em;
 }
 .DateItem-items {
   list-style-type: none;
-  padding-left: 1rem;
+  padding-left: 2rem;
+  margin-bottom: 1rem;
 }
 </style>
