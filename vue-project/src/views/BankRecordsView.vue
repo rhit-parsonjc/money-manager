@@ -49,9 +49,11 @@ function loadData() {
   }
 }
 
+/*
 async function populateData() {
   await dataStore.populateDataAsync();
 }
+*/
 </script>
 
 <template>
