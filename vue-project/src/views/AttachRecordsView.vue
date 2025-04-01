@@ -47,12 +47,24 @@ function loadData() {
 </script>
 
 <template>
-    <DateFilter @applyFilter="reloadData" />
     <DataMessages :retrievalStatus="dataStore.retrievalStatus"
     loadingMessage="Loading Transaction and Records..."
     errorMessage="Could Not Load Transaction or Records...">
+        <h1 class="libre-baskerville-regular AttachRecordsView-header">{{ dataStore.data.financialTransaction.name }}</h1>
+        <DateFilter @applyFilter="reloadData" class="AttachRecordsView-filter"/>
         <AttachBankRecords
             :financialTransaction="dataStore.data.financialTransaction"
             :bankRecords="dataStore.data.bankRecords"/>
     </DataMessages>
 </template>
+
+<style scoped>
+.AttachRecordsView-header {
+    text-align: center;
+    text-decoration: underline;
+    margin-bottom: 1rem;
+}
+.AttachRecordsView-filter {
+    margin-bottom: 2rem;
+}
+</style>

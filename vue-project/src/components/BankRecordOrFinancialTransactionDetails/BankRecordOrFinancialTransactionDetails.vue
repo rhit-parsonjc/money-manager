@@ -74,29 +74,29 @@ function deleteFile(id) {
 </script>
 
 <template>
-    <h1 class="happy-monkey-regular">{{ data.name }}</h1>
-    <p class="ubuntu-regular">Date: {{ data.dateObj.format() }}</p>
-    <p class="ubuntu-regular">Amount: {{ formatCurrency(data.amount) }}</p>
+    <p class="happy-monkey-regular">Name: {{ data.name }}</p>
+    <p class="happy-monkey-regular">Date: {{ data.dateObj.format() }}</p>
+    <p class="happy-monkey-regular">Amount: {{ formatCurrency(data.amount) }}</p>
     <div class="BankRecordOrFinancialTransactionDetails-buttons">
         <button class="ubuntu-regular BankRecordOrFinancialTransactionDetails-edit-button" @click="editItem">Edit</button>
         <button class="ubuntu-regular" @click="goBack">Back</button>
         <button class="ubuntu-regular BankRecordOrFinancialTransactionDetails-delete-button" @click="deleteItem">Delete</button>
     </div>
     <div v-if="isBankRecord">
-        <p class="ubuntu-regular">Transactions</p>
-        <FinancialTransactionItem v-for="financialTransaction of data.financialTransactions" :key="financialTransaction.id" :recordId="data.id" :transaction="financialTransaction" :isAttached="true"/>
+        <h2 class="happy-monkey-regular">Financial Transactions</h2>
+        <FinancialTransactionItem v-for="financialTransaction of data.financialTransactions" :key="financialTransaction.id" :recordId="data.id" :transaction="financialTransaction" :isAttached="true" class="BankRecordOrFinancialTransactionDetails-item"/>
     </div>
     <div v-else>
-        <p class="ubuntu-regular">Records</p>
-        <BankRecordItem v-for="bankRecord of data.bankRecords" :key="bankRecord.id" :transactionId="data.id" :record="bankRecord" :isAttached="true"/>
+        <h2 class="happy-monkey-regular">Bank Records</h2>
+        <BankRecordItem v-for="bankRecord of data.bankRecords" :key="bankRecord.id" :transactionId="data.id" :record="bankRecord" :isAttached="true" class="BankRecordOrFinancialTransactionDetails-item"/>
     </div>
     <div class="BankRecordOrFinancialTransactionDetails-link-buttons">
         <button class="ubuntu-regular" @click="attachSubitems">Attach</button>
     </div>
-    <p class="ubuntu-regular">Files</p>
+    <h2 class="happy-monkey-regular">Attached Files</h2>
     <ul class="BankRecordOrFinancialTransactionsDetails-files">
         <li v-for="fileAttachment of data.fileAttachments" :key="fileAttachment.id" class="BankRecordOrFinancialTransactionDetails-file-line">
-            <a :href="`http://localhost:8080/api/v1/fileattachments/${fileAttachment.id}`" class="ubuntu-regular">{{ fileAttachment.name }}</a>
+            <a :href="`http://localhost:8080/api/v1/fileattachments/${fileAttachment.id}`" class="happy-monkey-regular">{{ fileAttachment.name }}</a>
             <button class="ubuntu-regular BankRecordOrFinancialTransactionDetails-delete-file-button" @click="deleteFile(fileAttachment.id)">Delete</button>
         </li>
     </ul>
@@ -114,12 +114,20 @@ function deleteFile(id) {
 .BankRecordOrFinancialTransactionDetails-buttons button:hover,
 .BankRecordOrFinancialTransactionDetails-link-buttons button:hover {
     text-decoration: underline;
-    cursor: pointer;
 }
 .BankRecordOrFinancialTransactionDetails-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-bottom: 2rem;
+    margin-top: 0.5rem;
+}
+.BankRecordOrFinancialTransactionDetails-item {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+.BankRecordOrFinancialTransactionDetails-item:last-child {
+    margin-bottom: 0rem;
 }
 .BankRecordOrFinancialTransactionDetails-edit-button {
     color: #050;
@@ -131,6 +139,8 @@ function deleteFile(id) {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
 }
 .BankRecordOrFinancialTransactionsDetails-files {
     margin: 0.5em 0em;

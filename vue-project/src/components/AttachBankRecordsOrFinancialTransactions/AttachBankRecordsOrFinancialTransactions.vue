@@ -26,38 +26,51 @@ const dataModel = computed(() => {
 })
 
 </script>
+
 <template>
-    <h1 class="happy-monkey-regular">{{ item.name }}</h1>
     <div v-if="isBankRecord">
-        <p class="ubuntu-regular">Detach Transactions</p>
+        <h2 class="libre-baskerville-regular">Detach Financial Transactions</h2>
         <FinancialTransactionItem
             v-for="financialTransaction of dataModel.financialTransactions"
+            class="AttachBankRecordsOrFinancialTransactions-item"
             :key="financialTransaction.id"
             :recordId="item.id"
             :transaction="financialTransaction"
             :isAttached="true"/>
-        <p class="ubuntu-regular">Attach Transactions</p>
+        <h2 class="libre-baskerville-regular AttachBankRecordsOrFinancialTransactions-attach-header">Attach Financial Transactions</h2>
         <FinancialTransactionItem
             v-for="financialTransaction of dataModel.otherFinancialTransactions"
+            class="AttachBankRecordsOrFinancialTransactions-item"
             :key="financialTransaction.id"
             :recordId="item.id"
             :transaction="financialTransaction"
             :isAttached="false"/>
     </div>
     <div v-else>
-        <p class="ubuntu-regular">Detach Records</p>
+        <h2 class="libre-baskerville-regular">Detach Bank Records</h2>
         <BankRecordItem
             v-for="bankRecord of dataModel.bankRecords"
+            class="AttachBankRecordsOrFinancialTransactions-item"
             :key="bankRecord.id"
             :transactionId="item.id"
             :record="bankRecord"
             :isAttached="true"/>
-        <p class="ubuntu-regular">Attach Records</p>
+        <h2 class="libre-baskerville-regular AttachBankRecordsOrFinancialTransactions-attach-header">Attach Bank Records</h2>
         <BankRecordItem
             v-for="bankRecord of dataModel.otherBankRecords"
+            class="AttachBankRecordsOrFinancialTransactions-item"
             :key="bankRecord.id"
             :transactionId="item.id"
             :record="bankRecord"
             :isAttached="false"/>
     </div>
 </template>
+
+<style scoped>
+.AttachBankRecordsOrFinancialTransactions-attach-header {
+    margin-top: 2rem;
+}
+.AttachBankRecordsOrFinancialTransactions-item {
+    margin-top: 0.5rem;
+}
+</style>

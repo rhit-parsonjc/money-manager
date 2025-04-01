@@ -93,7 +93,7 @@ function confirmAction() {
 <template>
     <h1 class="libre-baskerville-regular BankRecordOrFinancialTransactionForm-header">{{ (data === null ? "Create" : "Edit") + (isBankRecord ? " Bank Record" : " Financial Transaction") }}</h1>
     <div class="BankRecordOrFinancialTransactionForm-input-line">
-        <p class="ubuntu-regular">Title:</p>
+        <p class="ubuntu-regular">Name:</p>
         <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-name-input" v-model="nameValue">
     </div>
     <div class="BankRecordOrFinancialTransactionForm-input-line">

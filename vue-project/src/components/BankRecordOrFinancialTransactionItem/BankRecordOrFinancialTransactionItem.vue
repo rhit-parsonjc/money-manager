@@ -61,8 +61,7 @@ function attachOrDetach() {
 <style scoped>
 .BankRecordOrFinancialTransactionItem-box {
     border: 1px solid black;
-    margin: 1em;
-    padding: 0.2em;
+    padding: 0.5em;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -74,13 +73,23 @@ function attachOrDetach() {
 .BankRecordOrFinancialTransactionItem-record {
     background-color: #0c0;
 }
+.BankRecordOrFinancialTransactionItem-record:hover {
+    background-color: #0f0;
+}
 .BankRecordOrFinancialTransactionItem-transaction {
     background-color: #0cc;
+}
+.BankRecordOrFinancialTransactionItem-transaction:hover {
+    background-color: #0ff;
 }
 .BankRecordOrFinancialTransactionItem-record-icon {
     color: #050;
 }
 .BankRecordOrFinancialTransactionItem-transaction-icon {
     color: #055;
+}
+.BankRecordOrFinancialTransactionItem-record-icon:hover,
+.BankRecordOrFinancialTransactionItem-transaction-icon:hover {
+    text-decoration: underline;
 }
 </style>
