@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: api
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DB}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update

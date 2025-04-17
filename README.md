@@ -29,7 +29,7 @@
 - [Learn CORS In 6 Minutes](https://www.youtube.com/watch?v=PNtFSVU-YTI)
 - Thanks to [Sébastien Deleuze](https://spring.io/blog/2015/06/08/cors-support-in-spring-framework) for the solution.
 
-### Stack Overflow
+### Spring Data Stack Overflow
 
 - Thanks to [Andrey B. Panfilov](https://stackoverflow.com/questions/73078524/java-lang-stackoverflowerror-while-saving-jpa-entities) for addressing a Stack Overflow exception.
 - Thanks to [Grzegorz Oledzki and damian](https://stackoverflow.com/questions/1082095/how-to-remove-entity-with-manytomany-relationship-in-jpa-and-corresponding-join?rq=3) for handling a Many-to-Many relationship.
@@ -48,6 +48,19 @@
 
 - Thanks to [how to upload a file to my server using html](https://stackoverflow.com/questions/5628011/how-to-upload-a-file-to-my-server-using-html) for setting up a file upload form
 - Thanks to [API4AI](https://medium.com/@API4AI/post-a-file-via-http-request-the-ultimate-guide-b23fb70a3f73) for describing how to use axios to upload a file.
+
+### Docker
+
+- Thanks to vladimirvaca's [dockerize-vue-3 repository](https://github.com/vladimirvaca/dockerize-vue-3/tree/main) for providing an example of how to use Vue with Docker.
+- Thanks to [Deploy Spring Boot and MySQL using Docker compose](https://stackoverflow.com/questions/78208727/deploy-spring-boot-and-mysql-using-docker-compose) for detailing how to use Docker Compose with Spring Boot and MySQL
+- Also see [Communications link failure , Spring Boot + MySql +Docker + Hibernate](https://stackoverflow.com/questions/58880998/communications-link-failure-spring-boot-mysql-docker-hibernate?rq=1) for more information. I don't know if `docker-compose down --rmi all` was necessary.
+- There are other webpages I looked at when configuring Docker, but these three are probably the most helpful ones.
+- Also thanks to [Zeitounator] (https://stackoverflow.com/questions/59838692/mysql-root-password-is-set-but-getting-access-denied-for-user-rootlocalhost) for noting that the volume needs to be deleted to fix a database issue and describing how to do so.
+- According to [super](https://stackoverflow.com/questions/68151318/make-an-api-call-from-one-container-to-another/68151409), to reach another container, you can use the container name as the hostname. However, thanks to David Maze for ["Unknown host" error calling containerized backend from frontend](https://stackoverflow.com/questions/77060233/unknown-host-error-calling-containerized-backend-from-frontend), which describes in detail the issue with this in the browser and how to use an HTTP reverse proxy to fix it, and for [docker-frontend-hostnames](https://github.com/dmaze/docker-frontend-hostnames), which provides sample code.
+
+## Random Value
+
+- [Random.org](https://www.random.org/) was used to generate the root password for the MySQL Database
 
 ## Images Used
 

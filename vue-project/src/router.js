@@ -9,8 +9,14 @@ import FinancialTransactionUpdateView from './views/FinancialTransactionUpdateVi
 import FinancialTransactionsView from './views/FinancialTransactionsView.vue'
 import AttachRecordsView from './views/AttachRecordsView.vue'
 import AttachTransactionsView from './views/AttachTransactionsView.vue'
+import HomeView from './views/HomeView.vue'
 
 const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView,
+  },
   {
     path: '/create/record',
     name: 'record-create',

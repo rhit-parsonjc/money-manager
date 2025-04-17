@@ -7,7 +7,7 @@ import { DateAmountModel } from '@/model/DateAmountModel'
 import { FinancialTransactionModel } from '@/model/FinancialTransactionModel'
 import { FileAttachmentModel } from '@/model/FileAttachmentModel'
 
-const baseUrl = 'http://localhost:8080/api/v1'
+const baseUrl = '/api/v1'
 
 /*
  * This data store is responsible for all requests to the backend.
@@ -99,11 +99,13 @@ const useDataStore = defineStore('data', () => {
 
   function resetData() {
     console.log('Set data to NOT LOADED')
+    console.log({ baseUrl })
     retrievalStatus.value = 'NOT LOADED'
   }
 
   function expireData() {
     console.log('Set data to EXPIRED')
+    console.log({ baseUrl })
     retrievalStatus.value = 'EXPIRED'
   }
 

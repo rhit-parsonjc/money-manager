@@ -1,0 +1,63 @@
+services:
+  mysql:
+    image: mysql:9
+    container_name: mysql
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+    networks:
+      - moneymanagernet
+    volumes:
+      - mysql-data:/var/lib/mysql
+  spring:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: spring
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DB: test
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    networks:
+      - moneymanagernet
+  vue:
+    build:
+      context: ./vue-project
+      dockerfile: Dockerfile
+    container_name: vue
+    ports:
+      - 5173:80
+    depends_on:
+      - spring
+    networks:
+      - moneymanagernet
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - 8000:80
+    depends_on:
+      - spring
+      - vue
+    networks:
+      - moneymanagernet
+
+networks:
+  moneymanagernet:
+    name: moneymanagernet
+
+volumes:
+  mysql-data:
+    
