@@ -1,4 +1,4 @@
-package com.moneymanager.api.services;
+package com.moneymanager.api.services.BankRecordService;
 
 import com.moneymanager.api.dtos.BankRecordDetailsDto;
 import com.moneymanager.api.dtos.BankRecordDto;

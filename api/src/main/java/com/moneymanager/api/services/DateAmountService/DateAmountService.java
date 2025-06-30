@@ -1,4 +1,4 @@
-package com.moneymanager.api.services;
+package com.moneymanager.api.services.DateAmountService;
 
 import com.moneymanager.api.dtos.DateAmountDto;
 import com.moneymanager.api.requests.DateAmountCreateRequest;

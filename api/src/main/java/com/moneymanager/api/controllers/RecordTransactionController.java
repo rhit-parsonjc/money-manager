@@ -3,7 +3,7 @@ package com.moneymanager.api.controllers;
 import com.moneymanager.api.exceptions.AlreadyExistsException;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
 import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.RecordTransactionConnectionService;
+import com.moneymanager.api.services.RecordTransactionConnectionService.RecordTransactionConnectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

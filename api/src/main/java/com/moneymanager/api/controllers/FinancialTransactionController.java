@@ -1,13 +1,11 @@
 package com.moneymanager.api.controllers;
 
-import com.moneymanager.api.dtos.BankRecordDto;
 import com.moneymanager.api.dtos.FinancialTransactionDetailsDto;
 import com.moneymanager.api.dtos.FinancialTransactionDto;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
-import com.moneymanager.api.requests.BankRecordRequest;
 import com.moneymanager.api.requests.FinancialTransactionRequest;
 import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.FinancialTransactionService;
+import com.moneymanager.api.services.FinancialTransactionService.FinancialTransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

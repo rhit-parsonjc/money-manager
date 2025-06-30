@@ -1,4 +1,4 @@
-package com.moneymanager.api.services;
+package com.moneymanager.api.services.RecordTransactionConnectionService;
 
 public interface RecordTransactionConnectionService {
     public void createConnection(Long recordId, Long transactionId);

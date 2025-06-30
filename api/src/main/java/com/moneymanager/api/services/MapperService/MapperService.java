@@ -1,4 +1,4 @@
-package com.moneymanager.api.services;
+package com.moneymanager.api.services.MapperService;
 
 import com.moneymanager.api.dtos.*;
 import com.moneymanager.api.models.BankRecord;

@@ -1,4 +1,4 @@
-package com.moneymanager.api.services;
+package com.moneymanager.api.services.FileAttachmentService;
 
 import com.moneymanager.api.dtos.FileAttachmentDetailsDto;
 import com.moneymanager.api.dtos.FileAttachmentDto;
@@ -6,7 +6,6 @@ import com.moneymanager.api.models.FileAttachment;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface FileAttachmentService {

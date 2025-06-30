@@ -5,7 +5,7 @@ import com.moneymanager.api.dtos.BankRecordDto;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
 import com.moneymanager.api.requests.BankRecordRequest;
 import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.BankRecordService;
+import com.moneymanager.api.services.BankRecordService.BankRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

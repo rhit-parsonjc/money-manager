@@ -6,7 +6,7 @@ import com.moneymanager.api.exceptions.ResourceNotFoundException;
 import com.moneymanager.api.requests.DateAmountCreateRequest;
 import com.moneymanager.api.requests.DateAmountUpdateRequest;
 import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.DateAmountService;
+import com.moneymanager.api.services.DateAmountService.DateAmountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

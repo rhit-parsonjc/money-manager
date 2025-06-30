@@ -1,4 +1,4 @@
-package com.moneymanager.api.services;
+package com.moneymanager.api.services.FinancialTransactionService;
 
 import com.moneymanager.api.dtos.FinancialTransactionDetailsDto;
 import com.moneymanager.api.dtos.FinancialTransactionDto;

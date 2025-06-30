@@ -1,4 +1,4 @@
-package com.moneymanager.api.services;
+package com.moneymanager.api.services.FinancialTransactionService;
 
 import com.moneymanager.api.dtos.FinancialTransactionDetailsDto;
 import com.moneymanager.api.dtos.FinancialTransactionDto;
@@ -7,6 +7,7 @@ import com.moneymanager.api.models.FinancialTransaction;
 import com.moneymanager.api.repositories.BankRecordRepository;
 import com.moneymanager.api.repositories.FinancialTransactionRepository;
 import com.moneymanager.api.requests.FinancialTransactionRequest;
+import com.moneymanager.api.services.MapperService.MapperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

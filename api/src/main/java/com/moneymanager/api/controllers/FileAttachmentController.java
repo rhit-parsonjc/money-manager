@@ -4,7 +4,7 @@ import com.moneymanager.api.dtos.FileAttachmentDetailsDto;
 import com.moneymanager.api.dtos.FileAttachmentDto;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
 import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.FileAttachmentService;
+import com.moneymanager.api.services.FileAttachmentService.FileAttachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

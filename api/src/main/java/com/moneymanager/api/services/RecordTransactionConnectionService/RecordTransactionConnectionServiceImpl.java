@@ -1,4 +1,4 @@
-package com.moneymanager.api.services;
+package com.moneymanager.api.services.RecordTransactionConnectionService;
 
 import com.moneymanager.api.exceptions.AlreadyExistsException;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
