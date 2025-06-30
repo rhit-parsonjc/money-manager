@@ -10,6 +10,7 @@
 - Thanks to [Attila Fejér](https://www.baeldung.com/jpa-many-to-many) for describing how to use the @ManyToMany annotation
 - Thanks to [Teddy Smith](https://github.com/teddysmithdev/pokemon-review-springboot/) for showing how to use Spring
 - Thanks to [Vinayak Shedgeri's answer](https://stackoverflow.com/questions/37774282/intellij-cannot-resolve-symbol-springframework) for noting the Refresh button for Maven.
+- Thanks to [uvsmtid](https://stackoverflow.com/questions/45718145/intellij-errorjava-java-lang-exceptionininitializererror) for identifying a Java version discrepancy as the reason for an error
 
 ### Images in Spring Boot
 
