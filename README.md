@@ -8,6 +8,8 @@
 - Also thanks to [Simpson Alfred's dream-shops repository](https://github.com/dailycodework/dream-shops) for Spring Boot details.
 - Thanks to [baledung](https://www.baeldung.com/spring-request-param) for describing how to use the @RequestParam annotation.
 - Thanks to [Attila Fejér](https://www.baeldung.com/jpa-many-to-many) for describing how to use the @ManyToMany annotation
+- Thanks to [Teddy Smith](https://github.com/teddysmithdev/pokemon-review-springboot/) for showing how to use Spring
+- Thanks to [Vinayak Shedgeri's answer](https://stackoverflow.com/questions/37774282/intellij-cannot-resolve-symbol-springframework) for noting the Refresh button for Maven.
 
 ### Images in Spring Boot
 
@@ -33,6 +35,7 @@
 
 - Thanks to [Andrey B. Panfilov](https://stackoverflow.com/questions/73078524/java-lang-stackoverflowerror-while-saving-jpa-entities) for addressing a Stack Overflow exception.
 - Thanks to [Grzegorz Oledzki and damian](https://stackoverflow.com/questions/1082095/how-to-remove-entity-with-manytomany-relationship-in-jpa-and-corresponding-join?rq=3) for handling a Many-to-Many relationship.
+- Thanks to [Failed to load driver class com.mysql.jdbc.Driver](https://stackoverflow.com/questions/52804228/failed-to-load-driver-class-com-mysql-jdbc-driver) and [Failed to load driver class org.h2.Driver from HikariConfig class classloader jdk.internal.loader.ClassLoaders$AppClassLoader](https://stackoverflow.com/questions/75568456/failed-to-load-driver-class-org-h2-driver-from-hikariconfig-class-classloader-jd/75568519) for suggesting that missing the MySQL dependency caused the error
 
 ### Fonts
 
@@ -58,9 +61,19 @@
 - Also thanks to [Zeitounator] (https://stackoverflow.com/questions/59838692/mysql-root-password-is-set-but-getting-access-denied-for-user-rootlocalhost) for noting that the volume needs to be deleted to fix a database issue and describing how to do so.
 - According to [super](https://stackoverflow.com/questions/68151318/make-an-api-call-from-one-container-to-another/68151409), to reach another container, you can use the container name as the hostname. However, thanks to David Maze for ["Unknown host" error calling containerized backend from frontend](https://stackoverflow.com/questions/77060233/unknown-host-error-calling-containerized-backend-from-frontend), which describes in detail the issue with this in the browser and how to use an HTTP reverse proxy to fix it, and for [docker-frontend-hostnames](https://github.com/dmaze/docker-frontend-hostnames), which provides sample code.
 
+### Spring Security
+
+- Thanks to [Geeks for Geeks](https://www.geeksforgeeks.org/spring-boot-3-0-jwt-authentication-with-spring-security-using-mysql-database/) for explaining Spring Security
+- Thanks to [FreeCodeCamp](https://www.youtube.com/watch?v=oGhc5Z-WJSw) for demonstrating how to use Spring Boot, but primarily for Spring Security
+- Thanks to [DaoAuthenticationException](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/authentication/dao/DaoAuthenticationProvider.html) for fixing the DaoAuthenticationProvider deprecation issue
+
+### IntelliJ
+
+- Thanks to [StackOverflow](https://stackoverflow.com/questions/75689637/idea-intellij-errorjava-error-release-version-20-not-supported-maven-compil) for fixing the Java version issue
+
 ## Random Value
 
-- [Random.org](https://www.random.org/) was used to generate the root password for the MySQL Database
+- [Random.org](https://www.random.org/) was used to generate the root password for the MySQL Database and the JWT secret
 
 ## Images Used
 

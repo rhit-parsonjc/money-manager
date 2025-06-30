@@ -14,49 +14,67 @@ Base URL: _/api/v1_
 
 ## Bank Records
 
-**POST** to _/bankrecords_: creates a new bank record based on the specified body, can return **201** or **500**
+**POST** to _/bankrecords/{accountId}_: creates a new bank record for the specified account using the specified body, can return **201**, **404**, or **500**
 
-**GET** to _/bankrecords/{id}_: gets the bank record with the specified id, can return **200**, **404**, or **500**
+**GET** to _/bankrecords/{accountId}/{id}_: gets the bank record with the specified id from the specified account, can return **200**, **404**, or **500**
 
-**GET** to _/bankrecords?year={year}&month={month}&day={day}_: gets all of the bank records, can filter by year, month, and day, can return **200**, **400**, or **500**
+**GET** to _/bankrecords/{accountId}?year={year}&month={month}&day={day}_: gets all of the bank records from the specified account, can filter by year, month, and day, can return **200**, **400**, **404**, or **500**
 
-**PUT** to _/bankrecords/{id}_: replaces the bank record with the specified id with the specified body, can return **200**, **404**, or **500**
+**PUT** to _/bankrecords/{accountId}/{id}_: replaces the bank record with the specified id from the specified account with the specified body, can return **200**, **404**, or **500**
 
-**DELETE** to _/bankrecords/{id}_: deletes the bank record with the specified id, can return **204**, **404**, or **500**
+**DELETE** to _/bankrecords/{accountId}/{id}_: deletes the bank record with the specified id from the specified account, can return **204**, **404**, or **500**
 
-**DELETE** to _/bankrecords_: deletes all bank records, can return **204** or **500**
+**DELETE** to _/bankrecords/{accountId}_: deletes all bank records from the specified account, can return **204**, **404**, or **500**
 
-## Date Amounts (_/api/v1/daterecord_)
+## Date Amounts
 
-**POST** to _/dateamounts_: create a new date amount based on the specified body, can return **201**, **409**, or **500**
+**POST** to _/dateamounts/{accountId}_: create a new date amount for the specified account using the specified body, can return **201**, **404**, **409**, or **500**
 
-**GET** to _/dateamounts?year={year}&month={month}&day={day}_: gets all of the date amounts, can filter by year and month, can return **200**, **400**, or **500**
+**GET** to _/dateamounts/{accountId}?year={year}&month={month}&day={day}_: gets all of the date amounts from the specified account, can filter by year and month, can return **200**, **400**, **404**, or **500**
 
-**PUT** to _/dateamounts/{year}/{month}/{day}_: replaces the date record for the specified day with the specified body, can return **200**, **404**, or **500**
+**PUT** to _/dateamounts/{accountId}?year={year}&month={month}&day={day}_: replaces the date record for the specified account and day with the specified body, can return **200**, **404**, or **500**
 
-**DELETE** to _/dateamounts/{year}/{month}/{day}_: deletes the date record with the specified day, can return **204**, **404**, or **500**
+**DELETE** to _/dateamounts/{accountId}?year={year}&month={month}&day={day}_: deletes the date record for the specified account and day, can return **204**, **404**, or **500**
 
-**DELETE** to _/dateamounts_: deletes all date amounts, can return **204** or **500**
+**DELETE** to _/dateamounts/{accountId}_: deletes all date amounts from the specified account, can return **204**, **404**, or **500**
 
 ## Financial Transactions
 
-**POST** to _/financialtransactions_: creates a new financial transaction based on the specified body, can return **201** or **500**
+**POST** to _/financialtransactions/{accountId}_: creates a new financial transaction for the specified account using the specified body, can return **201**, **404**, or **500**
 
-**GET** to _/financialtransactions/{id}_: gets the financial transaction with the specified id, can return **200**, **404**, or **500**
+**GET** to _/financialtransactions/{accountId}/{id}_: gets the financial transaction with the specified id from the specified account, can return **200**, **404**, or **500**
 
-**GET** to _/financialtransactions?year={year}&month={month}&day={day}_: gets all of the financial transactions, can filter by year, month, and day, can return **200**, **400**, or **500**
+**GET** to _/financialtransactions/{accountId}?year={year}&month={month}&day={day}_: gets all of the financial transactions from the specified account, can filter by year, month, and day, can return **200**, **400**, **404**, or **500**
 
-**PUT** to _/financialtransactions/{id}_: replaces the financial transaction with the specified id with the specified body, can return **200**, **404**, or **500**
+**PUT** to _/financialtransactions/{accountId}/{id}_: replaces the financial transaction with the specified id from the specified account with the specified body, can return **200**, **404**, or **500**
 
-**DELETE** to _/financialtransactions/{id}_: deletes the financial transaction with the specified id, can return **204**, **404**, or **500**
+**DELETE** to _/financialtransactions/{accountId}/{id}_: deletes the financial transaction with the specified id from the specified account, can return **204**, **404**, or **500**
 
-**DELETE** to _/financialtransactions_: deletes all financial transactions, can return **204** or **500**
+**DELETE** to _/financialtransactions/{accountId}_: deletes all financial transactions from the specified account, can return **204**, **404**, or **500**
 
 ## Record-Transaction Connections
 
-**POST** to _/recordtransactions/{recordId}/{transactionId}_: creates a new connection between a bank record and a financial transaction, can return **201**, **404**, **409**, or **500**
+**POST** to _/recordtransactions/{recordId}/{transactionId}_: creates a new connection between a bank record and a financial transaction for the specified account, can return **201**, **404**, **409**, or **500**
 
-**DELETE** to _/recordtransactions/{recordId}/{transactionId}_: deletes a connection between a bank record and a financial transaction, can return **204**, **404**, or **500**
+**DELETE** to _/recordtransactions/{recordId}/{transactionId}_: deletes a connection between a bank record and a financial transaction for the specified account, can return **204**, **404**, or **500**
+
+## File Attachments
+
+**POST** to _/fileattachments/bankrecords/{recordId}_: creates a new file attached to a bank record, can return **201**, **404**, or **500**
+
+**POST** to _/fileattachments/financialtransactions/{transactionId}_: creates a new file attaced to a financial transaction, can return **201**, **404**, or **500**
+
+**GET** to _/fileattachments/{id}_: gets the file attachent with the specified id, can return **200**, **404**, or **500**
+
+**GET** to _/fileattachments/bankrecords/{recordId}_: gets the file attachments for the specified bank record, can return **200**, **404**, or **500**
+
+**GET** to _/fileattachments/financialtransactions/{transactionId}_: gets the file attachments for the specified financial transaction, can return **200**, **404**, or **500**
+
+**DELETE** to _/fileattachments/{id}_: deletes the file attachment with the specified id, can return **204**, **404**, or **500**
+
+**DELETE** to _/fileattachments/bankrecords/{recordId}_: deletes the file attachments for the specified bank record, can return **204**, **404**, or **500**
+
+**DELETE** to _/fileattachments/financialtransactions/{transactionId}_: deletes the file attachments for the specified financial transaction, can return **204**, **404**, or **500**
 
 # Models
 
