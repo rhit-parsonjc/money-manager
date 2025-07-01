@@ -1,22 +1,24 @@
 package com.moneymanager.api.services.FileAttachmentService;
 
-import com.moneymanager.api.dtos.FileAttachmentDetailsDto;
-import com.moneymanager.api.dtos.FileAttachmentDto;
-import com.moneymanager.api.exceptions.ResourceNotFoundException;
-import com.moneymanager.api.models.BankRecord;
-import com.moneymanager.api.models.FileAttachment;
-import com.moneymanager.api.models.FinancialTransaction;
-import com.moneymanager.api.repositories.BankRecordRepository;
-import com.moneymanager.api.repositories.FileAttachmentRepository;
-import com.moneymanager.api.repositories.FinancialTransactionRepository;
-import com.moneymanager.api.services.MapperService.MapperService;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import com.moneymanager.api.exceptions.InvalidStateException;
+import com.moneymanager.api.exceptions.PermissionsException;
+import com.moneymanager.api.exceptions.ResourceNotFoundException;
+import com.moneymanager.api.models.*;
+import com.moneymanager.api.repositories.BankRecordRepository;
+import com.moneymanager.api.repositories.FileAttachmentRepository;
+import com.moneymanager.api.repositories.FinancialTransactionRepository;
+import com.moneymanager.api.services.MapperService.MapperService;
+import com.moneymanager.api.services.UserEntityService.UserEntityService;
 
 @Service
 @RequiredArgsConstructor
@@ -25,85 +27,114 @@ public class FileAttachmentServiceImpl implements FileAttachmentService {
     private final BankRecordRepository bankRecordRepository;
     private final FinancialTransactionRepository financialTransactionRepository;
     private final MapperService mapperService;
+    private final UserEntityService userEntityService;
 
-    @Override
-    public FileAttachment createFileAttachment(MultipartFile multipartFile) throws IOException {
-        return new FileAttachment(
-            multipartFile.getOriginalFilename(), multipartFile.getContentType(), multipartFile.getSize(), multipartFile.getBytes()
-        );
-    }
-
-    @Override
-    public FileAttachmentDto attachFileToBankRecord(MultipartFile file, Long recordId) throws IOException {
-        FileAttachment fileAttachment = createFileAttachment(file);
+    private BankRecord getBankRecord(UserEntity userEntity, Long recordId) {
         Optional<BankRecord> bankRecordOptional = bankRecordRepository.findById(recordId);
         if (bankRecordOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.BANK_RECORD_MESSAGE);
         BankRecord bankRecord = bankRecordOptional.get();
-        fileAttachment.getBankRecords().add(bankRecord);
-        FileAttachment savedFileAttachment = fileAttachmentRepository.save(fileAttachment);
-        bankRecord.getFileAttachments().add(savedFileAttachment);
-        bankRecordRepository.save(bankRecord);
-        return mapperService.mapFileAttachmentToDto(savedFileAttachment);
+        if (!Objects.equals(bankRecord.getAccount().getUserEntity().getId(), userEntity.getId()))
+            throw new PermissionsException(PermissionsException.INCORRECT_USER);
+        return bankRecord;
     }
 
-    @Override
-    public FileAttachmentDto attachFileToFinancialTransaction(MultipartFile file, Long transactionId) throws IOException {
-        FileAttachment fileAttachment = createFileAttachment(file);
+    private FinancialTransaction getFinancialTransaction(UserEntity userEntity, Long transactionId) {
         Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(transactionId);
         if (financialTransactionOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         FinancialTransaction financialTransaction = financialTransactionOptional.get();
-        fileAttachment.getFinancialTransactions().add(financialTransaction);
-        FileAttachment savedFileAttachment = fileAttachmentRepository.save(fileAttachment);
-        financialTransaction.getFileAttachments().add(savedFileAttachment);
-        financialTransactionRepository.save(financialTransaction);
-        return mapperService.mapFileAttachmentToDto(savedFileAttachment);
+        if (!Objects.equals(financialTransaction.getAccount().getUserEntity().getId(), userEntity.getId()))
+            throw new PermissionsException(PermissionsException.INCORRECT_USER);
+        return financialTransaction;
     }
 
-
-    @Override
-    public FileAttachmentDetailsDto getFileAttachment(Long id) {
-        Optional<FileAttachment> fileAttachmentOptional = fileAttachmentRepository.findById(id);
+    private FileAttachment getFileAttachment(UserEntity userEntity, Long attachmentId) {
+        Optional<FileAttachment> fileAttachmentOptional = fileAttachmentRepository.findById(attachmentId);
         if (fileAttachmentOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.FILE_ATTACHMENT_MESSAGE);
         FileAttachment fileAttachment = fileAttachmentOptional.get();
-        return mapperService.mapFileAttachmentToDetailsDto(fileAttachment);
+        BankRecord bankRecord = fileAttachment.getBankRecord();
+        FinancialTransaction financialTransaction = fileAttachment.getFinancialTransaction();
+        Account account;
+        if (bankRecord == null && financialTransaction == null)
+            throw new InvalidStateException(InvalidStateException.FILE_NO_LINKS);
+        else if (bankRecord != null && financialTransaction != null)
+            throw new InvalidStateException(InvalidStateException.FILE_TWO_LINKS);
+        else if (bankRecord != null)
+            account = bankRecord.getAccount();
+        else
+            account = financialTransaction.getAccount();
+        if (!Objects.equals(account.getUserEntity().getId(), userEntity.getId()))
+            throw new PermissionsException(PermissionsException.INCORRECT_USER);
+        return fileAttachment;
     }
 
     @Override
-    public List<FileAttachmentDto> getFileAttachments() {
-        return mapperService.mapFileAttachmentsToDtos(fileAttachmentRepository.findAll());
+    public FileAttachment createFileAttachmentForBankRecord(MultipartFile file, Long recordId) throws IOException {
+        UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
+        BankRecord bankRecord = getBankRecord(userEntity, recordId);
+        FileAttachment fileAttachment = new FileAttachment(
+                file.getOriginalFilename(),
+                file.getContentType(),
+                file.getSize(),
+                file.getBytes(),
+                bankRecord
+        );
+        return fileAttachmentRepository.save(fileAttachment);
     }
 
     @Override
-    public List<FileAttachmentDto> getFileAttachmentsByRecordId(Long recordId) {
-        Optional<BankRecord> bankRecordOptional = bankRecordRepository.findById(recordId);
-        if (bankRecordOptional.isEmpty())
-            throw new ResourceNotFoundException(ResourceNotFoundException.BANK_RECORD_MESSAGE);
-        BankRecord bankRecord = bankRecordOptional.get();
-        return mapperService.mapFileAttachmentsToDtos(bankRecord.getFileAttachments().stream().toList());
+    public FileAttachment createFileAttachmentForFinancialTransaction(MultipartFile file, Long transactionId) throws IOException {
+        UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
+        FinancialTransaction financialTransaction = getFinancialTransaction(userEntity, transactionId);
+        FileAttachment fileAttachment = new FileAttachment(
+                file.getOriginalFilename(),
+                file.getContentType(),
+                file.getSize(),
+                file.getBytes(),
+                financialTransaction
+        );
+        return fileAttachmentRepository.save(fileAttachment);
     }
 
     @Override
-    public List<FileAttachmentDto> getFileAttachmentsByTransactionId(Long transactionId) {
-        Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(transactionId);
-        if (financialTransactionOptional.isEmpty())
-            throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
-        FinancialTransaction financialTransaction = financialTransactionOptional.get();
-        return mapperService.mapFileAttachmentsToDtos(financialTransaction.getFileAttachments().stream().toList());
+    public FileAttachment getFileAttachment(Long id) {
+        UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
+        return getFileAttachment(userEntity, id);
+    }
+
+    @Override
+    public List<FileAttachment> getFileAttachmentsByRecordId(Long recordId) {
+        UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
+        BankRecord bankRecord = getBankRecord(userEntity, recordId);
+        return bankRecord.getFileAttachments().stream().toList();
+    }
+
+    @Override
+    public List<FileAttachment> getFileAttachmentsByTransactionId(Long transactionId) {
+        UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
+        FinancialTransaction financialTransaction = getFinancialTransaction(userEntity, transactionId);
+        return financialTransaction.getFileAttachments().stream().toList();
     }
 
     @Override
     public void deleteFileAttachment(Long id) {
-        Optional<FileAttachment> fileAttachmentOptional = fileAttachmentRepository.findById(id);
-        if (fileAttachmentOptional.isEmpty())
-            throw new ResourceNotFoundException("File attachment not found");
+        getFileAttachment(id);
         fileAttachmentRepository.deleteById(id);
     }
 
     @Override
-    public void deleteFileAttachments() {
-        fileAttachmentRepository.deleteAll();
+    @Transactional
+    public void deleteFileAttachmentsByRecordId(Long recordId) {
+        getFileAttachmentsByRecordId(recordId);
+        fileAttachmentRepository.deleteByBankRecordId(recordId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFileAttachmentsByTransactionId(Long transactionId) {
+        getFileAttachmentsByTransactionId(transactionId);
+        fileAttachmentRepository.deleteByFinancialTransactionId(transactionId);
     }
 }

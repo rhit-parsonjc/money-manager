@@ -1,16 +1,14 @@
 package com.moneymanager.api.services.MapperService;
 
+import java.util.List;
+import org.springframework.stereotype.Service;
+
 import com.moneymanager.api.dtos.*;
-import com.moneymanager.api.models.BankRecord;
-import com.moneymanager.api.models.DateAmount;
-import com.moneymanager.api.models.FileAttachment;
-import com.moneymanager.api.models.FinancialTransaction;
+import com.moneymanager.api.models.*;
+import com.moneymanager.api.requests.AccountRequest;
 import com.moneymanager.api.requests.BankRecordRequest;
 import com.moneymanager.api.requests.DateAmountCreateRequest;
 import com.moneymanager.api.requests.FinancialTransactionRequest;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MapperServiceImpl implements MapperService {
@@ -46,8 +44,9 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @Override
-    public BankRecord mapBankRecordRequestToRecord(BankRecordRequest bankRecordRequest) {
+    public BankRecord mapBankRecordRequestToRecord(Account account, BankRecordRequest bankRecordRequest) {
         return new BankRecord(
+                account,
                 bankRecordRequest.getYear(),
                 bankRecordRequest.getMonth(),
                 bankRecordRequest.getDay(),
@@ -73,8 +72,9 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @Override
-    public DateAmount mapDateAmountRequestToAmount(DateAmountCreateRequest dateAmountCreateRequest) {
+    public DateAmount mapDateAmountRequestToAmount(Account account, DateAmountCreateRequest dateAmountCreateRequest) {
         return new DateAmount(
+                account,
                 dateAmountCreateRequest.getYear(),
                 dateAmountCreateRequest.getMonth(),
                 dateAmountCreateRequest.getDay(),
@@ -114,8 +114,9 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @Override
-    public FinancialTransaction mapFinancialTransactionRequestToTransaction(FinancialTransactionRequest financialTransactionRequest) {
+    public FinancialTransaction mapFinancialTransactionRequestToTransaction(Account account, FinancialTransactionRequest financialTransactionRequest) {
         return new FinancialTransaction(
+                account,
                 financialTransactionRequest.getYear(),
                 financialTransactionRequest.getMonth(),
                 financialTransactionRequest.getDay(),
@@ -148,5 +149,26 @@ public class MapperServiceImpl implements MapperService {
     @Override
     public List<FileAttachmentDto> mapFileAttachmentsToDtos(List<FileAttachment> fileAttachments) {
         return fileAttachments.stream().map(this::mapFileAttachmentToDto).toList();
+    }
+
+    @Override
+    public AccountDto mapAccountToDto(Account account) {
+        return new AccountDto(
+                account.getId(),
+                account.getName()
+        );
+    }
+
+    @Override
+    public List<AccountDto> mapAccountsToDtos(List<Account> accounts) {
+        return accounts.stream().map(this::mapAccountToDto).toList();
+    }
+
+    @Override
+    public Account mapAccountRequestToAccount(UserEntity user, AccountRequest accountRequest) {
+        return new Account(
+                user,
+                accountRequest.getName()
+        );
     }
 }

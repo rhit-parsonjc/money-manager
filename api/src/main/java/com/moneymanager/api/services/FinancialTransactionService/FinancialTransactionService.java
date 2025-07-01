@@ -1,22 +1,21 @@
 package com.moneymanager.api.services.FinancialTransactionService;
 
-import com.moneymanager.api.dtos.FinancialTransactionDetailsDto;
-import com.moneymanager.api.dtos.FinancialTransactionDto;
-import com.moneymanager.api.requests.FinancialTransactionRequest;
-
 import java.util.List;
 
+import com.moneymanager.api.models.FinancialTransaction;
+import com.moneymanager.api.requests.FinancialTransactionRequest;
+
 public interface FinancialTransactionService {
-    public FinancialTransactionDto createFinancialTransaction(FinancialTransactionRequest request);
+    FinancialTransaction createFinancialTransaction(Long accountId, FinancialTransactionRequest request);
 
-    public FinancialTransactionDetailsDto getFinancialTransactionById(Long id);
-    public List<FinancialTransactionDto> getFinancialTransactions();
-    public List<FinancialTransactionDto> getFinancialTransactionsForYear(Integer year);
-    public List<FinancialTransactionDto> getFinancialTransactionsForMonth(Integer year, Integer month);
-    public List<FinancialTransactionDto> getFinancialTransactionsForDay(Integer year, Integer month, Integer day);
+    FinancialTransaction getFinancialTransactionById(Long accountId, Long id);
+    List<FinancialTransaction> getFinancialTransactions(Long accountId);
+    List<FinancialTransaction> getFinancialTransactionsForYear(Long accountId, Short year);
+    List<FinancialTransaction> getFinancialTransactionsForMonth(Long accountId, Short year, Byte month);
+    List<FinancialTransaction> getFinancialTransactionsForDay(Long accountId, Short year, Byte month, Byte day);
 
-    public FinancialTransactionDto updateFinancialTransaction(Long id, FinancialTransactionRequest request);
+    FinancialTransaction updateFinancialTransaction(Long accountId, Long id, FinancialTransactionRequest request);
 
-    public void deleteFinancialTransaction(Long id);
-    public void deleteFinancialTransactions();
+    void deleteFinancialTransaction(Long accountId, Long id);
+    void deleteFinancialTransactions(Long accountId);
 }

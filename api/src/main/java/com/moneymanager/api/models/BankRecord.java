@@ -1,34 +1,60 @@
 package com.moneymanager.api.models;
 
-import com.moneymanager.api.requests.BankRecordRequest;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import com.moneymanager.api.requests.BankRecordRequest;
+
+/**
+ * A BankRecord refers to a single bank record and has the following properties:
+ * - id
+ * - year
+ * - month
+ * - day
+ * - amount
+ * - name
+ * - account
+ * - financialTransactions
+ * - fileAttachments
+ */
 
 @Getter
-@NoArgsConstructor
 @Entity
+@Table(name="RECORDS")
+@NoArgsConstructor
 public class BankRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer year;
-    private Integer month;
-    private Integer day;
+    private Short year;
+    private Byte month;
+    private Byte day;
 
-    private Double amount;
+    private Long amount;
     private String name;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
     @ManyToMany
+    @JoinTable(
+        name = "RECORD_TRANSACTIONS",
+        joinColumns = @JoinColumn(name = "transaction_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "record_id", referencedColumnName = "id")
+    )
     private Set<FinancialTransaction> financialTransactions;
 
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bankRecord", orphanRemoval = true)
     private Set<FileAttachment> fileAttachments;
 
-    public BankRecord(Integer year, Integer month, Integer day, Double amount, String name) {
+    public BankRecord(Account account, Short year, Byte month,
+                      Byte day, Long amount, String name) {
+        this.account = account;
         this.year = year;
         this.month = month;
         this.day = day;

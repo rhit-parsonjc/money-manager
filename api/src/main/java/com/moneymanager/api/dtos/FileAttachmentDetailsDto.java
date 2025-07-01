@@ -2,7 +2,10 @@ package com.moneymanager.api.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.core.io.ByteArrayResource;
+
+/**
+ * FileAttachmentDetailsDto contains the properties and contents of a file
+ */
 
 @Data
 @AllArgsConstructor

@@ -1,12 +1,13 @@
 package com.moneymanager.api.repositories;
 
-import com.moneymanager.api.models.FinancialTransaction;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.moneymanager.api.models.FinancialTransaction;
 
 public interface FinancialTransactionRepository extends JpaRepository<FinancialTransaction, Long> {
-    public List<FinancialTransaction> findByYear(Integer year);
-    public List<FinancialTransaction> findByYearAndMonth(Integer year, Integer month);
-    public List<FinancialTransaction> findByYearAndMonthAndDay(Integer year, Integer month, Integer day);
+    List<FinancialTransaction> findByAccountIdAndYear(Long accountId, Short year);
+    List<FinancialTransaction> findByAccountIdAndYearAndMonth(Long accountId, Short year, Byte month);
+    List<FinancialTransaction> findByAccountIdAndYearAndMonthAndDay(Long accountId, Short year, Byte month, Byte day);
+    void deleteByAccountId(Long accountId);
 }

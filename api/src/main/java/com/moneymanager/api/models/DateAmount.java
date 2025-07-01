@@ -1,29 +1,43 @@
 package com.moneymanager.api.models;
 
-import com.moneymanager.api.requests.DateAmountUpdateRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import com.moneymanager.api.requests.DateAmountUpdateRequest;
+
+/**
+ * A DateAmount represents a recorded amount of money on a particular date.
+ * It contains the following properties:
+ * - id
+ * - year
+ * - month
+ * - day
+ * - amount
+ * - account
+ */
 
 @Getter
-@NoArgsConstructor
 @Entity
+@Table(name="AMOUNTS")
+@NoArgsConstructor
 public class DateAmount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer year;
-    private Integer month;
-    private Integer day;
+    private Short year;
+    private Byte month;
+    private Byte day;
 
-    private Double amount;
+    private Long amount;
 
-    public DateAmount(Integer year, Integer month, Integer day, Double amount) {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    public DateAmount(Account account, Short year, Byte month, Byte day, Long amount) {
+        this.account = account;
         this.year = year;
         this.month = month;
         this.day = day;

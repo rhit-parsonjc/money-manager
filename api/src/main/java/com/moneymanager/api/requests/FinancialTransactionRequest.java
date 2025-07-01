@@ -2,11 +2,15 @@ package com.moneymanager.api.requests;
 
 import lombok.Data;
 
+/**
+ * A FinancialTransactionRequest is used to create a FinancialTransaction
+ */
+
 @Data
 public class FinancialTransactionRequest {
-    private Integer year;
-    private Integer month;
-    private Integer day;
-    private Double amount;
+    private Short year;
+    private Byte month;
+    private Byte day;
+    private Long amount;
     private String name;
 }

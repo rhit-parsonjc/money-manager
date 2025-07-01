@@ -1,10 +1,7 @@
 package com.moneymanager.api.controllers;
 
-import com.moneymanager.api.dtos.FileAttachmentDetailsDto;
-import com.moneymanager.api.dtos.FileAttachmentDto;
-import com.moneymanager.api.exceptions.ResourceNotFoundException;
-import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.FileAttachmentService.FileAttachmentService;
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,7 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import com.moneymanager.api.dtos.FileAttachmentDetailsDto;
+import com.moneymanager.api.dtos.FileAttachmentDto;
+import com.moneymanager.api.models.FileAttachment;
+import com.moneymanager.api.responses.DataOrErrorResponse;
+import com.moneymanager.api.services.FileAttachmentService.FileAttachmentService;
+import com.moneymanager.api.services.MapperService.MapperService;
 
 @CrossOrigin
 @RestController
@@ -21,108 +23,97 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileAttachmentController {
     private final FileAttachmentService fileAttachmentService;
+    private final MapperService mapperService;
 
-    @PostMapping("/bankrecords/{id}")
-    public ResponseEntity<DataOrErrorResponse> attachFileToBankRecord(@PathVariable Long id, @RequestParam("file") MultipartFile multipartFile) {
+    @PostMapping("bankrecords/{recordId}")
+    public ResponseEntity<DataOrErrorResponse> attachFileToBankRecord(
+            @PathVariable Long recordId,
+            @RequestParam("file") MultipartFile multipartFile
+    ) {
         try {
-            FileAttachmentDto fileAttachmentDto = fileAttachmentService.attachFileToBankRecord(multipartFile, id);
+            FileAttachment fileAttachment = fileAttachmentService.createFileAttachmentForBankRecord(multipartFile, recordId);
+            FileAttachmentDto fileAttachmentDto = mapperService.mapFileAttachmentToDto(fileAttachment);
             DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDto);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (IOException e) {
             DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/financialtransactions/{id}")
-    public ResponseEntity<DataOrErrorResponse> attachFileToFinancialTransaction(@PathVariable Long id, @RequestParam("file") MultipartFile multipartFile) {
+    @PostMapping("financialtransactions/{transactionId}")
+    public ResponseEntity<DataOrErrorResponse> attachFileToFinancialTransaction(
+            @PathVariable Long transactionId,
+            @RequestParam("file") MultipartFile multipartFile
+    ) {
         try {
-            FileAttachmentDto fileAttachmentDto = fileAttachmentService.attachFileToFinancialTransaction(multipartFile, id);
+            FileAttachment fileAttachment = fileAttachmentService.createFileAttachmentForFinancialTransaction(multipartFile, transactionId);
+            FileAttachmentDto fileAttachmentDto = mapperService.mapFileAttachmentToDto(fileAttachment);
             DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDto);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (IOException e) {
             DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<byte[]> getFileAttachment(@PathVariable Long id) {
-        try {
-            FileAttachmentDetailsDto fileAttachmentDetailsDto = fileAttachmentService.getFileAttachment(id);
-            MediaType mediaType = MediaType.parseMediaType(fileAttachmentDetailsDto.getType());
-
-            return ResponseEntity.ok()
-                    .contentType(mediaType)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileAttachmentDetailsDto.getName() + "\"")
-                    .body(fileAttachmentDetailsDto.getContents());
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            byte[] emptyArr = new byte[0];
-            return new ResponseEntity<byte[]>(emptyArr, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<byte[]> getFileAttachment(
+            @PathVariable Long id
+    ) {
+        FileAttachment fileAttachment = fileAttachmentService.getFileAttachment(id);
+        FileAttachmentDetailsDto fileAttachmentDetailsDto = mapperService.mapFileAttachmentToDetailsDto(fileAttachment);
+        MediaType mediaType = MediaType.parseMediaType(fileAttachmentDetailsDto.getType());
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileAttachmentDetailsDto.getName() + "\"")
+                .body(fileAttachmentDetailsDto.getContents());
     }
 
-    @GetMapping("")
-    public ResponseEntity<DataOrErrorResponse> getFileAttachments() {
-        try {
-            List<FileAttachmentDto> fileAttachmentDtoList = fileAttachmentService.getFileAttachments();
-            DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDtoList);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping("bankrecords/{recordId}")
+    public ResponseEntity<DataOrErrorResponse> getFileAttachmentsForBankRecord(
+            @PathVariable Long recordId
+    ) {
+        List<FileAttachment> fileAttachmentList = fileAttachmentService.getFileAttachmentsByRecordId(recordId);
+        List<FileAttachmentDto> fileAttachmentDtoList = mapperService.mapFileAttachmentsToDtos(fileAttachmentList);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDtoList);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/bankrecords/{id}")
-    public ResponseEntity<DataOrErrorResponse> getFileAttachmentsForBankRecord(@PathVariable Long id) {
-        try {
-            List<FileAttachmentDto> fileAttachmentDtoList = fileAttachmentService.getFileAttachmentsByRecordId(id);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDtoList);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping("financialtransactions/{transactionId}")
+    public ResponseEntity<DataOrErrorResponse> getFileAttachmentsForFinancialTransaction(
+            @PathVariable Long transactionId
+    ) {
+        List<FileAttachment> fileAttachmentList = fileAttachmentService.getFileAttachmentsByTransactionId(transactionId);
+        List<FileAttachmentDto> fileAttachmentDtoList = mapperService.mapFileAttachmentsToDtos(fileAttachmentList);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDtoList);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/financialtransactions/{id}")
-    public ResponseEntity<DataOrErrorResponse> getFileAttachmentsForFinancialTransaction(@PathVariable Long id) {
-        try {
-            List<FileAttachmentDto> fileAttachmentDtoList = fileAttachmentService.getFileAttachmentsByTransactionId(id);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDtoList);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("{id}")
+    public ResponseEntity<DataOrErrorResponse> deleteFileAttachment(
+            @PathVariable Long id
+    ) {
+        fileAttachmentService.deleteFileAttachment(id);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<DataOrErrorResponse> deleteFileAttachment(@PathVariable Long id) {
-        try {
-            fileAttachmentService.deleteFileAttachment(id);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, null);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
-        } catch (ResourceNotFoundException e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("bankrecords/{recordId}")
+    public ResponseEntity<DataOrErrorResponse> deleteFileAttachmentsForBankRecord(
+            @PathVariable Long recordId
+    ) {
+        fileAttachmentService.deleteFileAttachmentsByRecordId(recordId);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("")
-    public ResponseEntity<DataOrErrorResponse> deleteFileAttachments() {
-        try {
-            fileAttachmentService.deleteFileAttachments();
-            DataOrErrorResponse response = new DataOrErrorResponse(true, null);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("financialtransactions/{transactionId}")
+    public ResponseEntity<DataOrErrorResponse> deleteFileAttachmentsForFinancialTransaction(
+            @PathVariable Long transactionId
+    ) {
+        fileAttachmentService.deleteFileAttachmentsByTransactionId(transactionId);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 }

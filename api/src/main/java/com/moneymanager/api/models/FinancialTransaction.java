@@ -1,43 +1,61 @@
 package com.moneymanager.api.models;
 
-import com.moneymanager.api.requests.FinancialTransactionRequest;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import com.moneymanager.api.requests.FinancialTransactionRequest;
+
+/**
+ * A FinancialTransaction refers to a financial transaction, which has the following properties:
+ * - id
+ * - year
+ * - month
+ * - day
+ * - amount
+ * - name
+ * - account
+ * - bankRecords
+ * - fileAttachments
+ */
 
 @Getter
-@NoArgsConstructor
 @Entity
+@Table(name="TRANSACTIONS")
+@NoArgsConstructor
 public class FinancialTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer year;
-    private Integer month;
-    private Integer day;
+    private Short year;
+    private Byte month;
+    private Byte day;
 
-    private Double amount;
+    private Long amount;
     private String name;
 
-    @ManyToMany(mappedBy = "financialTransactions")
-    Set<BankRecord> bankRecords;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "financialTransactions")
+    private Set<BankRecord> bankRecords;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "financialTransaction", orphanRemoval = true)
     private Set<FileAttachment> fileAttachments;
 
-    public FinancialTransaction(Integer year, Integer month, Integer day, Double amount, String name) {
+    public FinancialTransaction(Account account, Short year, Byte month, Byte day, Long amount, String name) {
+        this.account = account;
         this.year = year;
         this.month = month;
         this.day = day;
         this.amount = amount;
         this.name = name;
-        this.bankRecords = new HashSet<BankRecord>();
-        this.fileAttachments = new HashSet<FileAttachment>();
+        this.bankRecords = new HashSet<>();
+        this.fileAttachments = new HashSet<>();
     }
 
     public void update(FinancialTransactionRequest financialTransactionRequest) {
@@ -45,6 +63,7 @@ public class FinancialTransaction {
         this.month = financialTransactionRequest.getMonth();
         this.day = financialTransactionRequest.getDay();
         this.name = financialTransactionRequest.getName();
+        this.amount = financialTransactionRequest.getAmount();
     }
 
     @PreRemove

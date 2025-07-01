@@ -1,12 +1,13 @@
 package com.moneymanager.api.repositories;
 
-import com.moneymanager.api.models.BankRecord;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.moneymanager.api.models.BankRecord;
 
 public interface BankRecordRepository extends JpaRepository<BankRecord, Long> {
-    public List<BankRecord> findByYear(Integer year);
-    public List<BankRecord> findByYearAndMonth(Integer year, Integer month);
-    public List<BankRecord> findByYearAndMonthAndDay(Integer year, Integer month, Integer day);
+    List<BankRecord> findByAccountIdAndYear(Long accountId, Short year);
+    List<BankRecord> findByAccountIdAndYearAndMonth(Long accountId, Short year, Byte month);
+    List<BankRecord> findByAccountIdAndYearAndMonthAndDay(Long accountId, Short year, Byte month, Byte day);
+    void deleteByAccountId(Long accountId);
 }

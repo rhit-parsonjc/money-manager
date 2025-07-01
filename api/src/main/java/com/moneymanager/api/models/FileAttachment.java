@@ -3,15 +3,23 @@ package com.moneymanager.api.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.sql.Blob;
-import java.util.HashSet;
-import java.util.Set;
+/**
+ * A FileAttachment contains the data for a file, which is linked to either a bank record
+ * or a financial transaction, and has the following properties:
+ * - id
+ * - name
+ * - type
+ * - size
+ * - contents
+ * - financialTransaction
+ * - bankRecord
+ */
 
 @Getter
-@NoArgsConstructor
 @Entity
+@Table(name="ATTACHMENTS")
+@NoArgsConstructor
 public class FileAttachment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,26 +32,29 @@ public class FileAttachment {
     @Lob
     private byte[] contents;
 
-    @ManyToMany(mappedBy = "fileAttachments")
-    private Set<FinancialTransaction> financialTransactions;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "transaction_id")
+    private FinancialTransaction financialTransaction;
 
-    @ManyToMany(mappedBy = "fileAttachments")
-    private Set<BankRecord> bankRecords;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "record_id")
+    private BankRecord bankRecord;
 
-    public FileAttachment(String name, String type, Long size, byte[] contents) {
+    public FileAttachment(String name, String type, Long size, byte[] contents, FinancialTransaction financialTransaction) {
         this.name = name;
         this.type = type;
         this.size = size;
         this.contents = contents;
-        this.financialTransactions = new HashSet<FinancialTransaction>();
-        this.bankRecords = new HashSet<BankRecord>();
+        this.financialTransaction = financialTransaction;
+        this.bankRecord = null;
     }
 
-    @PreRemove
-    private void disconnectBankRecordsAndFinancialTransactions() {
-        for (FinancialTransaction financialTransaction : financialTransactions)
-            financialTransaction.getFileAttachments().remove(this);
-        for (BankRecord bankRecord : bankRecords)
-            bankRecord.getFileAttachments().remove(this);
+    public FileAttachment(String name, String type, Long size, byte[] contents, BankRecord bankRecord) {
+        this.name = name;
+        this.type = type;
+        this.size = size;
+        this.contents = contents;
+        this.financialTransaction = null;
+        this.bankRecord = bankRecord;
     }
 }

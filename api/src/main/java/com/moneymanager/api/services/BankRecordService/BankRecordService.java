@@ -1,22 +1,21 @@
 package com.moneymanager.api.services.BankRecordService;
 
-import com.moneymanager.api.dtos.BankRecordDetailsDto;
-import com.moneymanager.api.dtos.BankRecordDto;
-import com.moneymanager.api.requests.BankRecordRequest;
-
 import java.util.List;
 
+import com.moneymanager.api.models.BankRecord;
+import com.moneymanager.api.requests.BankRecordRequest;
+
 public interface BankRecordService {
-    public BankRecordDto createBankRecord(BankRecordRequest request);
+    BankRecord createBankRecord(Long accountId, BankRecordRequest request);
 
-    public BankRecordDetailsDto getBankRecordById(Long id);
-    public List<BankRecordDto> getBankRecords();
-    public List<BankRecordDto> getBankRecordsForYear(Integer year);
-    public List<BankRecordDto> getBankRecordsForMonth(Integer year, Integer month);
-    public List<BankRecordDto> getBankRecordsForDay(Integer year, Integer month, Integer day);
+    BankRecord getBankRecordById(Long accountId, Long id);
+    List<BankRecord> getBankRecords(Long accountId);
+    List<BankRecord> getBankRecordsForYear(Long accountId, Short year);
+    List<BankRecord> getBankRecordsForMonth(Long accountId, Short year, Byte month);
+    List<BankRecord> getBankRecordsForDay(Long accountId, Short year, Byte month, Byte day);
 
-    public BankRecordDto updateBankRecord(Long id, BankRecordRequest request);
+    BankRecord updateBankRecord(Long accountId, Long id, BankRecordRequest request);
 
-    public void deleteBankRecord(Long id);
-    public void deleteBankRecords();
+    void deleteBankRecord(Long accountId, Long id);
+    void deleteBankRecords(Long accountId);
 }

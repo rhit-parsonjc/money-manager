@@ -1,21 +1,21 @@
 package com.moneymanager.api.services.DateAmountService;
 
-import com.moneymanager.api.dtos.DateAmountDto;
+import java.util.List;
+
+import com.moneymanager.api.models.DateAmount;
 import com.moneymanager.api.requests.DateAmountCreateRequest;
 import com.moneymanager.api.requests.DateAmountUpdateRequest;
 
-import java.util.List;
-
 public interface DateAmountService {
-    public DateAmountDto createDateAmount(DateAmountCreateRequest request);
+    DateAmount createDateAmount(Long accountId, DateAmountCreateRequest request);
 
-    public List<DateAmountDto> getDateAmounts();
-    public List<DateAmountDto> getDateAmountsByYear(Integer year);
-    public List<DateAmountDto> getDateAmountsByMonth(Integer year, Integer month);
-    public List<DateAmountDto> getDateAmountsByDay(Integer year, Integer month, Integer day);
+    List<DateAmount> getDateAmounts(Long accountId);
+    List<DateAmount> getDateAmountsByYear(Long accountId, Short year);
+    List<DateAmount> getDateAmountsByMonth(Long accountId, Short year, Byte month);
+    List<DateAmount> getDateAmountsByDay(Long accountId, Short year, Byte month, Byte day);
 
-    public DateAmountDto updateDateAmount(Integer year, Integer month, Integer day, DateAmountUpdateRequest request);
+    DateAmount updateDateAmount(Long accountId, Short year, Byte month, Byte day, DateAmountUpdateRequest request);
 
-    public void deleteDateAmount(Integer year, Integer month, Integer day);
-    public void deleteDateAmounts();
+    void deleteDateAmount(Long accountId, Short year, Byte month, Byte day);
+    void deleteDateAmounts(Long accountId);
 }

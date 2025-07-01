@@ -1,16 +1,17 @@
 package com.moneymanager.api.controllers;
 
-import com.moneymanager.api.dtos.DateAmountDto;
-import com.moneymanager.api.exceptions.AlreadyExistsException;
-import com.moneymanager.api.exceptions.ResourceNotFoundException;
-import com.moneymanager.api.requests.DateAmountCreateRequest;
-import com.moneymanager.api.requests.DateAmountUpdateRequest;
-import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.DateAmountService.DateAmountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.moneymanager.api.dtos.DateAmountDto;
+import com.moneymanager.api.models.DateAmount;
+import com.moneymanager.api.requests.DateAmountCreateRequest;
+import com.moneymanager.api.requests.DateAmountUpdateRequest;
+import com.moneymanager.api.responses.DataOrErrorResponse;
+import com.moneymanager.api.services.DateAmountService.DateAmountService;
+import com.moneymanager.api.services.MapperService.MapperService;
 
 import java.util.List;
 
@@ -20,84 +21,75 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DateAmountController {
     private final DateAmountService dateAmountService;
+    private final MapperService mapperService;
 
-    @PostMapping("")
-    public ResponseEntity<DataOrErrorResponse> createDateAmount(@RequestBody DateAmountCreateRequest request) {
-        try {
-            DateAmountDto dateAmountDto = dateAmountService.createDateAmount(request);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, dateAmountDto);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
-        } catch (AlreadyExistsException e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping("{accountId}")
+    public ResponseEntity<DataOrErrorResponse> createDateAmount(
+            @PathVariable Long accountId,
+            @RequestBody DateAmountCreateRequest request
+    ) {
+        DateAmount dateAmount = dateAmountService.createDateAmount(accountId, request);
+        DateAmountDto dateAmountDto = mapperService.mapDateAmountToDto(dateAmount);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, dateAmountDto);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
     }
 
-    @GetMapping("")
-    public ResponseEntity<DataOrErrorResponse> getDateAmounts(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestBody(required = false) Integer day) {
-        try {
-            List<DateAmountDto> dateAmountDtos = null;
-            if (year == null && month == null && day == null) {
-                dateAmountDtos = dateAmountService.getDateAmounts();
-            } else if (year != null && month == null & day == null) {
-                dateAmountDtos = dateAmountService.getDateAmountsByYear(year);
-            } else if (year != null && month != null) {
-                if (day == null) {
-                    dateAmountDtos = dateAmountService.getDateAmountsByMonth(year, month);
-                } else {
-                    dateAmountDtos = dateAmountService.getDateAmountsByDay(year, month, day);
-                }
+    @GetMapping("{accountId}")
+    public ResponseEntity<DataOrErrorResponse> getDateAmounts(
+            @PathVariable Long accountId,
+            @RequestParam(required = false) Short year,
+            @RequestParam(required = false) Byte month,
+            @RequestParam(required = false) Byte day
+    ) {
+        List<DateAmount> dateAmounts = null;
+        if (year == null && month == null && day == null) {
+            dateAmounts = dateAmountService.getDateAmounts(accountId);
+        } else if (year != null && month == null & day == null) {
+            dateAmounts = dateAmountService.getDateAmountsByYear(accountId, year);
+        } else if (year != null && month != null) {
+            if (day == null) {
+                dateAmounts = dateAmountService.getDateAmountsByMonth(accountId, year, month);
+            } else {
+                dateAmounts = dateAmountService.getDateAmountsByDay(accountId, year, month, day);
             }
-            DataOrErrorResponse response = new DataOrErrorResponse(true, dateAmountDtos);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        List<DateAmountDto> dateAmountDtos = mapperService.mapDateAmountsToDtos(dateAmounts);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, dateAmountDtos);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{year}/{month}/{day}")
-    public ResponseEntity<DataOrErrorResponse> updateDateAmount(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day, @RequestBody DateAmountUpdateRequest request) {
-        try {
-            DateAmountDto dateAmountDto = dateAmountService.updateDateAmount(year, month, day, request);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, dateAmountDto);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PutMapping("{accountId}")
+    public ResponseEntity<DataOrErrorResponse> updateDateAmount(
+            @PathVariable Long accountId,
+            @RequestParam Short year,
+            @RequestParam Byte month,
+            @RequestParam Byte day,
+            @RequestBody DateAmountUpdateRequest request
+    ) {
+        DateAmount dateAmount = dateAmountService.updateDateAmount(accountId, year, month, day, request);
+        DateAmountDto dateAmountDto = mapperService.mapDateAmountToDto(dateAmount);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, dateAmountDto);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{year}/{month}/{day}")
-    public ResponseEntity<DataOrErrorResponse> deleteDateAmount(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day) {
-        try {
-            dateAmountService.deleteDateAmount(year, month, day);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, null);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
-        } catch (ResourceNotFoundException e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("{accountId}")
+    public ResponseEntity<DataOrErrorResponse> deleteDateAmount(
+            @PathVariable Long accountId,
+            @RequestParam Short year,
+            @RequestParam Byte month,
+            @RequestParam Byte day
+    ) {
+        dateAmountService.deleteDateAmount(accountId, year, month, day);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("")
-    public ResponseEntity<DataOrErrorResponse> deleteDateRecords() {
-        try {
-            dateAmountService.deleteDateAmounts();
-            DataOrErrorResponse response = new DataOrErrorResponse(true, null);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<DataOrErrorResponse> deleteDateAmounts(
+            @RequestParam Long accountId
+    ) {
+        dateAmountService.deleteDateAmounts(accountId);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 }

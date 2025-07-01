@@ -1,12 +1,14 @@
 package com.moneymanager.api.repositories;
 
-import com.moneymanager.api.models.DateAmount;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.moneymanager.api.models.DateAmount;
 
 public interface DateAmountRepository extends JpaRepository<DateAmount, Long> {
-    public List<DateAmount> findByYear(Integer year);
-    public List<DateAmount> findByYearAndMonth(Integer year, Integer month);
-    public List<DateAmount> findByYearAndMonthAndDay(Integer year, Integer month, Integer day);
+    List<DateAmount> findByAccountId(Long accountId);
+    List<DateAmount> findByAccountIdAndYear(Long accountId, Short year);
+    List<DateAmount> findByAccountIdAndYearAndMonth(Long accountId, Short year, Byte month);
+    List<DateAmount> findByAccountIdAndYearAndMonthAndDay(Long accountId, Short year, Byte month, Byte day);
+    void deleteByAccountId(Long accountId);
 }

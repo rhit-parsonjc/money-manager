@@ -1,83 +1,100 @@
 package com.moneymanager.api.services.FinancialTransactionService;
 
-import com.moneymanager.api.dtos.FinancialTransactionDetailsDto;
-import com.moneymanager.api.dtos.FinancialTransactionDto;
-import com.moneymanager.api.exceptions.ResourceNotFoundException;
-import com.moneymanager.api.models.FinancialTransaction;
-import com.moneymanager.api.repositories.BankRecordRepository;
-import com.moneymanager.api.repositories.FinancialTransactionRepository;
-import com.moneymanager.api.requests.FinancialTransactionRequest;
-import com.moneymanager.api.services.MapperService.MapperService;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.moneymanager.api.exceptions.ResourceNotFoundException;
+import com.moneymanager.api.models.Account;
+import com.moneymanager.api.models.FinancialTransaction;
+import com.moneymanager.api.repositories.FinancialTransactionRepository;
+import com.moneymanager.api.requests.FinancialTransactionRequest;
+import com.moneymanager.api.services.AccountService.AccountService;
+import com.moneymanager.api.services.MapperService.MapperService;
 
 @Service
 @RequiredArgsConstructor
 public class FinancialTransactionServiceImpl implements FinancialTransactionService {
+    private final AccountService accountService;
     private final FinancialTransactionRepository financialTransactionRepository;
-    private final BankRecordRepository bankRecordRepository;
     private final MapperService mapperService;
 
     @Override
-    public FinancialTransactionDto createFinancialTransaction(FinancialTransactionRequest request) {
-        FinancialTransaction financialTransaction = mapperService.mapFinancialTransactionRequestToTransaction(request);
-        FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
-        return mapperService.mapFinancialTransactionToDto(savedFinancialTransaction);
+    public FinancialTransaction createFinancialTransaction(Long accountId, FinancialTransactionRequest request) {
+        Account account = accountService.getAccountById(accountId);
+        FinancialTransaction financialTransaction = mapperService.mapFinancialTransactionRequestToTransaction(account, request);
+        return financialTransactionRepository.save(financialTransaction);
     }
 
     @Override
-    public FinancialTransactionDetailsDto getFinancialTransactionById(Long id) {
+    public FinancialTransaction getFinancialTransactionById(Long accountId, Long id) {
+        accountService.getAccountById(accountId);
         Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(id);
         if (financialTransactionOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         FinancialTransaction financialTransaction = financialTransactionOptional.get();
-        return mapperService.mapFinancialTransactionToDetailsDto(financialTransaction);
+        if (!Objects.equals(financialTransaction.getAccount().getId(), accountId))
+            throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
+        return financialTransaction;
     }
 
     @Override
-    public List<FinancialTransactionDto> getFinancialTransactions() {
-        return mapperService.mapFinancialTransactionsToDtos(financialTransactionRepository.findAll());
+    public List<FinancialTransaction> getFinancialTransactions(Long accountId) {
+        Account account = accountService.getAccountById(accountId);
+        return account.getFinancialTransactions().stream().toList();
     }
 
     @Override
-    public List<FinancialTransactionDto> getFinancialTransactionsForYear(Integer year) {
-        return mapperService.mapFinancialTransactionsToDtos(financialTransactionRepository.findByYear(year));
+    public List<FinancialTransaction> getFinancialTransactionsForYear(Long accountId, Short year) {
+        accountService.getAccountById(accountId);
+        return financialTransactionRepository.findByAccountIdAndYear(accountId, year);
     }
 
     @Override
-    public List<FinancialTransactionDto> getFinancialTransactionsForMonth(Integer year, Integer month) {
-        return mapperService.mapFinancialTransactionsToDtos(financialTransactionRepository.findByYearAndMonth(year, month));
+    public List<FinancialTransaction> getFinancialTransactionsForMonth(Long accountId, Short year, Byte month) {
+        accountService.getAccountById(accountId);
+        return financialTransactionRepository.findByAccountIdAndYearAndMonth(accountId, year, month);
     }
 
     @Override
-    public List<FinancialTransactionDto> getFinancialTransactionsForDay(Integer year, Integer month, Integer day) {
-        return mapperService.mapFinancialTransactionsToDtos(financialTransactionRepository.findByYearAndMonthAndDay(year, month, day));
+    public List<FinancialTransaction> getFinancialTransactionsForDay(Long accountId, Short year, Byte month, Byte day) {
+        accountService.getAccountById(accountId);
+        return financialTransactionRepository.findByAccountIdAndYearAndMonthAndDay(accountId, year, month, day);
     }
 
     @Override
-    public FinancialTransactionDto updateFinancialTransaction(Long id, FinancialTransactionRequest request) {
+    public FinancialTransaction updateFinancialTransaction(Long accountId, Long id, FinancialTransactionRequest request) {
+        accountService.getAccountById(accountId);
         Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(id);
         if (financialTransactionOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         FinancialTransaction financialTransaction = financialTransactionOptional.get();
+        if (!Objects.equals(financialTransaction.getAccount().getId(), accountId))
+            throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         financialTransaction.update(request);
-        FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
-        return mapperService.mapFinancialTransactionToDto(savedFinancialTransaction);
+        return financialTransactionRepository.save(financialTransaction);
     }
 
     @Override
-    public void deleteFinancialTransaction(Long id) {
+    public void deleteFinancialTransaction(Long accountId, Long id) {
+        accountService.getAccountById(accountId);
         Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(id);
         if (financialTransactionOptional.isEmpty())
+            throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
+        FinancialTransaction financialTransaction = financialTransactionOptional.get();
+        if (!Objects.equals(financialTransaction.getAccount().getId(), accountId))
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         financialTransactionRepository.deleteById(id);
     }
 
     @Override
-    public void deleteFinancialTransactions() {
-        financialTransactionRepository.deleteAll();
+    @Transactional
+    public void deleteFinancialTransactions(Long accountId) {
+        accountService.getAccountById(accountId);
+        financialTransactionRepository.deleteByAccountId(accountId);
     }
 }

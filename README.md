@@ -37,6 +37,7 @@
 - Thanks to [Andrey B. Panfilov](https://stackoverflow.com/questions/73078524/java-lang-stackoverflowerror-while-saving-jpa-entities) for addressing a Stack Overflow exception.
 - Thanks to [Grzegorz Oledzki and damian](https://stackoverflow.com/questions/1082095/how-to-remove-entity-with-manytomany-relationship-in-jpa-and-corresponding-join?rq=3) for handling a Many-to-Many relationship.
 - Thanks to [Failed to load driver class com.mysql.jdbc.Driver](https://stackoverflow.com/questions/52804228/failed-to-load-driver-class-com-mysql-jdbc-driver) and [Failed to load driver class org.h2.Driver from HikariConfig class classloader jdk.internal.loader.ClassLoaders$AppClassLoader](https://stackoverflow.com/questions/75568456/failed-to-load-driver-class-org-h2-driver-from-hikariconfig-class-classloader-jd/75568519) for suggesting that missing the MySQL dependency caused the error
+- Thanks to [Executing an update/delete query; nested exception is javax.persistence.TransactionRequiredException: Executing an update/delete query](https://stackoverflow.com/questions/68662951/executing-an-update-delete-query-nested-exception-is-javax-persistence-transact) for noting the @Transactional annotation
 
 ### Fonts
 

@@ -1,17 +1,18 @@
 package com.moneymanager.api.controllers;
 
-import com.moneymanager.api.dtos.BankRecordDetailsDto;
-import com.moneymanager.api.dtos.BankRecordDto;
-import com.moneymanager.api.exceptions.ResourceNotFoundException;
-import com.moneymanager.api.requests.BankRecordRequest;
-import com.moneymanager.api.responses.DataOrErrorResponse;
-import com.moneymanager.api.services.BankRecordService.BankRecordService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.moneymanager.api.dtos.BankRecordDetailsDto;
+import com.moneymanager.api.dtos.BankRecordDto;
+import com.moneymanager.api.models.BankRecord;
+import com.moneymanager.api.requests.BankRecordRequest;
+import com.moneymanager.api.responses.DataOrErrorResponse;
+import com.moneymanager.api.services.BankRecordService.BankRecordService;
+import com.moneymanager.api.services.MapperService.MapperService;
 
 @CrossOrigin
 @RestController
@@ -19,99 +20,84 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BankRecordController {
     private final BankRecordService bankRecordService;
+    private final MapperService mapperService;
 
-    @PostMapping("")
-    public ResponseEntity<DataOrErrorResponse> createBankRecord(@RequestBody BankRecordRequest request) {
-        try {
-            BankRecordDto bankRecordDto = bankRecordService.createBankRecord(request);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDto);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping("{accountId}")
+    public ResponseEntity<DataOrErrorResponse> createBankRecord(
+            @PathVariable Long accountId,
+            @RequestBody BankRecordRequest request
+    ) {
+        BankRecord bankRecord = bankRecordService.createBankRecord(accountId, request);
+        BankRecordDto bankRecordDto = mapperService.mapBankRecordToDto(bankRecord);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDto);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DataOrErrorResponse> getBankRecordById(@PathVariable Long id) {
-        try {
-            BankRecordDetailsDto bankRecordDetailsDto = bankRecordService.getBankRecordById(id);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDetailsDto);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping("{accountId}/{id}")
+    public ResponseEntity<DataOrErrorResponse> getBankRecordById(
+            @PathVariable Long accountId,
+            @PathVariable Long id
+    ) {
+        BankRecord bankRecord = bankRecordService.getBankRecordById(accountId, id);
+        BankRecordDetailsDto bankRecordDetailsDto = mapperService.mapBankRecordToDetailsDto(bankRecord);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDetailsDto);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
     }
 
-    @GetMapping("")
-    public ResponseEntity<DataOrErrorResponse> getBankRecords(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestParam(required = false) Integer day) {
-        try {
-            List<BankRecordDto> bankRecordDtos = null;
+    @GetMapping("{accountId}")
+    public ResponseEntity<DataOrErrorResponse> getBankRecords(
+            @PathVariable Long accountId,
+            @RequestParam(required = false) Short year,
+            @RequestParam(required = false) Byte month,
+            @RequestParam(required = false) Byte day
+    ) {
+            List<BankRecord> bankRecords = null;
             if (year == null && month == null && day == null) {
-                bankRecordDtos = bankRecordService.getBankRecords();
+                bankRecords = bankRecordService.getBankRecords(accountId);
             } else if (year != null && month == null && day == null) {
-                bankRecordDtos = bankRecordService.getBankRecordsForYear(year);
+                bankRecords = bankRecordService.getBankRecordsForYear(accountId, year);
             } else if (year != null && month != null) {
-                if (day == null) {
-                    bankRecordDtos = bankRecordService.getBankRecordsForMonth(year, month);
-                } else {
-                    bankRecordDtos = bankRecordService.getBankRecordsForDay(year, month, day);
-                }
+                if (day == null)
+                    bankRecords = bankRecordService.getBankRecordsForMonth(accountId, year, month);
+                else
+                    bankRecords = bankRecordService.getBankRecordsForDay(accountId, year, month, day);
             } else {
                 DataOrErrorResponse response = new DataOrErrorResponse(false, "Invalid query parameters");
                 return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.BAD_REQUEST);
             }
+            List<BankRecordDto> bankRecordDtos = mapperService.mapBankRecordsToDtos(bankRecords);
             DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDtos);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<DataOrErrorResponse> updateBankRecord(@PathVariable Long id, @RequestBody BankRecordRequest request) {
-        try {
-            BankRecordDto bankRecordDto = bankRecordService.updateBankRecord(id, request);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDto);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PutMapping("{accountId}/{id}")
+    public ResponseEntity<DataOrErrorResponse> updateBankRecord(
+            @PathVariable Long accountId,
+            @PathVariable Long id,
+            @RequestBody BankRecordRequest request
+    ) {
+        BankRecord bankRecord = bankRecordService.updateBankRecord(accountId, id, request);
+        BankRecordDto bankRecordDto = mapperService.mapBankRecordToDto(bankRecord);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, bankRecordDto);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<DataOrErrorResponse> deleteBankRecord(@PathVariable Long id) {
-        try {
-            bankRecordService.deleteBankRecord(id);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, null);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
-        } catch (ResourceNotFoundException e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("{accountId}/{id}")
+    public ResponseEntity<DataOrErrorResponse> deleteBankRecord(
+            @PathVariable Long accountId,
+            @PathVariable Long id
+    ) {
+        bankRecordService.deleteBankRecord(accountId, id);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("")
-    public ResponseEntity<DataOrErrorResponse> deleteBankRecords() {
-        try {
-            bankRecordService.deleteBankRecords();
-            DataOrErrorResponse response = new DataOrErrorResponse(true, null);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("{accountId}")
+    public ResponseEntity<DataOrErrorResponse> deleteBankRecords(
+            @PathVariable Long accountId
+    ) {
+        bankRecordService.deleteBankRecords(accountId);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 }

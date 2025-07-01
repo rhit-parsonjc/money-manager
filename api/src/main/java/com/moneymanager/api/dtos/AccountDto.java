@@ -4,14 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * FileAttachmentDto is returned in place of FileAttachment
+ * AccountDto is returned in place of Account
  */
 
 @Data
 @AllArgsConstructor
-public class FileAttachmentDto {
+public class AccountDto {
     private Long id;
     private String name;
-    private String type;
-    private Long size;
 }
