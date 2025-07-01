@@ -68,6 +68,7 @@
 - Thanks to [Geeks for Geeks](https://www.geeksforgeeks.org/spring-boot-3-0-jwt-authentication-with-spring-security-using-mysql-database/) for explaining Spring Security
 - Thanks to [FreeCodeCamp](https://www.youtube.com/watch?v=oGhc5Z-WJSw) for demonstrating how to use Spring Boot, but primarily for Spring Security
 - Thanks to [DaoAuthenticationException](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/authentication/dao/DaoAuthenticationProvider.html) for fixing the DaoAuthenticationProvider deprecation issue
+- Thanks to [JWT Decoder](https://jwt.io/) for viewing JWT contents
 
 ### IntelliJ
 

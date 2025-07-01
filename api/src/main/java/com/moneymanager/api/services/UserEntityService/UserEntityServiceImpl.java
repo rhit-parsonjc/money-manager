@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.moneymanager.api.exceptions.AlreadyExistsException;
 import com.moneymanager.api.exceptions.PermissionsException;
@@ -20,6 +22,7 @@ import com.moneymanager.api.requests.RegisterRequest;
 public class UserEntityServiceImpl implements UserEntityService {
     private final UserEntityRepository userEntityRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void createUser(RegisterRequest registerRequest) {
@@ -39,7 +42,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         Set<Role> singletonUserRole = Collections.singleton(userRole);
         UserEntity userEntity = new UserEntity(
                 username,
-                password,
+                passwordEncoder.encode(password),
                 singletonUserRole
         );
         userEntityRepository.save(userEntity);
@@ -47,7 +50,11 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     @Override
     public Optional<UserEntity> getAuthenticatedUser() {
-        List<UserEntity> userEntities = userEntityRepository.findAll();
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+        List<UserEntity> userEntities = userEntityRepository.findByUsername(username);
         if (userEntities.isEmpty())
             return Optional.empty();
         else

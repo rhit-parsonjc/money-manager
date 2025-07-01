@@ -3,6 +3,8 @@ package com.moneymanager.api.services.AccountService;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +90,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public void deleteAccounts() {
         UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
         accountRepository.deleteByUserEntityId(userEntity.getId());
