@@ -5,7 +5,7 @@
 ### Spring Boot Basics
 
 - Thanks to [Chinthaka Dinadasa](https://www.javatodev.com/spring-boot-mysql/) for describing how to connect MySQL to Spring Boot and how to set up a REST API in Spring Boot.
-- Also thanks to [Simpson Alfred's dream-shops repository](https://github.com/dailycodework/dream-shops) for Spring Boot details.
+- Also thanks to [Samson Alfred's dream-shops repository](https://github.com/dailycodework/dream-shops) for Spring Boot details.
 - Thanks to [baledung](https://www.baeldung.com/spring-request-param) for describing how to use the @RequestParam annotation.
 - Thanks to [Attila Fejér](https://www.baeldung.com/jpa-many-to-many) for describing how to use the @ManyToMany annotation
 - Thanks to [Teddy Smith](https://github.com/teddysmithdev/pokemon-review-springboot/) for showing how to use Spring
