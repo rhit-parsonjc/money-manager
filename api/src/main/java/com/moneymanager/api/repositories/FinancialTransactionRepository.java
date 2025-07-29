@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.moneymanager.api.models.FinancialTransaction;
 
 public interface FinancialTransactionRepository extends JpaRepository<FinancialTransaction, Long> {
-    List<FinancialTransaction> findByAccountIdAndYear(Long accountId, Short year);
-    List<FinancialTransaction> findByAccountIdAndYearAndMonth(Long accountId, Short year, Byte month);
-    List<FinancialTransaction> findByAccountIdAndYearAndMonthAndDay(Long accountId, Short year, Byte month, Byte day);
+    List<FinancialTransaction> findByAccountId(Long accountId);
+    List<FinancialTransaction> findByAccountIdAndYearValue(Long accountId, Short yearValue);
+    List<FinancialTransaction> findByAccountIdAndYearValueAndMonthValue(Long accountId, Short yearValue, Byte monthValue);
+    List<FinancialTransaction> findByAccountIdAndYearValueAndMonthValueAndDayValue(Long accountId, Short yearValue, Byte monthValue, Byte dayValue);
     void deleteByAccountId(Long accountId);
 }

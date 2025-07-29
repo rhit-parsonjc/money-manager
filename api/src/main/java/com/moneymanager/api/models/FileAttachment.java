@@ -4,17 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * A FileAttachment contains the data for a file, which is linked to either a bank record
- * or a financial transaction, and has the following properties:
- * - id
- * - name
- * - type
- * - size
- * - contents
- * - financialTransaction
- * - bankRecord
- */
+/*
+A file attachment represents a file, containing the metadata and contents.
+*/
 
 @Getter
 @Entity
@@ -32,29 +24,15 @@ public class FileAttachment {
     @Lob
     private byte[] contents;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "transaction_id")
-    private FinancialTransaction financialTransaction;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "record_id")
-    private BankRecord bankRecord;
-
-    public FileAttachment(String name, String type, Long size, byte[] contents, FinancialTransaction financialTransaction) {
+    public FileAttachment(String name, String type, Long size, byte[] contents, Item item) {
         this.name = name;
         this.type = type;
         this.size = size;
         this.contents = contents;
-        this.financialTransaction = financialTransaction;
-        this.bankRecord = null;
-    }
-
-    public FileAttachment(String name, String type, Long size, byte[] contents, BankRecord bankRecord) {
-        this.name = name;
-        this.type = type;
-        this.size = size;
-        this.contents = contents;
-        this.financialTransaction = null;
-        this.bankRecord = bankRecord;
+        this.item = item;
     }
 }

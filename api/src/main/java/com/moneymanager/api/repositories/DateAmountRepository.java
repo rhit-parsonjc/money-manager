@@ -7,8 +7,8 @@ import com.moneymanager.api.models.DateAmount;
 
 public interface DateAmountRepository extends JpaRepository<DateAmount, Long> {
     List<DateAmount> findByAccountId(Long accountId);
-    List<DateAmount> findByAccountIdAndYear(Long accountId, Short year);
-    List<DateAmount> findByAccountIdAndYearAndMonth(Long accountId, Short year, Byte month);
-    List<DateAmount> findByAccountIdAndYearAndMonthAndDay(Long accountId, Short year, Byte month, Byte day);
+    List<DateAmount> findByAccountIdAndYearValue(Long accountId, Short yearValue);
+    List<DateAmount> findByAccountIdAndYearValueAndMonthValue(Long accountId, Short yearValue, Byte monthValue);
+    List<DateAmount> findByAccountIdAndYearValueAndMonthValueAndDayValue(Long accountId, Short yearValue, Byte monthValue, Byte dayValue);
     void deleteByAccountId(Long accountId);
 }

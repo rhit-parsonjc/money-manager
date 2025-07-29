@@ -30,7 +30,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         String password = registerRequest.getPassword();
         List<UserEntity> userEntities = userEntityRepository.findByUsername(username);
         if (!userEntities.isEmpty())
-            throw new AlreadyExistsException(AlreadyExistsException.DATE_AMOUNT_MESSAGE);
+            throw new AlreadyExistsException(AlreadyExistsException.USER_MESSAGE);
         List<Role> roles = roleRepository.findByName("USER");
         Role userRole;
         if (roles.isEmpty()) {

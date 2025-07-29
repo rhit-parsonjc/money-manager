@@ -6,16 +6,9 @@ import lombok.NoArgsConstructor;
 
 import com.moneymanager.api.requests.DateAmountUpdateRequest;
 
-/**
- * A DateAmount represents a recorded amount of money on a particular date.
- * It contains the following properties:
- * - id
- * - year
- * - month
- * - day
- * - amount
- * - account
- */
+/*
+A DateAmount records the amount of money in the account on a specified date.
+*/
 
 @Getter
 @Entity
@@ -26,9 +19,9 @@ public class DateAmount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Short year;
-    private Byte month;
-    private Byte day;
+    private Short yearValue;
+    private Byte monthValue;
+    private Byte dayValue;
 
     private Long amount;
 
@@ -36,11 +29,12 @@ public class DateAmount {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    public DateAmount(Account account, Short year, Byte month, Byte day, Long amount) {
+    public DateAmount(Account account, Short yearValue, Byte monthValue,
+                      Byte dayValue, Long amount) {
         this.account = account;
-        this.year = year;
-        this.month = month;
-        this.day = day;
+        this.yearValue = yearValue;
+        this.monthValue = monthValue;
+        this.dayValue = dayValue;
         this.amount = amount;
     }
 

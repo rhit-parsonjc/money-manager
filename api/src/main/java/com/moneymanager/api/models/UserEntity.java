@@ -6,15 +6,10 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * A UserEntity represents a user and contains the following properties:
- * - id
- * - username
- * - password
- * - roles
- * - accounts
- */
-
+/*
+A UserEntity represents the data for a user.
+A UserEntity has many roles and accounts.
+*/
 @Getter
 @Entity
 @Table(name="USERS")

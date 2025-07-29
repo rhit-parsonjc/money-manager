@@ -10,12 +10,12 @@ public interface DateAmountService {
     DateAmount createDateAmount(Long accountId, DateAmountCreateRequest request);
 
     List<DateAmount> getDateAmounts(Long accountId);
-    List<DateAmount> getDateAmountsByYear(Long accountId, Short year);
-    List<DateAmount> getDateAmountsByMonth(Long accountId, Short year, Byte month);
-    List<DateAmount> getDateAmountsByDay(Long accountId, Short year, Byte month, Byte day);
+    List<DateAmount> getDateAmountsByYear(Long accountId, Short yearValue);
+    List<DateAmount> getDateAmountsByMonth(Long accountId, Short yearValue, Byte monthValue);
+    List<DateAmount> getDateAmountsByDay(Long accountId, Short yearValue, Byte monthValue, Byte dayValue);
 
-    DateAmount updateDateAmount(Long accountId, Short year, Byte month, Byte day, DateAmountUpdateRequest request);
+    DateAmount updateDateAmount(Long accountId, Short yearValue, Byte monthValue, Byte dayValue, DateAmountUpdateRequest request);
 
-    void deleteDateAmount(Long accountId, Short year, Byte month, Byte day);
+    void deleteDateAmount(Long accountId, Short yearValue, Byte monthValue, Byte dayValue);
     void deleteDateAmounts(Long accountId);
 }

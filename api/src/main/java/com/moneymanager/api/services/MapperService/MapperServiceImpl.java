@@ -16,9 +16,9 @@ public class MapperServiceImpl implements MapperService {
     public BankRecordDto mapBankRecordToDto(BankRecord bankRecord) {
         return new BankRecordDto(
                 bankRecord.getId(),
-                bankRecord.getYear(),
-                bankRecord.getMonth(),
-                bankRecord.getDay(),
+                bankRecord.getYearValue(),
+                bankRecord.getMonthValue(),
+                bankRecord.getDayValue(),
                 bankRecord.getAmount(),
                 bankRecord.getName()
         );
@@ -28,9 +28,9 @@ public class MapperServiceImpl implements MapperService {
     public BankRecordDetailsDto mapBankRecordToDetailsDto(BankRecord bankRecord) {
         return new BankRecordDetailsDto(
                 bankRecord.getId(),
-                bankRecord.getYear(),
-                bankRecord.getMonth(),
-                bankRecord.getDay(),
+                bankRecord.getYearValue(),
+                bankRecord.getMonthValue(),
+                bankRecord.getDayValue(),
                 bankRecord.getAmount(),
                 bankRecord.getName(),
                 mapFinancialTransactionsToDtos(bankRecord.getFinancialTransactions().stream().toList()),
@@ -47,9 +47,9 @@ public class MapperServiceImpl implements MapperService {
     public BankRecord mapBankRecordRequestToRecord(Account account, BankRecordRequest bankRecordRequest) {
         return new BankRecord(
                 account,
-                bankRecordRequest.getYear(),
-                bankRecordRequest.getMonth(),
-                bankRecordRequest.getDay(),
+                bankRecordRequest.getYearValue(),
+                bankRecordRequest.getMonthValue(),
+                bankRecordRequest.getDayValue(),
                 bankRecordRequest.getAmount(),
                 bankRecordRequest.getName()
         );
@@ -59,9 +59,9 @@ public class MapperServiceImpl implements MapperService {
     public DateAmountDto mapDateAmountToDto(DateAmount dateAmount) {
         return new DateAmountDto(
                 dateAmount.getId(),
-                dateAmount.getYear(),
-                dateAmount.getMonth(),
-                dateAmount.getDay(),
+                dateAmount.getYearValue(),
+                dateAmount.getMonthValue(),
+                dateAmount.getDayValue(),
                 dateAmount.getAmount()
         );
     }
@@ -75,9 +75,9 @@ public class MapperServiceImpl implements MapperService {
     public DateAmount mapDateAmountRequestToAmount(Account account, DateAmountCreateRequest dateAmountCreateRequest) {
         return new DateAmount(
                 account,
-                dateAmountCreateRequest.getYear(),
-                dateAmountCreateRequest.getMonth(),
-                dateAmountCreateRequest.getDay(),
+                dateAmountCreateRequest.getYearValue(),
+                dateAmountCreateRequest.getMonthValue(),
+                dateAmountCreateRequest.getDayValue(),
                 dateAmountCreateRequest.getAmount()
         );
     }
@@ -86,9 +86,9 @@ public class MapperServiceImpl implements MapperService {
     public FinancialTransactionDto mapFinancialTransactionToDto(FinancialTransaction financialTransaction) {
         return new FinancialTransactionDto(
                 financialTransaction.getId(),
-                financialTransaction.getYear(),
-                financialTransaction.getMonth(),
-                financialTransaction.getDay(),
+                financialTransaction.getYearValue(),
+                financialTransaction.getMonthValue(),
+                financialTransaction.getDayValue(),
                 financialTransaction.getAmount(),
                 financialTransaction.getName()
         );
@@ -98,9 +98,9 @@ public class MapperServiceImpl implements MapperService {
     public FinancialTransactionDetailsDto mapFinancialTransactionToDetailsDto(FinancialTransaction financialTransaction) {
         return new FinancialTransactionDetailsDto(
                 financialTransaction.getId(),
-                financialTransaction.getYear(),
-                financialTransaction.getMonth(),
-                financialTransaction.getDay(),
+                financialTransaction.getYearValue(),
+                financialTransaction.getMonthValue(),
+                financialTransaction.getDayValue(),
                 financialTransaction.getAmount(),
                 financialTransaction.getName(),
                 mapBankRecordsToDtos(financialTransaction.getBankRecords().stream().toList()),
@@ -117,9 +117,9 @@ public class MapperServiceImpl implements MapperService {
     public FinancialTransaction mapFinancialTransactionRequestToTransaction(Account account, FinancialTransactionRequest financialTransactionRequest) {
         return new FinancialTransaction(
                 account,
-                financialTransactionRequest.getYear(),
-                financialTransactionRequest.getMonth(),
-                financialTransactionRequest.getDay(),
+                financialTransactionRequest.getYearValue(),
+                financialTransactionRequest.getMonthValue(),
+                financialTransactionRequest.getDayValue(),
                 financialTransactionRequest.getAmount(),
                 financialTransactionRequest.getName()
         );

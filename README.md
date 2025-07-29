@@ -74,6 +74,11 @@
 
 - Thanks to [StackOverflow](https://stackoverflow.com/questions/75689637/idea-intellij-errorjava-error-release-version-20-not-supported-maven-compil) for fixing the Java version issue
 
+### Spring Testing
+
+- Thanks to [Abderrahim Azhrioun](https://www.baeldung.com/spring-boot-h2-jdbcsqlsyntaxerrorexception-expected-identifier) for noting that the H2 issue could be due to a reserved word. According to [H2 Documentation](https://h2database.com/html/advanced.html#keywords), these keywords are YEAR, MONTH, and DAY.
+- Thanks to [W3Schools](https://www.w3schools.com/java/java_advanced_sorting.asp) for explaining how to use Java sorting
+
 ## Random Value
 
 - [Random.org](https://www.random.org/) was used to generate the root password for the MySQL Database and the JWT secret

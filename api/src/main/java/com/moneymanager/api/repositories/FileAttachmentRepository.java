@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.moneymanager.api.models.FileAttachment;
 
+import java.util.List;
+
 public interface FileAttachmentRepository extends JpaRepository<FileAttachment, Long> {
-    void deleteByBankRecordId(Long bankRecordId);
-    void deleteByFinancialTransactionId(Long financialTransactionId);
+    List<FileAttachment> findByItemId(Long itemId);
+    void deleteByItemId(Long itemId);
 }

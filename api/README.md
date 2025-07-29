@@ -2,16 +2,6 @@
 
 Base URL: _/api/v1_
 
-## Status Codes Used
-
-- **200 OK**
-- **201 Created**
-- **204 No Content**
-- **400 Bad Request**
-- **404 Not Found**
-- **409 Conflict**
-- **500 Internal Server Error**
-
 ## Accounts
 
 **POST** to _/accounts_: creates a new account using the speciied body
@@ -28,7 +18,9 @@ Base URL: _/api/v1_
 
 ## Authentication
 
-**POST** to _/auth/register_: creates a user with the specified username and password
+**POST** to _/auth/login_: logins a user with the specified username and password
+
+**POST** to _/auth/register_: registers a user with the specified username and password
 
 ## Bank Records
 
@@ -78,21 +70,15 @@ Base URL: _/api/v1_
 
 ## File Attachments
 
-**POST** to _/fileattachments/bankrecords/{recordId}_: creates a new file attached to a bank record
-
-**POST** to _/fileattachments/financialtransactions/{transactionId}_: creates a new file attaced to a financial transaction
+**POST** to _/fileattachments/{itemId}: creates a new file attached to an item
 
 **GET** to _/fileattachments/{id}_: gets the file attachment with the specified id
 
-**GET** to _/fileattachments/bankrecords/{recordId}_: gets the file attachments for the specified bank record
-
-**GET** to _/fileattachments/financialtransactions/{transactionId}_: gets the file attachments for the specified financial transaction
+**GET** to _/fileattachments?itemId={itemId}_: gets the file attachments for the specified item
 
 **DELETE** to _/fileattachments/{id}_: deletes the file attachment with the specified id
 
-**DELETE** to _/fileattachments/bankrecords/{recordId}_: deletes the file attachments for the specified bank record
-
-**DELETE** to _/fileattachments/financialtransactions/{transactionId}_: deletes the file attachments for the specified financial transaction
+**DELETE** to _/fileattachments?itemId={itemId}_: deletes the file attachments for the specified item
 
 # Models
 

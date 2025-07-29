@@ -37,33 +37,33 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         if (financialTransactionOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         FinancialTransaction financialTransaction = financialTransactionOptional.get();
-        if (!Objects.equals(financialTransaction.getAccount().getId(), accountId))
+        if (financialTransaction.getAccount().getId().longValue() != accountId.longValue())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         return financialTransaction;
     }
 
     @Override
     public List<FinancialTransaction> getFinancialTransactions(Long accountId) {
-        Account account = accountService.getAccountById(accountId);
-        return account.getFinancialTransactions().stream().toList();
+        accountService.getAccountById(accountId);
+        return financialTransactionRepository.findByAccountId(accountId);
     }
 
     @Override
-    public List<FinancialTransaction> getFinancialTransactionsForYear(Long accountId, Short year) {
+    public List<FinancialTransaction> getFinancialTransactionsForYear(Long accountId, Short yearValue) {
         accountService.getAccountById(accountId);
-        return financialTransactionRepository.findByAccountIdAndYear(accountId, year);
+        return financialTransactionRepository.findByAccountIdAndYearValue(accountId, yearValue);
     }
 
     @Override
-    public List<FinancialTransaction> getFinancialTransactionsForMonth(Long accountId, Short year, Byte month) {
+    public List<FinancialTransaction> getFinancialTransactionsForMonth(Long accountId, Short yearValue, Byte monthValue) {
         accountService.getAccountById(accountId);
-        return financialTransactionRepository.findByAccountIdAndYearAndMonth(accountId, year, month);
+        return financialTransactionRepository.findByAccountIdAndYearValueAndMonthValue(accountId, yearValue, monthValue);
     }
 
     @Override
-    public List<FinancialTransaction> getFinancialTransactionsForDay(Long accountId, Short year, Byte month, Byte day) {
+    public List<FinancialTransaction> getFinancialTransactionsForDay(Long accountId, Short yearValue, Byte monthValue, Byte dayValue) {
         accountService.getAccountById(accountId);
-        return financialTransactionRepository.findByAccountIdAndYearAndMonthAndDay(accountId, year, month, day);
+        return financialTransactionRepository.findByAccountIdAndYearValueAndMonthValueAndDayValue(accountId, yearValue, monthValue, dayValue);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         if (financialTransactionOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         FinancialTransaction financialTransaction = financialTransactionOptional.get();
-        if (!Objects.equals(financialTransaction.getAccount().getId(), accountId))
+        if (financialTransaction.getAccount().getId().longValue() != accountId.longValue())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         financialTransaction.update(request);
         return financialTransactionRepository.save(financialTransaction);
@@ -86,7 +86,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         if (financialTransactionOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         FinancialTransaction financialTransaction = financialTransactionOptional.get();
-        if (!Objects.equals(financialTransaction.getAccount().getId(), accountId))
+        if (financialTransaction.getAccount().getId().longValue() != accountId.longValue())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);
         financialTransactionRepository.deleteById(id);
     }

@@ -38,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
         UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
         Optional<Account> existingAccountOptional = this.getAccountByName(userEntity, request.getName());
         if (existingAccountOptional.isPresent())
-            throw new AlreadyExistsException(ResourceNotFoundException.ACCOUNT_MESSAGE);
+            throw new AlreadyExistsException(AlreadyExistsException.ACCOUNT_MESSAGE);
         Account account = mapperService.mapAccountRequestToAccount(userEntity, request);
         return accountRepository.save(account);
     }
@@ -50,7 +50,7 @@ public class AccountServiceImpl implements AccountService {
         if (accountOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.ACCOUNT_MESSAGE);
         Account account = accountOptional.get();
-        if (!Objects.equals(account.getUserEntity().getId(), userEntity.getId()))
+        if (account.getUserEntity().getId().longValue() != userEntity.getId().longValue())
             throw new PermissionsException(PermissionsException.INCORRECT_USER);
         return account;
     }
@@ -68,11 +68,11 @@ public class AccountServiceImpl implements AccountService {
         if (accountOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.ACCOUNT_MESSAGE);
         Account account = accountOptional.get();
-        if (!Objects.equals(account.getUserEntity().getId(), userEntity.getId()))
+        if (account.getUserEntity().getId().longValue() != userEntity.getId().longValue())
             throw new PermissionsException(PermissionsException.INCORRECT_USER);
         Optional<Account> existingAccountOptional = this.getAccountByName(userEntity, request.getName());
         if (existingAccountOptional.isPresent())
-            throw new AlreadyExistsException(ResourceNotFoundException.ACCOUNT_MESSAGE);
+            throw new AlreadyExistsException(AlreadyExistsException.ACCOUNT_MESSAGE);
         account.update(request);
         return accountRepository.save(account);
     }
@@ -84,7 +84,7 @@ public class AccountServiceImpl implements AccountService {
         if (accountOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.ACCOUNT_MESSAGE);
         Account account = accountOptional.get();
-        if (!Objects.equals(account.getUserEntity().getId(), userEntity.getId()))
+        if (account.getUserEntity().getId().longValue() != userEntity.getId().longValue())
             throw new PermissionsException(PermissionsException.INCORRECT_USER);
         accountRepository.deleteById(id);
     }

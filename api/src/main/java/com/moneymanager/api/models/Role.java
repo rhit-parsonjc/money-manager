@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * A Role specifies what actions a user can perform.
- * There is currently only a single role: USER
- */
+/*
+A Role specifies what permissions a user can have.
+Currently, there is only one role: a USER role.
+*/
 
 @Getter
 @Entity

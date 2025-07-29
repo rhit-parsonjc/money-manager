@@ -10,9 +10,9 @@ public interface BankRecordService {
 
     BankRecord getBankRecordById(Long accountId, Long id);
     List<BankRecord> getBankRecords(Long accountId);
-    List<BankRecord> getBankRecordsForYear(Long accountId, Short year);
-    List<BankRecord> getBankRecordsForMonth(Long accountId, Short year, Byte month);
-    List<BankRecord> getBankRecordsForDay(Long accountId, Short year, Byte month, Byte day);
+    List<BankRecord> getBankRecordsForYear(Long accountId, Short yearValue);
+    List<BankRecord> getBankRecordsForMonth(Long accountId, Short yearValue, Byte monthValue);
+    List<BankRecord> getBankRecordsForDay(Long accountId, Short yearValue, Byte monthValue, Byte dayValue);
 
     BankRecord updateBankRecord(Long accountId, Long id, BankRecordRequest request);
 

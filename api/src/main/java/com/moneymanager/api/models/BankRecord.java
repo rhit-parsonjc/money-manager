@@ -8,39 +8,16 @@ import lombok.NoArgsConstructor;
 
 import com.moneymanager.api.requests.BankRecordRequest;
 
-/**
- * A BankRecord refers to a single bank record and has the following properties:
- * - id
- * - year
- * - month
- * - day
- * - amount
- * - name
- * - account
- * - financialTransactions
- * - fileAttachments
- */
+/*
+A bank record represents a record from the financial institution.
+A bank record has many financial transactions.
+*/
 
 @Getter
 @Entity
-@Table(name="RECORDS")
+@DiscriminatorValue(value = "R")
 @NoArgsConstructor
-public class BankRecord {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private Short year;
-    private Byte month;
-    private Byte day;
-
-    private Long amount;
-    private String name;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id")
-    private Account account;
-
+public class BankRecord extends Item {
     @ManyToMany
     @JoinTable(
         name = "RECORD_TRANSACTIONS",
@@ -49,26 +26,17 @@ public class BankRecord {
     )
     private Set<FinancialTransaction> financialTransactions;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bankRecord", orphanRemoval = true)
-    private Set<FileAttachment> fileAttachments;
-
-    public BankRecord(Account account, Short year, Byte month,
-                      Byte day, Long amount, String name) {
-        this.account = account;
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.amount = amount;
-        this.name = name;
+    public BankRecord(Account account, Short yearValue, Byte monthValue,
+                      Byte dayValue, Long amount, String name) {
+        super(account, yearValue, monthValue, dayValue, amount, name);
         this.financialTransactions = new HashSet<FinancialTransaction>();
-        this.fileAttachments = new HashSet<FileAttachment>();
     }
 
     public void update(BankRecordRequest bankRecordRequest) {
-        this.year = bankRecordRequest.getYear();
-        this.month = bankRecordRequest.getMonth();
-        this.day = bankRecordRequest.getDay();
-        this.amount = bankRecordRequest.getAmount();
-        this.name = bankRecordRequest.getName();
+        super.update(bankRecordRequest.getYearValue(),
+                bankRecordRequest.getMonthValue(),
+                bankRecordRequest.getDayValue(),
+                bankRecordRequest.getAmount(),
+                bankRecordRequest.getName());
     }
 }

@@ -32,7 +32,7 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
 
     private Long getAccountId(UserEntity userEntity, BankRecord bankRecord) {
         Account bankRecordAccount = bankRecord.getAccount();
-        if (!Objects.equals(bankRecordAccount.getUserEntity().getId(), userEntity.getId()))
+        if (bankRecordAccount.getUserEntity().getId().longValue() != userEntity.getId().longValue())
             throw new PermissionsException(PermissionsException.INCORRECT_USER);
         return bankRecordAccount.getId();
     }
@@ -46,7 +46,7 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
 
     private Long getAccountId(UserEntity userEntity, FinancialTransaction financialTransaction) {
         Account financialTransactionAccount = financialTransaction.getAccount();
-        if (!Objects.equals(financialTransactionAccount.getUserEntity().getId(), userEntity.getId()))
+        if (financialTransactionAccount.getUserEntity().getId().longValue() != userEntity.getId().longValue())
             throw new PermissionsException(PermissionsException.INCORRECT_USER);
         return financialTransactionAccount.getId();
     }
@@ -58,7 +58,7 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
         Long bankRecordAccountId = getAccountId(userEntity, bankRecord);
         FinancialTransaction financialTransaction = getFinancialTransaction(userEntity, transactionId);
         Long financialTransactionAccountId = getAccountId(userEntity, financialTransaction);
-        if (!Objects.equals(bankRecordAccountId, financialTransactionAccountId))
+        if (bankRecordAccountId.longValue() != financialTransactionAccountId.longValue())
             throw new InvalidRequestException(InvalidRequestException.DIFFERENT_ACCOUNTS);
         boolean bankRecordHasFinancialTransaction = bankRecord.getFinancialTransactions().contains(financialTransaction);
         boolean financialTransactionHasBankRecord = financialTransaction.getBankRecords().contains(bankRecord);
@@ -81,7 +81,7 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
         Long bankRecordAccountId = getAccountId(userEntity, bankRecord);
         FinancialTransaction financialTransaction = getFinancialTransaction(userEntity, transactionId);
         Long financialTransactionAccountId = getAccountId(userEntity, financialTransaction);
-        if (!Objects.equals(bankRecordAccountId, financialTransactionAccountId))
+        if (bankRecordAccountId.longValue() != financialTransactionAccountId.longValue())
             throw new InvalidRequestException(InvalidRequestException.DIFFERENT_ACCOUNTS);
         boolean bankRecordHasFinancialTransaction = bankRecord.getFinancialTransactions().contains(financialTransaction);
         boolean financialTransactionHasBankRecord = financialTransaction.getBankRecords().contains(bankRecord);

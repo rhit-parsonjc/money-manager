@@ -10,9 +10,9 @@ public interface FinancialTransactionService {
 
     FinancialTransaction getFinancialTransactionById(Long accountId, Long id);
     List<FinancialTransaction> getFinancialTransactions(Long accountId);
-    List<FinancialTransaction> getFinancialTransactionsForYear(Long accountId, Short year);
-    List<FinancialTransaction> getFinancialTransactionsForMonth(Long accountId, Short year, Byte month);
-    List<FinancialTransaction> getFinancialTransactionsForDay(Long accountId, Short year, Byte month, Byte day);
+    List<FinancialTransaction> getFinancialTransactionsForYear(Long accountId, Short yearValue);
+    List<FinancialTransaction> getFinancialTransactionsForMonth(Long accountId, Short yearValue, Byte monthValue);
+    List<FinancialTransaction> getFinancialTransactionsForDay(Long accountId, Short yearValue, Byte monthValue, Byte dayValue);
 
     FinancialTransaction updateFinancialTransaction(Long accountId, Long id, FinancialTransactionRequest request);
 

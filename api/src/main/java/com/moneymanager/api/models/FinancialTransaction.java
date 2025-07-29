@@ -8,62 +8,31 @@ import lombok.NoArgsConstructor;
 
 import com.moneymanager.api.requests.FinancialTransactionRequest;
 
-/**
- * A FinancialTransaction refers to a financial transaction, which has the following properties:
- * - id
- * - year
- * - month
- * - day
- * - amount
- * - name
- * - account
- * - bankRecords
- * - fileAttachments
- */
+/*
+A financial transaction represents a record not from the financial institution.
+A financial transaction has many bank records.
+*/
 
 @Getter
 @Entity
-@Table(name="TRANSACTIONS")
+@DiscriminatorValue(value = "T")
 @NoArgsConstructor
-public class FinancialTransaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private Short year;
-    private Byte month;
-    private Byte day;
-
-    private Long amount;
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
+public class FinancialTransaction extends Item {
     @ManyToMany(mappedBy = "financialTransactions")
     private Set<BankRecord> bankRecords;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "financialTransaction", orphanRemoval = true)
-    private Set<FileAttachment> fileAttachments;
-
-    public FinancialTransaction(Account account, Short year, Byte month, Byte day, Long amount, String name) {
-        this.account = account;
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.amount = amount;
-        this.name = name;
+    public FinancialTransaction(Account account, Short yearValue, Byte monthValue,
+                                Byte dayValue, Long amount, String name) {
+        super(account, yearValue, monthValue, dayValue, amount, name);
         this.bankRecords = new HashSet<>();
-        this.fileAttachments = new HashSet<>();
     }
 
     public void update(FinancialTransactionRequest financialTransactionRequest) {
-        this.year = financialTransactionRequest.getYear();
-        this.month = financialTransactionRequest.getMonth();
-        this.day = financialTransactionRequest.getDay();
-        this.name = financialTransactionRequest.getName();
-        this.amount = financialTransactionRequest.getAmount();
+        super.update(financialTransactionRequest.getYearValue(),
+                financialTransactionRequest.getMonthValue(),
+                financialTransactionRequest.getDayValue(),
+                financialTransactionRequest.getAmount(),
+                financialTransactionRequest.getName());
     }
 
     @PreRemove

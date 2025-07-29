@@ -38,33 +38,33 @@ public class BankRecordServiceImpl implements BankRecordService {
         if (bankRecordOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.BANK_RECORD_MESSAGE);
         BankRecord bankRecord = bankRecordOptional.get();
-        if (!Objects.equals(bankRecord.getAccount().getId(), accountId))
+        if (bankRecord.getAccount().getId().longValue() != accountId.longValue())
             throw new InvalidRequestException(InvalidRequestException.INCORRECT_ACCOUNT);
         return bankRecord;
     }
 
     @Override
     public List<BankRecord> getBankRecords(Long accountId) {
-        Account account = accountService.getAccountById(accountId);
-        return account.getBankRecords().stream().toList();
+        accountService.getAccountById(accountId);
+        return bankRecordRepository.findByAccountId(accountId);
     }
 
     @Override
-    public List<BankRecord> getBankRecordsForYear(Long accountId, Short year) {
+    public List<BankRecord> getBankRecordsForYear(Long accountId, Short yearValue) {
         accountService.getAccountById(accountId);
-        return bankRecordRepository.findByAccountIdAndYear(accountId, year);
+        return bankRecordRepository.findByAccountIdAndYearValue(accountId, yearValue);
     }
 
     @Override
-    public List<BankRecord> getBankRecordsForMonth(Long accountId, Short year, Byte month) {
+    public List<BankRecord> getBankRecordsForMonth(Long accountId, Short yearValue, Byte monthValue) {
         accountService.getAccountById(accountId);
-        return bankRecordRepository.findByAccountIdAndYearAndMonth(accountId, year, month);
+        return bankRecordRepository.findByAccountIdAndYearValueAndMonthValue(accountId, yearValue, monthValue);
     }
 
     @Override
-    public List<BankRecord> getBankRecordsForDay(Long accountId, Short year, Byte month, Byte day) {
+    public List<BankRecord> getBankRecordsForDay(Long accountId, Short yearValue, Byte monthValue, Byte dayValue) {
         accountService.getAccountById(accountId);
-        return bankRecordRepository.findByAccountIdAndYearAndMonthAndDay(accountId, year, month, day);
+        return bankRecordRepository.findByAccountIdAndYearValueAndMonthValueAndDayValue(accountId, yearValue, monthValue, dayValue);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BankRecordServiceImpl implements BankRecordService {
         if (bankRecordOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.BANK_RECORD_MESSAGE);
         BankRecord bankRecord = bankRecordOptional.get();
-        if (!Objects.equals(bankRecord.getAccount().getId(), accountId))
+        if (bankRecord.getAccount().getId() != accountId.longValue())
             throw new ResourceNotFoundException(ResourceNotFoundException.BANK_RECORD_MESSAGE);
         bankRecord.update(request);
         return bankRecordRepository.save(bankRecord);
@@ -87,7 +87,7 @@ public class BankRecordServiceImpl implements BankRecordService {
         if (bankRecordOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.BANK_RECORD_MESSAGE);
         BankRecord bankRecord = bankRecordOptional.get();
-        if (!Objects.equals(bankRecord.getAccount().getId(), accountId))
+        if (bankRecord.getAccount().getId().longValue() != accountId.longValue())
             throw new ResourceNotFoundException(ResourceNotFoundException.BANK_RECORD_MESSAGE);
         bankRecordRepository.deleteById(id);
     }

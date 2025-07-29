@@ -25,29 +25,13 @@ public class FileAttachmentController {
     private final FileAttachmentService fileAttachmentService;
     private final MapperService mapperService;
 
-    @PostMapping("bankrecords/{recordId}")
-    public ResponseEntity<DataOrErrorResponse> attachFileToBankRecord(
-            @PathVariable Long recordId,
+    @PostMapping("{itemId}")
+    public ResponseEntity<DataOrErrorResponse> createFile(
+            @PathVariable Long itemId,
             @RequestParam("file") MultipartFile multipartFile
     ) {
         try {
-            FileAttachment fileAttachment = fileAttachmentService.createFileAttachmentForBankRecord(multipartFile, recordId);
-            FileAttachmentDto fileAttachmentDto = mapperService.mapFileAttachmentToDto(fileAttachment);
-            DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDto);
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
-        } catch (IOException e) {
-            DataOrErrorResponse response = new DataOrErrorResponse(false, e.getMessage());
-            return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("financialtransactions/{transactionId}")
-    public ResponseEntity<DataOrErrorResponse> attachFileToFinancialTransaction(
-            @PathVariable Long transactionId,
-            @RequestParam("file") MultipartFile multipartFile
-    ) {
-        try {
-            FileAttachment fileAttachment = fileAttachmentService.createFileAttachmentForFinancialTransaction(multipartFile, transactionId);
+            FileAttachment fileAttachment = fileAttachmentService.createFileAttachmentForItem(multipartFile, itemId);
             FileAttachmentDto fileAttachmentDto = mapperService.mapFileAttachmentToDto(fileAttachment);
             DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDto);
             return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
@@ -70,21 +54,11 @@ public class FileAttachmentController {
                 .body(fileAttachmentDetailsDto.getContents());
     }
 
-    @GetMapping("bankrecords/{recordId}")
-    public ResponseEntity<DataOrErrorResponse> getFileAttachmentsForBankRecord(
-            @PathVariable Long recordId
+    @GetMapping("")
+    public ResponseEntity<DataOrErrorResponse> getFileAttachmentsForItem(
+            @RequestParam Long itemId
     ) {
-        List<FileAttachment> fileAttachmentList = fileAttachmentService.getFileAttachmentsByRecordId(recordId);
-        List<FileAttachmentDto> fileAttachmentDtoList = mapperService.mapFileAttachmentsToDtos(fileAttachmentList);
-        DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDtoList);
-        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
-    }
-
-    @GetMapping("financialtransactions/{transactionId}")
-    public ResponseEntity<DataOrErrorResponse> getFileAttachmentsForFinancialTransaction(
-            @PathVariable Long transactionId
-    ) {
-        List<FileAttachment> fileAttachmentList = fileAttachmentService.getFileAttachmentsByTransactionId(transactionId);
+        List<FileAttachment> fileAttachmentList = fileAttachmentService.getFileAttachmentsByItemId(itemId);
         List<FileAttachmentDto> fileAttachmentDtoList = mapperService.mapFileAttachmentsToDtos(fileAttachmentList);
         DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDtoList);
         return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
@@ -99,20 +73,11 @@ public class FileAttachmentController {
         return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("bankrecords/{recordId}")
-    public ResponseEntity<DataOrErrorResponse> deleteFileAttachmentsForBankRecord(
-            @PathVariable Long recordId
+    @DeleteMapping("")
+    public ResponseEntity<DataOrErrorResponse> deleteFileAttachmentsForItem(
+            @RequestParam Long itemId
     ) {
-        fileAttachmentService.deleteFileAttachmentsByRecordId(recordId);
-        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
-        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
-    }
-
-    @DeleteMapping("financialtransactions/{transactionId}")
-    public ResponseEntity<DataOrErrorResponse> deleteFileAttachmentsForFinancialTransaction(
-            @PathVariable Long transactionId
-    ) {
-        fileAttachmentService.deleteFileAttachmentsByTransactionId(transactionId);
+        fileAttachmentService.deleteFileAttachmentsByItemId(itemId);
         DataOrErrorResponse response = new DataOrErrorResponse(true, null);
         return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }

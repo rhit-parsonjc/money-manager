@@ -24,8 +24,8 @@ public class DateAmountServiceImpl implements DateAmountService {
     private final DateAmountRepository dateAmountRepository;
     private final MapperService mapperService;
 
-    private Optional<DateAmount> getDateAmountByDay(Account account, Short year, Byte month, Byte day) {
-        List<DateAmount> dateAmounts = dateAmountRepository.findByAccountIdAndYearAndMonthAndDay(account.getId(), year, month, day);
+    private Optional<DateAmount> getDateAmountByDay(Account account, Short yearValue, Byte monthValue, Byte dayValue) {
+        List<DateAmount> dateAmounts = dateAmountRepository.findByAccountIdAndYearValueAndMonthValueAndDayValue(account.getId(), yearValue, monthValue, dayValue);
         if (dateAmounts.isEmpty())
             return Optional.empty();
         else
@@ -35,7 +35,7 @@ public class DateAmountServiceImpl implements DateAmountService {
     @Override
     public DateAmount createDateAmount(Long accountId, DateAmountCreateRequest request) {
         Account account = accountService.getAccountById(accountId);
-        Optional<DateAmount> existingDateAmountOptional = this.getDateAmountByDay(account, request.getYear(), request.getMonth(), request.getDay());
+        Optional<DateAmount> existingDateAmountOptional = this.getDateAmountByDay(account, request.getYearValue(), request.getMonthValue(), request.getDayValue());
         if (existingDateAmountOptional.isPresent())
             throw new AlreadyExistsException(AlreadyExistsException.DATE_AMOUNT_MESSAGE);
         DateAmount dateAmount = mapperService.mapDateAmountRequestToAmount(account, request);
@@ -49,27 +49,27 @@ public class DateAmountServiceImpl implements DateAmountService {
     }
 
     @Override
-    public List<DateAmount> getDateAmountsByYear(Long accountId, Short year) {
+    public List<DateAmount> getDateAmountsByYear(Long accountId, Short yearValue) {
         accountService.getAccountById(accountId);
-        return dateAmountRepository.findByAccountIdAndYear(accountId, year);
+        return dateAmountRepository.findByAccountIdAndYearValue(accountId, yearValue);
     }
 
     @Override
-    public List<DateAmount> getDateAmountsByMonth(Long accountId, Short year, Byte month) {
+    public List<DateAmount> getDateAmountsByMonth(Long accountId, Short yearValue, Byte monthValue) {
         accountService.getAccountById(accountId);
-        return dateAmountRepository.findByAccountIdAndYearAndMonth(accountId, year, month);
+        return dateAmountRepository.findByAccountIdAndYearValueAndMonthValue(accountId, yearValue, monthValue);
     }
 
     @Override
-    public List<DateAmount> getDateAmountsByDay(Long accountId, Short year, Byte month, Byte day) {
+    public List<DateAmount> getDateAmountsByDay(Long accountId, Short yearValue, Byte monthValue, Byte dayValue) {
         accountService.getAccountById(accountId);
-        return dateAmountRepository.findByAccountIdAndYearAndMonthAndDay(accountId, year, month, day);
+        return dateAmountRepository.findByAccountIdAndYearValueAndMonthValueAndDayValue(accountId, yearValue, monthValue, dayValue);
     }
 
     @Override
-    public DateAmount updateDateAmount(Long accountId, Short year, Byte month, Byte day, DateAmountUpdateRequest request) {
+    public DateAmount updateDateAmount(Long accountId, Short yearValue, Byte monthValue, Byte dayValue, DateAmountUpdateRequest request) {
         Account account = accountService.getAccountById(accountId);
-        Optional<DateAmount> dateAmountOptional = this.getDateAmountByDay(account, year, month, day);
+        Optional<DateAmount> dateAmountOptional = this.getDateAmountByDay(account, yearValue, monthValue, dayValue);
         if (dateAmountOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.DATE_AMOUNT_MESSAGE);
         DateAmount dateAmount = dateAmountOptional.get();
@@ -78,9 +78,9 @@ public class DateAmountServiceImpl implements DateAmountService {
     }
 
     @Override
-    public void deleteDateAmount(Long accountId, Short year, Byte month, Byte day) {
+    public void deleteDateAmount(Long accountId, Short yearValue, Byte monthValue, Byte dayValue) {
         Account account = accountService.getAccountById(accountId);
-        Optional<DateAmount> dateAmountOptional = this.getDateAmountByDay(account, year, month, day);
+        Optional<DateAmount> dateAmountOptional = this.getDateAmountByDay(account, yearValue, monthValue, dayValue);
         if (dateAmountOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.DATE_AMOUNT_MESSAGE);
         DateAmount dateAmount = dateAmountOptional.get();

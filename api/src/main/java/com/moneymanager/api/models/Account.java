@@ -7,15 +7,10 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * An Account refers to a single bank account and has the following properties:
- * - id
- * - name
- * - userEntity
- * - bankRecords
- * - financialTransactions
- * - dateAmounts
- */
+/*
+An account represents a single location for money, such as a bank account.
+An account has many bank records, financial transactions, and date amounts.
+*/
 
 @Getter
 @Entity
