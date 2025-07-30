@@ -16,7 +16,7 @@ Currently, there is only one role: a USER role.
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     private String name;
 

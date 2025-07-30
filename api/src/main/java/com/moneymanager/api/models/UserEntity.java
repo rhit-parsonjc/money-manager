@@ -17,7 +17,7 @@ A UserEntity has many roles and accounts.
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     private String username;
     private String password;
@@ -31,7 +31,7 @@ public class UserEntity {
     private Set<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userEntity", orphanRemoval = true)
-    private Set<Account> accounts;
+    protected Set<Account> accounts;
 
     public UserEntity(String username, String password, Set<Role> roles) {
         this.username = username;

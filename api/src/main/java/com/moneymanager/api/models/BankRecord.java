@@ -24,7 +24,7 @@ public class BankRecord extends Item {
         joinColumns = @JoinColumn(name = "transaction_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "record_id", referencedColumnName = "id")
     )
-    private Set<FinancialTransaction> financialTransactions;
+    protected Set<FinancialTransaction> financialTransactions;
 
     public BankRecord(Account account, Short yearValue, Byte monthValue,
                       Byte dayValue, Long amount, String name) {

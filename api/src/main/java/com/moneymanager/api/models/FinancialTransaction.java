@@ -19,7 +19,7 @@ A financial transaction has many bank records.
 @NoArgsConstructor
 public class FinancialTransaction extends Item {
     @ManyToMany(mappedBy = "financialTransactions")
-    private Set<BankRecord> bankRecords;
+    protected Set<BankRecord> bankRecords;
 
     public FinancialTransaction(Account account, Short yearValue, Byte monthValue,
                                 Byte dayValue, Long amount, String name) {

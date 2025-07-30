@@ -21,7 +21,7 @@ An item has many file attachments.
 public abstract class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     private Short yearValue;
     private Byte monthValue;
@@ -34,7 +34,7 @@ public abstract class Item {
     private Account account;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item", orphanRemoval = true)
-    private Set<FileAttachment> fileAttachments;
+    protected Set<FileAttachment> fileAttachments;
 
     public Item(Account account, Short yearValue, Byte monthValue, Byte dayValue, Long amount, String name) {
         this.account = account;

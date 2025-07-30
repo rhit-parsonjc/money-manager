@@ -17,7 +17,7 @@ A DateAmount records the amount of money in the account on a specified date.
 public class DateAmount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     private Short yearValue;
     private Byte monthValue;

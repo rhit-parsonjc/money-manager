@@ -19,7 +19,7 @@ An account has many bank records, financial transactions, and date amounts.
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     private String name;
 
@@ -28,13 +28,13 @@ public class Account {
     private UserEntity userEntity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
-    private Set<BankRecord> bankRecords;
+    protected Set<BankRecord> bankRecords;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
-    private Set<FinancialTransaction> financialTransactions;
+    protected Set<FinancialTransaction> financialTransactions;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
-    private Set<DateAmount> dateAmounts;
+    protected Set<DateAmount> dateAmounts;
 
     public Account(UserEntity userEntity, String name) {
         this.userEntity = userEntity;

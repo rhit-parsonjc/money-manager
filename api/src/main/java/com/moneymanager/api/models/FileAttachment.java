@@ -15,7 +15,7 @@ A file attachment represents a file, containing the metadata and contents.
 public class FileAttachment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     private String name;
     private String type;
