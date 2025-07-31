@@ -31,7 +31,7 @@ public class DateAmountController {
         DateAmount dateAmount = dateAmountService.createDateAmount(accountId, request);
         DateAmountDto dateAmountDto = mapperService.mapDateAmountToDto(dateAmount);
         DataOrErrorResponse response = new DataOrErrorResponse(true, dateAmountDto);
-        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("{accountId}")

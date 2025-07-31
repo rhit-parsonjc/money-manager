@@ -61,7 +61,7 @@ public class FileAttachmentController {
         List<FileAttachment> fileAttachmentList = fileAttachmentService.getFileAttachmentsByItemId(itemId);
         List<FileAttachmentDto> fileAttachmentDtoList = mapperService.mapFileAttachmentsToDtos(fileAttachmentList);
         DataOrErrorResponse response = new DataOrErrorResponse(true, fileAttachmentDtoList);
-        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
