@@ -78,6 +78,7 @@
 
 - Thanks to [Abderrahim Azhrioun](https://www.baeldung.com/spring-boot-h2-jdbcsqlsyntaxerrorexception-expected-identifier) for noting that the H2 issue could be due to a reserved word. According to [H2 Documentation](https://h2database.com/html/advanced.html#keywords), these keywords are YEAR, MONTH, and DAY.
 - Thanks to [W3Schools](https://www.w3schools.com/java/java_advanced_sorting.asp) for explaining how to use Java sorting
+- Thanks to [Ali Bouali](https://www.youtube.com/watch?v=uGZQdD9IpQc) for explaining Spring testing
 
 ## Random Value
 
