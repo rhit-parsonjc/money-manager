@@ -1,15 +1,12 @@
 package com.moneymanager.api.services.RecordTransactionConnectionService;
 
-import java.util.Objects;
 import java.util.Optional;
+
+import com.moneymanager.api.models.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.moneymanager.api.exceptions.*;
-import com.moneymanager.api.models.Account;
-import com.moneymanager.api.models.BankRecord;
-import com.moneymanager.api.models.FinancialTransaction;
-import com.moneymanager.api.models.UserEntity;
 import com.moneymanager.api.repositories.AccountRepository;
 import com.moneymanager.api.repositories.BankRecordRepository;
 import com.moneymanager.api.repositories.FinancialTransactionRepository;
@@ -18,7 +15,6 @@ import com.moneymanager.api.services.UserEntityService.UserEntityService;
 @Service
 @RequiredArgsConstructor
 public class RecordTransactionConnectionServiceImpl implements RecordTransactionConnectionService {
-    private final AccountRepository accountRepository;
     private final UserEntityService userEntityService;
     private final BankRecordRepository bankRecordRepository;
     private final FinancialTransactionRepository financialTransactionRepository;
@@ -30,13 +26,6 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
         return bankRecordOptional.get();
     }
 
-    private Long getAccountId(UserEntity userEntity, BankRecord bankRecord) {
-        Account bankRecordAccount = bankRecord.getAccount();
-        if (bankRecordAccount.getUserEntity().getId().longValue() != userEntity.getId().longValue())
-            throw new PermissionsException(PermissionsException.INCORRECT_USER);
-        return bankRecordAccount.getId();
-    }
-
     private FinancialTransaction getFinancialTransaction(UserEntity userEntity, Long transactionId) {
         Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(transactionId);
         if (financialTransactionOptional.isEmpty())
@@ -44,11 +33,11 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
         return financialTransactionOptional.get();
     }
 
-    private Long getAccountId(UserEntity userEntity, FinancialTransaction financialTransaction) {
-        Account financialTransactionAccount = financialTransaction.getAccount();
-        if (financialTransactionAccount.getUserEntity().getId().longValue() != userEntity.getId().longValue())
+    private Long getAccountId(UserEntity userEntity, Item item) {
+        Account itemAccount = item.getAccount();
+        if (itemAccount.getUserEntity().getId().longValue() != userEntity.getId().longValue())
             throw new PermissionsException(PermissionsException.INCORRECT_USER);
-        return financialTransactionAccount.getId();
+        return itemAccount.getId();
     }
 
     @Override
@@ -68,9 +57,7 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
             throw new InvalidStateException(InvalidStateException.ASYMMETRIC_CONNECTION);
         } else {
             bankRecord.getFinancialTransactions().add(financialTransaction);
-            financialTransaction.getBankRecords().add(bankRecord);
             bankRecordRepository.save(bankRecord);
-            financialTransactionRepository.save(financialTransaction);
         }
     }
 
@@ -91,9 +78,7 @@ public class RecordTransactionConnectionServiceImpl implements RecordTransaction
             throw new InvalidStateException(InvalidStateException.ASYMMETRIC_CONNECTION);
         } else {
             bankRecord.getFinancialTransactions().remove(financialTransaction);
-            financialTransaction.getBankRecords().remove(bankRecord);
             bankRecordRepository.save(bankRecord);
-            financialTransactionRepository.save(financialTransaction);
         }
     }
 }
