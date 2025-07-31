@@ -45,12 +45,12 @@ public class DateAmountController {
         if (year == null && month == null && day == null) {
             dateAmounts = dateAmountService.getDateAmounts(accountId);
         } else if (year != null && month == null & day == null) {
-            dateAmounts = dateAmountService.getDateAmountsByYear(accountId, year);
+            dateAmounts = dateAmountService.getDateAmountsForYear(accountId, year);
         } else if (year != null && month != null) {
             if (day == null) {
-                dateAmounts = dateAmountService.getDateAmountsByMonth(accountId, year, month);
+                dateAmounts = dateAmountService.getDateAmountsForMonth(accountId, year, month);
             } else {
-                dateAmounts = dateAmountService.getDateAmountsByDay(accountId, year, month, day);
+                dateAmounts = dateAmountService.getDateAmountsForDay(accountId, year, month, day);
             }
         }
         List<DateAmountDto> dateAmountDtos = mapperService.mapDateAmountsToDtos(dateAmounts);

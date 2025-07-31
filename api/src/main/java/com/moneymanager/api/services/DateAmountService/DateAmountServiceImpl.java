@@ -49,19 +49,19 @@ public class DateAmountServiceImpl implements DateAmountService {
     }
 
     @Override
-    public List<DateAmount> getDateAmountsByYear(Long accountId, Short yearValue) {
+    public List<DateAmount> getDateAmountsForYear(Long accountId, Short yearValue) {
         accountService.getAccountById(accountId);
         return dateAmountRepository.findByAccountIdAndYearValue(accountId, yearValue);
     }
 
     @Override
-    public List<DateAmount> getDateAmountsByMonth(Long accountId, Short yearValue, Byte monthValue) {
+    public List<DateAmount> getDateAmountsForMonth(Long accountId, Short yearValue, Byte monthValue) {
         accountService.getAccountById(accountId);
         return dateAmountRepository.findByAccountIdAndYearValueAndMonthValue(accountId, yearValue, monthValue);
     }
 
     @Override
-    public List<DateAmount> getDateAmountsByDay(Long accountId, Short yearValue, Byte monthValue, Byte dayValue) {
+    public List<DateAmount> getDateAmountsForDay(Long accountId, Short yearValue, Byte monthValue, Byte dayValue) {
         accountService.getAccountById(accountId);
         return dateAmountRepository.findByAccountIdAndYearValueAndMonthValueAndDayValue(accountId, yearValue, monthValue, dayValue);
     }
