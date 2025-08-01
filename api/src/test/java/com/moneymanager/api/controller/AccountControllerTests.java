@@ -67,10 +67,8 @@ public class AccountControllerTests {
         Set<Role> roleSet = new HashSet<Role>();
         roleSet.add(userRole);
         UserEntity userEntity = new TestUserEntity(1L, "Spring", "pass1234", roleSet, new HashSet<Account>());
-        accountCreateRequest = new AccountRequest();
-        accountCreateRequest.setName("Bank 3");
-        accountUpdateRequest = new AccountRequest();
-        accountUpdateRequest.setName("Bank A");
+        accountCreateRequest = new AccountRequest("Bank 3");
+        accountUpdateRequest = new AccountRequest("Bank A");
         account1 = new TestAccount(1L, "Bank 1", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());
         account2 = new TestAccount(2L, "Bank 2", userEntity,

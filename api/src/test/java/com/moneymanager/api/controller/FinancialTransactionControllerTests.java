@@ -73,18 +73,10 @@ public class FinancialTransactionControllerTests {
         Account account = new TestAccount(accountId, "Bank 1", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());
         userEntity.getAccounts().add(account);
-        financialTransactionCreateRequest = new FinancialTransactionRequest();
-        financialTransactionCreateRequest.setYearValue((short) 2023);
-        financialTransactionCreateRequest.setMonthValue((byte) 8);
-        financialTransactionCreateRequest.setDayValue((byte) 31);
-        financialTransactionCreateRequest.setAmount(500L);
-        financialTransactionCreateRequest.setName("Movie D");
-        financialTransactionUpdateRequest = new FinancialTransactionRequest();
-        financialTransactionUpdateRequest.setYearValue((short) 2025);
-        financialTransactionUpdateRequest.setMonthValue((byte) 5);
-        financialTransactionUpdateRequest.setDayValue((byte) 21);
-        financialTransactionUpdateRequest.setAmount(900L);
-        financialTransactionUpdateRequest.setName("Movie E");
+        financialTransactionCreateRequest = new FinancialTransactionRequest(
+                (short) 2023, (byte) 8, (byte) 31, 500L, "Movie D");
+        financialTransactionUpdateRequest = new FinancialTransactionRequest(
+                (short) 2025, (byte) 5, (byte) 21, 900L, "Movie E");
         financialTransaction1 = new TestFinancialTransaction(1L, account, (short) 2024, (byte) 2, (byte) 5, 100L,
                 "Movie A", new HashSet<FileAttachment>(), new HashSet<BankRecord>());
         financialTransaction2 = new TestFinancialTransaction(2L, account, (short) 2024, (byte) 8, (byte) 9, 1200L,

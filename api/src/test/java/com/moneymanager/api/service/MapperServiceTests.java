@@ -175,12 +175,7 @@ public class MapperServiceTests {
 
     @Test
     public void MapperService_MapBankRecordRequestToRecord() {
-        BankRecordRequest bankRecordRequest = new BankRecordRequest();
-        bankRecordRequest.setYearValue((short) 2024);
-        bankRecordRequest.setMonthValue((byte) 7);
-        bankRecordRequest.setDayValue((byte) 3);
-        bankRecordRequest.setAmount(2000L);
-        bankRecordRequest.setName("Game");
+        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2024, (byte) 7, (byte) 3, 2000L, "Game");
 
         BankRecord bankRecord = mapperService.mapBankRecordRequestToRecord(account1, bankRecordRequest);
 
@@ -234,11 +229,7 @@ public class MapperServiceTests {
 
     @Test
     public void MapperService_MapDateAmountRequestToAmount() {
-        DateAmountCreateRequest dateAmountCreateRequest = new DateAmountCreateRequest();
-        dateAmountCreateRequest.setYearValue((short) 2025);
-        dateAmountCreateRequest.setMonthValue((byte) 10);
-        dateAmountCreateRequest.setDayValue((byte) 25);
-        dateAmountCreateRequest.setAmount(9191L);
+        DateAmountCreateRequest dateAmountCreateRequest = new DateAmountCreateRequest((short) 2025, (byte) 10, (byte) 25, 9191L);
 
         DateAmount dateAmount = mapperService.mapDateAmountRequestToAmount(account2, dateAmountCreateRequest);
 
@@ -388,8 +379,7 @@ public class MapperServiceTests {
 
     @Test
     public void MapperService_MapAccountRequestToAccount() {
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.setName("Bank Omega");
+        AccountRequest accountRequest = new AccountRequest("Bank Omega");
 
         Account account = mapperService.mapAccountRequestToAccount(userEntity, accountRequest);
 

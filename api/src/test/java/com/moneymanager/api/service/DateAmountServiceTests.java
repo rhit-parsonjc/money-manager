@@ -71,11 +71,7 @@ public class DateAmountServiceTests {
     @Test
     public void DateAmountService_CreateDateAmount() {
         Long dateAmountId = 5L;
-        DateAmountCreateRequest dateAmountCreateRequest = new DateAmountCreateRequest();
-        dateAmountCreateRequest.setYearValue((short) 2024);
-        dateAmountCreateRequest.setMonthValue((byte) 12);
-        dateAmountCreateRequest.setDayValue((byte) 31);
-        dateAmountCreateRequest.setAmount(1700L);
+        DateAmountCreateRequest dateAmountCreateRequest = new DateAmountCreateRequest((short) 2024, (byte) 12, (byte) 31, 1700L);
         DateAmount dateAmount = new TestDateAmount(dateAmountId, account, (short) 2024, (byte) 12, (byte) 31, 1700L);
         List<DateAmount> emptyDateAmountList = new ArrayList<DateAmount>();
         when(dateAmountRepository.findByAccountIdAndYearValueAndMonthValueAndDayValue(
@@ -97,11 +93,7 @@ public class DateAmountServiceTests {
 
     @Test
     public void DateAmount_CreateDateAmount_DuplicateDate() {
-        DateAmountCreateRequest dateAmountCreateRequest = new DateAmountCreateRequest();
-        dateAmountCreateRequest.setYearValue((short) 2025);
-        dateAmountCreateRequest.setMonthValue((byte) 8);
-        dateAmountCreateRequest.setDayValue((byte) 1);
-        dateAmountCreateRequest.setAmount(1700L);
+        DateAmountCreateRequest dateAmountCreateRequest = new DateAmountCreateRequest((short) 2025, (byte) 8, (byte) 1, 1700L);
         List<DateAmount> singletonDateAmountList = new ArrayList<DateAmount>();
         singletonDateAmountList.add(dateAmount2);
         when(dateAmountRepository.findByAccountIdAndYearValueAndMonthValueAndDayValue(
@@ -196,8 +188,7 @@ public class DateAmountServiceTests {
 
     @Test
     public void DateAmountService_UpdateDateAmount() {
-        DateAmountUpdateRequest dateAmountUpdateRequest = new DateAmountUpdateRequest();
-        dateAmountUpdateRequest.setAmount(1700L);
+        DateAmountUpdateRequest dateAmountUpdateRequest = new DateAmountUpdateRequest(1700L);
         List<DateAmount> dateAmountList = new ArrayList<DateAmount>();
         dateAmountList.add(dateAmount1);
         when(dateAmountRepository

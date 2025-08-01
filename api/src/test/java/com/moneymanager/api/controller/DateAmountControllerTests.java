@@ -78,13 +78,8 @@ public class DateAmountControllerTests {
         Account account = new TestAccount(accountId, "Bank 1", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());
         userEntity.getAccounts().add(account);
-        dateAmountCreateRequest = new DateAmountCreateRequest();
-        dateAmountCreateRequest.setYearValue((short) 2024);
-        dateAmountCreateRequest.setMonthValue((byte) 9);
-        dateAmountCreateRequest.setDayValue((byte) 6);
-        dateAmountCreateRequest.setAmount(800L);
-        dateAmountUpdateRequest = new DateAmountUpdateRequest();
-        dateAmountUpdateRequest.setAmount(1250L);
+        dateAmountCreateRequest = new DateAmountCreateRequest((short) 2024, (byte) 9, (byte) 6, 800L);
+        dateAmountUpdateRequest = new DateAmountUpdateRequest(1250L);
         dateAmount1 = new TestDateAmount(1L, account, (short) 2025, (byte) 1, (byte) 13, 899L);
         dateAmount2 = new TestDateAmount(2L, account, (short) 2025, (byte) 3, (byte) 26, 950L);
         dateAmount3 = new TestDateAmount(3L, account, (short) 2025, (byte) 4, (byte) 9, 1100L);

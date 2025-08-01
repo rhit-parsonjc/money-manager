@@ -72,12 +72,7 @@ public class BankRecordServiceTests {
     @Test
     public void BankRecordService_CreateBankRecord() {
         Long bankRecordId = 4L;
-        BankRecordRequest bankRecordRequest = new BankRecordRequest();
-        bankRecordRequest.setYearValue((short) 2025);
-        bankRecordRequest.setMonthValue((byte) 8);
-        bankRecordRequest.setDayValue((byte) 27);
-        bankRecordRequest.setAmount(733L);
-        bankRecordRequest.setName("Snack");
+        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2025, (byte) 8, (byte) 27, 733L, "Snack");
         BankRecord bankRecord = new TestBankRecord(bankRecordId, account, (short) 2025, (byte) 8,
                 (byte) 27, 733L, "Snack", new HashSet<FileAttachment>(),
                 new HashSet<FinancialTransaction>());
@@ -195,12 +190,7 @@ public class BankRecordServiceTests {
     @Test
     public void BankRecordService_UpdateBankRecord() {
         Long bankRecordId = 2L;
-        BankRecordRequest bankRecordRequest = new BankRecordRequest();
-        bankRecordRequest.setYearValue((short) 2024);
-        bankRecordRequest.setMonthValue((byte) 10);
-        bankRecordRequest.setDayValue((byte) 22);
-        bankRecordRequest.setAmount(2400L);
-        bankRecordRequest.setName("Brunch");
+        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2024, (byte) 10, (byte) 22, 2400L, "Brunch");
         when(bankRecordRepository.findById(bankRecordId)).thenReturn(Optional.of(bankRecord2));
         when(bankRecordRepository.save(bankRecord2)).thenReturn(bankRecord2);
 
@@ -218,12 +208,7 @@ public class BankRecordServiceTests {
     @Test
     public void BankRecordService_UpdateBankRecord_NonexistentRecord() {
         Long bankRecordId = 7L;
-        BankRecordRequest bankRecordRequest = new BankRecordRequest();
-        bankRecordRequest.setYearValue((short) 2026);
-        bankRecordRequest.setMonthValue((byte) 2);
-        bankRecordRequest.setDayValue((byte) 28);
-        bankRecordRequest.setAmount(1024L);
-        bankRecordRequest.setName("Parking");
+        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2026, (byte) 2, (byte) 28, 1024L, "Parking");
         when(bankRecordRepository.findById(bankRecordId)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(ResourceNotFoundException.class,

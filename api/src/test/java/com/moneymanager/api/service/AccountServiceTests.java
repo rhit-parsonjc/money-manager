@@ -65,8 +65,7 @@ public class AccountServiceTests {
     @Test
     public void AccountService_CreateAccount() {
         Long accountId = 3L;
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.setName("Bank Gamma");
+        AccountRequest accountRequest = new AccountRequest("Bank Gamma");
         Account account = new TestAccount(accountId, "Bank Gamma", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());
         List<Account> emptyAccountList = new ArrayList<Account>();
@@ -134,8 +133,7 @@ public class AccountServiceTests {
     @Test
     public void AccountService_UpdateAccount() {
         Long accountId = 2L;
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.setName("Bank 2");
+        AccountRequest accountRequest = new AccountRequest("Bank 2");
         List<Account> emptyAccountList = new ArrayList<Account>();
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(account2));
         when(accountRepository.findByUserEntityIdAndName(userEntityId, "Bank 2")).thenReturn(emptyAccountList);
@@ -151,8 +149,7 @@ public class AccountServiceTests {
     @Test
     public void AccountService_UpdateAccount_NonexistentAccount() {
         Long accountId = 3L;
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.setName("Bank Gamma");
+        AccountRequest accountRequest = new AccountRequest("Bank Gamma");
         when(accountRepository.findById(accountId)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(ResourceNotFoundException.class,
@@ -162,8 +159,7 @@ public class AccountServiceTests {
     @Test
     public void AccountService_UpdateAccount_DuplicateName() {
         Long accountId = 1L;
-        AccountRequest accountRequest = new AccountRequest();
-        accountRequest.setName("Bank Beta");
+        AccountRequest accountRequest = new AccountRequest("Bank Beta");
         List<Account> singletonAccountList = new ArrayList<Account>();
         singletonAccountList.add(account2);
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(account1));

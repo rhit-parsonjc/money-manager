@@ -78,18 +78,8 @@ public class BankRecordControllerTests {
         Account account = new TestAccount(accountId, "Bank 1", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());
         userEntity.getAccounts().add(account);
-        bankRecordCreateRequest = new BankRecordRequest();
-        bankRecordCreateRequest.setYearValue((short) 2023);
-        bankRecordCreateRequest.setMonthValue((byte) 8);
-        bankRecordCreateRequest.setDayValue((byte) 31);
-        bankRecordCreateRequest.setAmount(500L);
-        bankRecordCreateRequest.setName("Movie D");
-        bankRecordUpdateRequest = new BankRecordRequest();
-        bankRecordUpdateRequest.setYearValue((short) 2025);
-        bankRecordUpdateRequest.setMonthValue((byte) 5);
-        bankRecordUpdateRequest.setDayValue((byte) 21);
-        bankRecordUpdateRequest.setAmount(900L);
-        bankRecordUpdateRequest.setName("Movie E");
+        bankRecordCreateRequest = new BankRecordRequest((short) 2023, (byte) 8, (byte) 31, 500L, "Movie D");
+        bankRecordUpdateRequest = new BankRecordRequest((short) 2025, (byte) 5, (byte) 21, 900L, "Movie E");
         bankRecord1 = new TestBankRecord(1L, account, (short) 2024, (byte) 2, (byte) 5, 100L,
                 "Movie A", new HashSet<FileAttachment>(), new HashSet<FinancialTransaction>());
         bankRecord2 = new TestBankRecord(2L, account, (short) 2024, (byte) 8, (byte) 9, 1200L,

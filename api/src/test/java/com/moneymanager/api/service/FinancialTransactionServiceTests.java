@@ -68,12 +68,8 @@ public class FinancialTransactionServiceTests {
     @Test
     public void FinancialTransactionService_CreateFinancialTransaction() {
         Long financialTransactionId = 3L;
-        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest();
-        financialTransactionRequest.setYearValue((short) 2025);
-        financialTransactionRequest.setDayValue((byte) 9);
-        financialTransactionRequest.setDayValue((byte) 15);
-        financialTransactionRequest.setAmount(1350L);
-        financialTransactionRequest.setName("Game 3");
+        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest(
+                (short) 2025, (byte) 9, (byte) 15, 1350L, "Game 3");
         FinancialTransaction financialTransaction = new TestFinancialTransaction(financialTransactionId,
                 account, (short) 2025, (byte) 9, (byte) 15, 1350L, "Game 3",
                 new HashSet<FileAttachment>(), new HashSet<BankRecord>());
@@ -190,12 +186,7 @@ public class FinancialTransactionServiceTests {
     @Test
     public void FinancialTransactionService_UpdateFinancialTransaction() {
         Long financialTransactionId = 1L;
-        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest();
-        financialTransactionRequest.setYearValue((short) 2027);
-        financialTransactionRequest.setMonthValue((byte) 6);
-        financialTransactionRequest.setDayValue((byte) 18);
-        financialTransactionRequest.setAmount(1000L);
-        financialTransactionRequest.setName("Song");
+        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest((short) 2027, (byte) 6, (byte) 18, 1000L, "Song");
         when(financialTransactionRepository.findById(financialTransactionId))
                 .thenReturn(Optional.of(financialTransaction1));
         when(financialTransactionRepository.save(financialTransaction1))
@@ -216,12 +207,7 @@ public class FinancialTransactionServiceTests {
     @Test
     public void FinancialTransactionService_UpdateFinancialTransaction_NonexistentTransaction() {
         Long financialTransactionId = 10L;
-        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest();
-        financialTransactionRequest.setYearValue((short) 2027);
-        financialTransactionRequest.setMonthValue((byte) 6);
-        financialTransactionRequest.setDayValue((byte) 18);
-        financialTransactionRequest.setAmount(1000L);
-        financialTransactionRequest.setName("Song");
+        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest((short) 2027, (byte) 6, (byte) 18, 1000L, "Song");
         when(financialTransactionRepository.findById(financialTransactionId))
                 .thenReturn(Optional.empty());
 
