@@ -1,10 +1,10 @@
 package com.moneymanager.api.services.DateAmountService;
 
-import java.util.List;
-
 import com.moneymanager.api.models.DateAmount;
 import com.moneymanager.api.requests.DateAmountCreateRequest;
 import com.moneymanager.api.requests.DateAmountUpdateRequest;
+
+import java.util.List;
 
 public interface DateAmountService {
     DateAmount createDateAmount(Long accountId, DateAmountCreateRequest request);

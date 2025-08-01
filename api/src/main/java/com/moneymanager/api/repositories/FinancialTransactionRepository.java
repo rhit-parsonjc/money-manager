@@ -1,9 +1,10 @@
 package com.moneymanager.api.repositories;
 
-import java.util.List;
+import com.moneymanager.api.models.FinancialTransaction;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.moneymanager.api.models.FinancialTransaction;
+import java.util.List;
 
 public interface FinancialTransactionRepository extends JpaRepository<FinancialTransaction, Long> {
     List<FinancialTransaction> findByAccountId(Long accountId);

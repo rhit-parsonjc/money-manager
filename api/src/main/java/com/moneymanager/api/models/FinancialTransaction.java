@@ -1,12 +1,13 @@
 package com.moneymanager.api.models;
 
+import com.moneymanager.api.requests.FinancialTransactionRequest;
+
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import com.moneymanager.api.requests.FinancialTransactionRequest;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 A financial transaction represents a record not from the financial institution.

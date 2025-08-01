@@ -6,6 +6,7 @@ import com.moneymanager.api.repositories.BankRecordRepository;
 import com.moneymanager.api.repositories.RoleRepository;
 import com.moneymanager.api.repositories.UserEntityRepository;
 import com.moneymanager.api.requests.BankRecordRequest;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

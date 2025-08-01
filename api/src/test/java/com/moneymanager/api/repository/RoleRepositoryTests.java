@@ -2,6 +2,7 @@ package com.moneymanager.api.repository;
 
 import com.moneymanager.api.models.Role;
 import com.moneymanager.api.repositories.RoleRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

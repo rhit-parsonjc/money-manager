@@ -1,8 +1,8 @@
 package com.moneymanager.api.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.moneymanager.api.models.FileAttachment;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 

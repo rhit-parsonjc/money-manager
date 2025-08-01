@@ -1,9 +1,9 @@
 package com.moneymanager.api.services.AccountService;
 
-import java.util.List;
-
 import com.moneymanager.api.models.Account;
 import com.moneymanager.api.requests.AccountRequest;
+
+import java.util.List;
 
 public interface AccountService {
     Account createAccount(AccountRequest request);

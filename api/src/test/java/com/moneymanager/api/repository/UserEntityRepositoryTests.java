@@ -4,6 +4,7 @@ import com.moneymanager.api.models.Role;
 import com.moneymanager.api.models.UserEntity;
 import com.moneymanager.api.repositories.RoleRepository;
 import com.moneymanager.api.repositories.UserEntityRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

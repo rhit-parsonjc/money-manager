@@ -1,6 +1,7 @@
 package com.moneymanager.api.exceptions;
 
 import com.moneymanager.api.responses.DataOrErrorResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,9 +1,9 @@
 package com.moneymanager.api.services.FinancialTransactionService;
 
-import java.util.List;
-
 import com.moneymanager.api.models.FinancialTransaction;
 import com.moneymanager.api.requests.FinancialTransactionRequest;
+
+import java.util.List;
 
 public interface FinancialTransactionService {
     FinancialTransaction createFinancialTransaction(Long accountId, FinancialTransactionRequest request);

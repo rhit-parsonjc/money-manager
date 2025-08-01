@@ -1,15 +1,10 @@
 package com.moneymanager.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moneymanager.api.controllers.RecordTransactionController;
-import com.moneymanager.api.dtos.BankRecordDetailsDto;
-import com.moneymanager.api.dtos.BankRecordDto;
-import com.moneymanager.api.dtos.FileAttachmentDto;
-import com.moneymanager.api.dtos.FinancialTransactionDto;
 import com.moneymanager.api.models.*;
 import com.moneymanager.api.models.test.*;
-import com.moneymanager.api.requests.BankRecordRequest;
 import com.moneymanager.api.services.RecordTransactionConnectionService.RecordTransactionConnectionService;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +35,6 @@ public class RecordTransactionControllerTests {
 
     @MockBean
     private RecordTransactionConnectionService recordTransactionConnectionService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private Long bankRecordId1;
     private Long bankRecordId2;

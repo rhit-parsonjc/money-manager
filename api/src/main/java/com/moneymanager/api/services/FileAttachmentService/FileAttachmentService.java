@@ -1,10 +1,11 @@
 package com.moneymanager.api.services.FileAttachmentService;
 
-import java.io.IOException;
-import java.util.List;
+import com.moneymanager.api.models.FileAttachment;
+
 import org.springframework.web.multipart.MultipartFile;
 
-import com.moneymanager.api.models.FileAttachment;
+import java.io.IOException;
+import java.util.List;
 
 public interface FileAttachmentService {
     FileAttachment createFileAttachmentForItem(MultipartFile file, Long itemId) throws IOException;

@@ -1,9 +1,9 @@
 package com.moneymanager.api.services.UserEntityService;
 
-import java.util.Optional;
-
 import com.moneymanager.api.models.UserEntity;
 import com.moneymanager.api.requests.RegisterRequest;
+
+import java.util.Optional;
 
 public interface UserEntityService {
     void createUser(RegisterRequest registerRequest);

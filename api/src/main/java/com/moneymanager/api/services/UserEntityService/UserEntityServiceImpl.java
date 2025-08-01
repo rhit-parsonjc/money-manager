@@ -1,14 +1,5 @@
 package com.moneymanager.api.services.UserEntityService;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import com.moneymanager.api.exceptions.AlreadyExistsException;
 import com.moneymanager.api.exceptions.PermissionsException;
 import com.moneymanager.api.models.Role;
@@ -16,6 +7,16 @@ import com.moneymanager.api.models.UserEntity;
 import com.moneymanager.api.repositories.RoleRepository;
 import com.moneymanager.api.repositories.UserEntityRepository;
 import com.moneymanager.api.requests.RegisterRequest;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

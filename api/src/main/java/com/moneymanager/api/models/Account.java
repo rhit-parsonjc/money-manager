@@ -1,11 +1,13 @@
 package com.moneymanager.api.models;
 
 import com.moneymanager.api.requests.AccountRequest;
+
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 An account represents a single location for money, such as a bank account.

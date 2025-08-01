@@ -1,10 +1,10 @@
 package com.moneymanager.api.models;
 
+import com.moneymanager.api.requests.DateAmountUpdateRequest;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import com.moneymanager.api.requests.DateAmountUpdateRequest;
 
 /*
 A DateAmount records the amount of money in the account on a specified date.

@@ -1,13 +1,13 @@
 package com.moneymanager.api.services.MapperService;
 
-import java.util.List;
-
 import com.moneymanager.api.dtos.*;
 import com.moneymanager.api.models.*;
 import com.moneymanager.api.requests.AccountRequest;
 import com.moneymanager.api.requests.BankRecordRequest;
 import com.moneymanager.api.requests.DateAmountCreateRequest;
 import com.moneymanager.api.requests.FinancialTransactionRequest;
+
+import java.util.List;
 
 public interface MapperService {
     BankRecordDto mapBankRecordToDto(BankRecord bankRecord);

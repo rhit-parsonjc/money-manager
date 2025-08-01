@@ -1,9 +1,9 @@
 package com.moneymanager.api.services.BankRecordService;
 
-import java.util.List;
-
 import com.moneymanager.api.models.BankRecord;
 import com.moneymanager.api.requests.BankRecordRequest;
+
+import java.util.List;
 
 public interface BankRecordService {
     BankRecord createBankRecord(Long accountId, BankRecordRequest request);

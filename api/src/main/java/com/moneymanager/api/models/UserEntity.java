@@ -1,10 +1,11 @@
 package com.moneymanager.api.models;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 A UserEntity represents the data for a user.

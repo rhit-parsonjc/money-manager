@@ -1,9 +1,10 @@
 package com.moneymanager.api.repositories;
 
-import java.util.List;
+import com.moneymanager.api.models.BankRecord;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.moneymanager.api.models.BankRecord;
+import java.util.List;
 
 public interface BankRecordRepository extends JpaRepository<BankRecord, Long> {
     List<BankRecord> findByAccountId(Long accountId);

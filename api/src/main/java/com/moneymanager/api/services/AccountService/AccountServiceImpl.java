@@ -1,13 +1,5 @@
 package com.moneymanager.api.services.AccountService;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import com.moneymanager.api.exceptions.AlreadyExistsException;
 import com.moneymanager.api.exceptions.PermissionsException;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
@@ -17,6 +9,13 @@ import com.moneymanager.api.repositories.AccountRepository;
 import com.moneymanager.api.requests.AccountRequest;
 import com.moneymanager.api.services.MapperService.MapperService;
 import com.moneymanager.api.services.UserEntityService.UserEntityService;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,5 @@
 package com.moneymanager.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moneymanager.api.controllers.BankRecordController;
 import com.moneymanager.api.dtos.BankRecordDetailsDto;
 import com.moneymanager.api.dtos.BankRecordDto;
@@ -14,6 +13,8 @@ import com.moneymanager.api.models.test.TestUserEntity;
 import com.moneymanager.api.requests.BankRecordRequest;
 import com.moneymanager.api.services.BankRecordService.BankRecordService;
 import com.moneymanager.api.services.MapperService.MapperService;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

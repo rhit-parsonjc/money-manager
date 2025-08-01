@@ -1,16 +1,15 @@
 package com.moneymanager.api.services.RecordTransactionConnectionService;
 
-import java.util.Optional;
-
-import com.moneymanager.api.models.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import com.moneymanager.api.exceptions.*;
-import com.moneymanager.api.repositories.AccountRepository;
+import com.moneymanager.api.models.*;
 import com.moneymanager.api.repositories.BankRecordRepository;
 import com.moneymanager.api.repositories.FinancialTransactionRepository;
 import com.moneymanager.api.services.UserEntityService.UserEntityService;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
