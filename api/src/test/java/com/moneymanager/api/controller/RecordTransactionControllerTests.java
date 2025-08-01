@@ -54,9 +54,9 @@ public class RecordTransactionControllerTests {
         bankRecordId2 = 29L;
         financialTransactionId1 = 3L;
         financialTransactionId2 = 44L;
-        BankRecord bankRecord1 = new TestBankRecord(bankRecordId1, account, (short) 2025, (byte) 7, (byte) 31, 500L,
+        BankRecord bankRecord1 = new TestBankRecord(bankRecordId1, account, (short) 2025, (byte) 7, (byte) 31, -500L,
                 "Streaming Subscription Alpha", new HashSet<FileAttachment>(), new HashSet<FinancialTransaction>());
-        BankRecord bankRecord2 = new TestBankRecord(bankRecordId2, account, (short) 2025, (byte) 9, (byte) 22, 1000L,
+        BankRecord bankRecord2 = new TestBankRecord(bankRecordId2, account, (short) 2025, (byte) 9, (byte) 22, -1000L,
                 "Streaming Subscription Beta", new HashSet<FileAttachment>(), new HashSet<FinancialTransaction>());
         FinancialTransaction financialTransaction1 = new TestFinancialTransaction(financialTransactionId1, account, (short) 2025, (byte) 7,
                 (byte) 28, 500L, "Alpha", new HashSet<FileAttachment>(), new HashSet<BankRecord>());

@@ -44,6 +44,17 @@ public class FinancialTransactionServiceTests {
     private FinancialTransaction financialTransaction1;
     private FinancialTransaction financialTransaction2;
 
+    private void verifyFinancialTransaction(FinancialTransaction financialTransaction, long id, short yearValue,
+                                            byte monthValue, byte dayValue, long amount, String name, String accountName) {
+        Assertions.assertEquals(id, financialTransaction.getId());
+        Assertions.assertEquals(yearValue, financialTransaction.getYearValue());
+        Assertions.assertEquals(monthValue, financialTransaction.getMonthValue());
+        Assertions.assertEquals(dayValue, financialTransaction.getDayValue());
+        Assertions.assertEquals(amount, financialTransaction.getAmount());
+        Assertions.assertEquals(name, financialTransaction.getName());
+        Assertions.assertEquals(accountName, financialTransaction.getAccount().getName());
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new TestRole(1L, "USER");
@@ -55,11 +66,11 @@ public class FinancialTransactionServiceTests {
         account = new TestAccount(accountId, "Bank A", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());
         userEntity.getAccounts().add(account);
-        financialTransaction1 = new TestFinancialTransaction(1L, account, (short) 2025, (byte) 9, (byte) 25, 2200L,
+        financialTransaction1 = new TestFinancialTransaction(1L, account, (short) 2025, (byte) 9, (byte) 25, -2200L,
                 "Game 1", new HashSet<FileAttachment>(), new HashSet<BankRecord>());
-        account.getFinancialTransactions().add(financialTransaction1);
-        financialTransaction2 = new TestFinancialTransaction(2L, account, (short) 2025, (byte) 10, (byte) 5, 525L,
+        financialTransaction2 = new TestFinancialTransaction(2L, account, (short) 2025, (byte) 10, (byte) 5, -525L,
                 "Game 2", new HashSet<FileAttachment>(), new HashSet<BankRecord>());
+        account.getFinancialTransactions().add(financialTransaction1);
         account.getFinancialTransactions().add(financialTransaction2);
 
         when(accountService.getAccountById(accountId)).thenReturn(account);
@@ -69,9 +80,9 @@ public class FinancialTransactionServiceTests {
     public void FinancialTransactionService_CreateFinancialTransaction() {
         Long financialTransactionId = 3L;
         FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest(
-                (short) 2025, (byte) 9, (byte) 15, 1350L, "Game 3");
+                (short) 2025, (byte) 9, (byte) 15, -1350L, "Game 3");
         FinancialTransaction financialTransaction = new TestFinancialTransaction(financialTransactionId,
-                account, (short) 2025, (byte) 9, (byte) 15, 1350L, "Game 3",
+                account, (short) 2025, (byte) 9, (byte) 15, -1350L, "Game 3",
                 new HashSet<FileAttachment>(), new HashSet<BankRecord>());
         when(mapperService.mapFinancialTransactionRequestToTransaction(account, financialTransactionRequest))
                 .thenReturn(financialTransaction);
@@ -81,12 +92,9 @@ public class FinancialTransactionServiceTests {
                 .createFinancialTransaction(accountId, financialTransactionRequest);
 
         Assertions.assertNotNull(createdFinancialTransaction);
-        Assertions.assertEquals((short) 2025, createdFinancialTransaction.getYearValue());
-        Assertions.assertEquals((byte) 9, createdFinancialTransaction.getMonthValue());
-        Assertions.assertEquals((byte) 15, createdFinancialTransaction.getDayValue());
-        Assertions.assertEquals(1350L, createdFinancialTransaction.getAmount());
-        Assertions.assertEquals("Game 3",createdFinancialTransaction.getName());
-        Assertions.assertEquals(financialTransactionId, createdFinancialTransaction.getId());
+        verifyFinancialTransaction(createdFinancialTransaction, financialTransactionId, (short) 2025, (byte) 9, (byte) 15, -1350L, "Game 3", "Bank A");
+        verify(mapperService, times(1)).mapFinancialTransactionRequestToTransaction(account, financialTransactionRequest);
+        verify(financialTransactionRepository, times(1)).save(financialTransaction);
     }
 
     @Test
@@ -99,8 +107,8 @@ public class FinancialTransactionServiceTests {
                 .getFinancialTransactionById(accountId, financialTransactionId);
 
         Assertions.assertNotNull(foundFinancialTransaction);
-        Assertions.assertEquals("Game 1", foundFinancialTransaction.getName());
-        Assertions.assertEquals(financialTransactionId, foundFinancialTransaction.getId());
+        verifyFinancialTransaction(foundFinancialTransaction, financialTransactionId, (short) 2025, (byte) 9, (byte) 25, -2200L, "Game 1", "Bank A");
+        verify(financialTransactionRepository, times(1)).findById(financialTransactionId);
     }
 
 
@@ -127,10 +135,9 @@ public class FinancialTransactionServiceTests {
 
         Assertions.assertNotNull(foundFinancialTransactionList);
         Assertions.assertEquals(2, foundFinancialTransactionList.size());
-        Assertions.assertEquals(1L, foundFinancialTransactionList.getFirst().getId());
-        Assertions.assertEquals("Game 1", financialTransactionList.getFirst().getName());
-        Assertions.assertEquals(2L, foundFinancialTransactionList.getLast().getId());
-        Assertions.assertEquals("Game 2", financialTransactionList.getLast().getName());
+        verifyFinancialTransaction(financialTransactionList.getFirst(), 1L, (short) 2025, (byte) 9, (byte) 25, -2200L, "Game 1", "Bank A");
+        verifyFinancialTransaction(financialTransactionList.getLast(), 2L, (short) 2025, (byte) 10, (byte) 5, -525L, "Game 2", "Bank A");
+        verify(financialTransactionRepository, times(1)).findByAccountId(accountId);
     }
 
     @Test
@@ -146,10 +153,10 @@ public class FinancialTransactionServiceTests {
 
         Assertions.assertNotNull(foundFinancialTransactionList);
         Assertions.assertEquals(2, foundFinancialTransactionList.size());
-        Assertions.assertEquals(1L, foundFinancialTransactionList.getFirst().getId());
-        Assertions.assertEquals("Game 1", financialTransactionList.getFirst().getName());
-        Assertions.assertEquals(2L, foundFinancialTransactionList.getLast().getId());
-        Assertions.assertEquals("Game 2", financialTransactionList.getLast().getName());
+        verifyFinancialTransaction(financialTransactionList.getFirst(), 1L, (short) 2025, (byte) 9, (byte) 25, -2200L, "Game 1", "Bank A");
+        verifyFinancialTransaction(financialTransactionList.getLast(), 2L, (short) 2025, (byte) 10, (byte) 5, -525L, "Game 2", "Bank A");
+        verify(financialTransactionRepository, times(1))
+                .findByAccountIdAndYearValue(accountId, (short) 2025);
     }
 
     @Test
@@ -165,8 +172,9 @@ public class FinancialTransactionServiceTests {
 
         Assertions.assertNotNull(foundFinancialTransactionList);
         Assertions.assertEquals(1, foundFinancialTransactionList.size());
-        Assertions.assertEquals(2L, foundFinancialTransactionList.getLast().getId());
-        Assertions.assertEquals("Game 2", financialTransactionList.getLast().getName());
+        verifyFinancialTransaction(financialTransactionList.getFirst(), 2L, (short) 2025, (byte) 10, (byte) 5, -525L, "Game 2", "Bank A");
+        verify(financialTransactionRepository, times(1))
+                .findByAccountIdAndYearValueAndMonthValue(accountId, (short) 2025, (byte) 10);
     }
 
     @Test
@@ -181,12 +189,14 @@ public class FinancialTransactionServiceTests {
 
         Assertions.assertNotNull(foundFinancialTransactionList);
         Assertions.assertTrue(foundFinancialTransactionList.isEmpty());
+        verify(financialTransactionRepository, times(1))
+                .findByAccountIdAndYearValueAndMonthValueAndDayValue(accountId, (short) 2025, (byte) 10, (byte) 25);
     }
 
     @Test
     public void FinancialTransactionService_UpdateFinancialTransaction() {
         Long financialTransactionId = 1L;
-        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest((short) 2027, (byte) 6, (byte) 18, 1000L, "Song");
+        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest((short) 2027, (byte) 6, (byte) 18, -1000L, "Song");
         when(financialTransactionRepository.findById(financialTransactionId))
                 .thenReturn(Optional.of(financialTransaction1));
         when(financialTransactionRepository.save(financialTransaction1))
@@ -196,18 +206,15 @@ public class FinancialTransactionServiceTests {
                 .updateFinancialTransaction(accountId, financialTransactionId, financialTransactionRequest);
 
         Assertions.assertNotNull(updatedFinancialTransaction);
-        Assertions.assertEquals((short) 2027, updatedFinancialTransaction.getYearValue());
-        Assertions.assertEquals((byte) 6, updatedFinancialTransaction.getMonthValue());
-        Assertions.assertEquals((byte) 18, updatedFinancialTransaction.getDayValue());
-        Assertions.assertEquals(1000L, updatedFinancialTransaction.getAmount());
-        Assertions.assertEquals("Song", updatedFinancialTransaction.getName());
-        Assertions.assertEquals(financialTransactionId, updatedFinancialTransaction.getId());
+        verifyFinancialTransaction(updatedFinancialTransaction, financialTransactionId, (short) 2027, (byte) 6, (byte) 18, -1000L, "Song", "Bank A");
+        verify(financialTransactionRepository, times(1)).findById(financialTransactionId);
+        verify(financialTransactionRepository, times(1)).save(financialTransaction1);
     }
 
     @Test
     public void FinancialTransactionService_UpdateFinancialTransaction_NonexistentTransaction() {
         Long financialTransactionId = 10L;
-        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest((short) 2027, (byte) 6, (byte) 18, 1000L, "Song");
+        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest((short) 2027, (byte) 6, (byte) 18, -1000L, "Song");
         when(financialTransactionRepository.findById(financialTransactionId))
                 .thenReturn(Optional.empty());
 

@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RecordTransactionConnectionServiceTests {
@@ -80,6 +80,9 @@ public class RecordTransactionConnectionServiceTests {
         recordTransactionConnectionService.createConnection(bankRecordId, financialTransactionId2);
 
         Assertions.assertTrue(bankRecord.getFinancialTransactions().contains(financialTransaction2));
+        verify(bankRecordRepository, times(1)).findById(bankRecordId);
+        verify(financialTransactionRepository, times(1)).findById(financialTransactionId2);
+        verify(bankRecordRepository, times(1)).save(bankRecord);
     }
 
     @Test
@@ -117,6 +120,9 @@ public class RecordTransactionConnectionServiceTests {
         recordTransactionConnectionService.deleteConnection(bankRecordId, financialTransactionId1);
 
         Assertions.assertFalse(bankRecord.getFinancialTransactions().contains(financialTransaction1));
+        verify(bankRecordRepository, times(1)).findById(bankRecordId);
+        verify(financialTransactionRepository, times(1)).findById(financialTransactionId1);
+        verify(bankRecordRepository, times(1)).save(bankRecord);
     }
 
     @Test

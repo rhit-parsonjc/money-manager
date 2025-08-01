@@ -77,22 +77,22 @@ public class FinancialTransactionControllerTests {
                 (short) 2023, (byte) 8, (byte) 31, 500L, "Movie D");
         financialTransactionUpdateRequest = new FinancialTransactionRequest(
                 (short) 2025, (byte) 5, (byte) 21, 900L, "Movie E");
-        financialTransaction1 = new TestFinancialTransaction(1L, account, (short) 2024, (byte) 2, (byte) 5, 100L,
+        financialTransaction1 = new TestFinancialTransaction(1L, account, (short) 2024, (byte) 2, (byte) 5, -100L,
                 "Movie A", new HashSet<FileAttachment>(), new HashSet<BankRecord>());
-        financialTransaction2 = new TestFinancialTransaction(2L, account, (short) 2024, (byte) 8, (byte) 9, 1200L,
+        financialTransaction2 = new TestFinancialTransaction(2L, account, (short) 2024, (byte) 8, (byte) 9, -1200L,
                 "Movie B", new HashSet<FileAttachment>(), new HashSet<BankRecord>());
-        financialTransaction3 = new TestFinancialTransaction(3L, account, (short) 2025, (byte) 7, (byte) 23, 1000L,
+        financialTransaction3 = new TestFinancialTransaction(3L, account, (short) 2025, (byte) 7, (byte) 23, -1000L,
                 "Movie C", new HashSet<FileAttachment>(), new HashSet<BankRecord>());
-        financialTransactionCreated = new TestFinancialTransaction(4L, account, (short) 2023, (byte) 8, (byte) 31, 500L,
+        financialTransactionCreated = new TestFinancialTransaction(4L, account, (short) 2023, (byte) 8, (byte) 31, -500L,
                 "Movie D", new HashSet<FileAttachment>(), new HashSet<BankRecord>());
-        financialTransactionUpdated = new TestFinancialTransaction(3L, account, (short) 2025, (byte) 5, (byte) 21, 900L,
+        financialTransactionUpdated = new TestFinancialTransaction(3L, account, (short) 2025, (byte) 5, (byte) 21, -900L,
                 "Movie E", new HashSet<FileAttachment>(), new HashSet<BankRecord>());
-        financialTransaction1Dto = new FinancialTransactionDto(1L, (short) 2024, (byte) 2, (byte) 5, 100L, "Movie A");
-        financialTransaction2Dto = new FinancialTransactionDto(2L, (short) 2024, (byte) 8, (byte) 9, 1200L, "Movie B");
-        financialTransaction3Dto = new FinancialTransactionDto(3L, (short) 2025, (byte) 7, (byte) 23, 1000L, "Movie C");
-        financialTransactionCreatedDto = new FinancialTransactionDto(4L, (short) 2023, (byte) 8, (byte) 31, 500L, "Movie D");
-        financialTransactionUpdatedDto = new FinancialTransactionDto(3L, (short) 2025, (byte) 5, (byte) 21, 900L, "Movie E");
-        financialTransaction3DetailsDto = new FinancialTransactionDetailsDto(3L, (short) 2025, (byte) 7, (byte) 23, 1000L,
+        financialTransaction1Dto = new FinancialTransactionDto(1L, (short) 2024, (byte) 2, (byte) 5, -100L, "Movie A");
+        financialTransaction2Dto = new FinancialTransactionDto(2L, (short) 2024, (byte) 8, (byte) 9, -1200L, "Movie B");
+        financialTransaction3Dto = new FinancialTransactionDto(3L, (short) 2025, (byte) 7, (byte) 23, -1000L, "Movie C");
+        financialTransactionCreatedDto = new FinancialTransactionDto(4L, (short) 2023, (byte) 8, (byte) 31, -500L, "Movie D");
+        financialTransactionUpdatedDto = new FinancialTransactionDto(3L, (short) 2025, (byte) 5, (byte) 21, -900L, "Movie E");
+        financialTransaction3DetailsDto = new FinancialTransactionDetailsDto(3L, (short) 2025, (byte) 7, (byte) 23, -1000L,
                 "Movie C", new ArrayList<BankRecordDto>(), new ArrayList<FileAttachmentDto>());
         account.getFinancialTransactions().add(financialTransaction1);
         account.getFinancialTransactions().add(financialTransaction2);
@@ -115,7 +115,7 @@ public class FinancialTransactionControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.yearValue", CoreMatchers.is(2023)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.monthValue", CoreMatchers.is(8)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.dayValue", CoreMatchers.is(31)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.amount", CoreMatchers.is(500)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.amount", CoreMatchers.is(-500)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name", CoreMatchers.is("Movie D")));
     }
     @Test
@@ -134,7 +134,7 @@ public class FinancialTransactionControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.yearValue", CoreMatchers.is(2025)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.monthValue", CoreMatchers.is(7)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.dayValue", CoreMatchers.is(23)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.amount", CoreMatchers.is(1000)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.amount", CoreMatchers.is(-1000)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name", CoreMatchers.is("Movie C")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.bankRecords.size()", CoreMatchers.is(0)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.fileAttachments.size()", CoreMatchers.is(0)));
@@ -161,10 +161,22 @@ public class FinancialTransactionControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()", CoreMatchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id", CoreMatchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].yearValue", CoreMatchers.is(2024)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].monthValue", CoreMatchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].dayValue", CoreMatchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].amount", CoreMatchers.is(-100)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name", CoreMatchers.is("Movie A")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id", CoreMatchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].yearValue", CoreMatchers.is(2024)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].monthValue", CoreMatchers.is(8)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].dayValue", CoreMatchers.is(9)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].amount", CoreMatchers.is(-1200)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].name", CoreMatchers.is("Movie B")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].id", CoreMatchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].monthValue", CoreMatchers.is(7)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].dayValue", CoreMatchers.is(23)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].amount", CoreMatchers.is(-1000)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].name", CoreMatchers.is("Movie C")));
     }
 
@@ -188,8 +200,16 @@ public class FinancialTransactionControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()", CoreMatchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id", CoreMatchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].yearValue", CoreMatchers.is(2024)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].monthValue", CoreMatchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].dayValue", CoreMatchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].amount", CoreMatchers.is(-100)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name", CoreMatchers.is("Movie A")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id", CoreMatchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].yearValue", CoreMatchers.is(2024)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].monthValue", CoreMatchers.is(8)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].dayValue", CoreMatchers.is(9)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].amount", CoreMatchers.is(-1200)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].name", CoreMatchers.is("Movie B")));
     }
 
@@ -231,6 +251,10 @@ public class FinancialTransactionControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()", CoreMatchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id", CoreMatchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].yearValue", CoreMatchers.is(2024)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].monthValue", CoreMatchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].dayValue", CoreMatchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].amount", CoreMatchers.is(-100)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name", CoreMatchers.is("Movie A")));
     }
 
@@ -247,6 +271,10 @@ public class FinancialTransactionControllerTests {
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id", CoreMatchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.monthValue", CoreMatchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.dayValue", CoreMatchers.is(21)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.amount", CoreMatchers.is(-900)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name", CoreMatchers.is("Movie E")));
     }
 

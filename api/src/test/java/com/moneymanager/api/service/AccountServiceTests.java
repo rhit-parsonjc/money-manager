@@ -44,6 +44,12 @@ public class AccountServiceTests {
     private Account account1;
     private Account account2;
 
+    private void verifyAccount(Account account, long id, String name, String username) {
+        Assertions.assertEquals(id, account.getId());
+        Assertions.assertEquals(name, account.getName());
+        Assertions.assertEquals(username, account.getUserEntity().getUsername());
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new TestRole(1L, "USER");
@@ -76,8 +82,10 @@ public class AccountServiceTests {
         Account createdAccount = accountService.createAccount(accountRequest);
 
         Assertions.assertNotNull(createdAccount);
-        Assertions.assertEquals("Bank Gamma", createdAccount.getName());
-        Assertions.assertEquals(accountId, createdAccount.getId());
+        verifyAccount(createdAccount, accountId, "Bank Gamma", "Spring");
+        verify(accountRepository, times(1)).findByUserEntityIdAndName(userEntityId, "Bank Gamma");
+        verify(mapperService, times(1)).mapAccountRequestToAccount(userEntity, accountRequest);
+        verify(accountRepository, times(1)).save(account);
     }
 
     @Test
@@ -100,8 +108,8 @@ public class AccountServiceTests {
         Account foundAccount = accountService.getAccountById(accountId);
 
         Assertions.assertNotNull(foundAccount);
-        Assertions.assertEquals("Bank Beta", foundAccount.getName());
-        Assertions.assertEquals(accountId, foundAccount.getId());
+        verifyAccount(foundAccount, accountId, "Bank Beta", "Spring");
+        verify(accountRepository, times(1)).findById(accountId);
     }
 
     @Test
@@ -124,10 +132,9 @@ public class AccountServiceTests {
 
         Assertions.assertNotNull(foundAccountList);
         Assertions.assertEquals(2, foundAccountList.size());
-        Assertions.assertEquals(1L, foundAccountList.getFirst().getId());
-        Assertions.assertEquals("Bank Alpha", foundAccountList.getFirst().getName());
-        Assertions.assertEquals(2L, foundAccountList.getLast().getId());
-        Assertions.assertEquals("Bank Beta", foundAccountList.getLast().getName());
+        verifyAccount(foundAccountList.getFirst(), 1L, "Bank Alpha", "Spring");
+        verifyAccount(foundAccountList.getLast(), 2L, "Bank Beta", "Spring");
+        verify(accountRepository, times(1)).findByUserEntityId(userEntityId);
     }
 
     @Test
@@ -142,8 +149,10 @@ public class AccountServiceTests {
         Account updatedAccount = accountService.updateAccount(accountId, accountRequest);
 
         Assertions.assertNotNull(updatedAccount);
-        Assertions.assertEquals("Bank 2", updatedAccount.getName());
-        Assertions.assertEquals(accountId, updatedAccount.getId());
+        verifyAccount(updatedAccount, 2L, "Bank 2", "Spring");
+        verify(accountRepository, times(1)).findById(accountId);
+        verify(accountRepository, times(1)).findByUserEntityIdAndName(userEntityId, "Bank 2");
+        verify(accountRepository, times(1)).save(account2);
     }
 
     @Test

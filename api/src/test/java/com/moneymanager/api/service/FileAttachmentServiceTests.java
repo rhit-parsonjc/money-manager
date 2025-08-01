@@ -47,6 +47,15 @@ public class FileAttachmentServiceTests {
     private FileAttachment fileAttachment2;
     private FileAttachment fileAttachment3;
 
+    private void verifyFileAttachment(FileAttachment fileAttachment, long id, String name, String type, long size, byte[] contents, String itemName) {
+        Assertions.assertEquals(id, fileAttachment.getId());
+        Assertions.assertEquals(name, fileAttachment.getName());
+        Assertions.assertEquals(type, fileAttachment.getType());
+        Assertions.assertEquals(size, fileAttachment.getSize());
+        Assertions.assertArrayEquals(contents, fileAttachment.getContents());
+        Assertions.assertEquals(itemName, fileAttachment.getItem().getName());
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new TestRole(1L, "USER");
@@ -75,10 +84,10 @@ public class FileAttachmentServiceTests {
         for (int i = 0; i < 15; i++)
             contents3[i] = (byte) (i * i);
         fileAttachment1 = new TestFileAttachment(1L, "receipt", "PNG", 1000L, contents1, bankRecord);
-        bankRecord.getFileAttachments().add(fileAttachment1);
         fileAttachment2 = new TestFileAttachment(2L, "invoice", "PDF", 5000L, contents2, bankRecord);
-        bankRecord.getFileAttachments().add(fileAttachment2);
         fileAttachment3 = new TestFileAttachment(3L, "purchase", "TXT", 100L, contents3, financialTransaction);
+        bankRecord.getFileAttachments().add(fileAttachment1);
+        bankRecord.getFileAttachments().add(fileAttachment2);
         financialTransaction.getFileAttachments().add(fileAttachment3);
         when(userEntityService.getAuthenticatedUserOrThrow()).thenReturn(userEntity);
     }
@@ -91,11 +100,8 @@ public class FileAttachmentServiceTests {
         FileAttachment foundFileAttachment = fileAttachmentService.getFileAttachment(fileAttachmentId);
 
         Assertions.assertNotNull(foundFileAttachment);
-        Assertions.assertEquals("receipt", foundFileAttachment.getName());
-        Assertions.assertEquals("PNG", foundFileAttachment.getType());
-        Assertions.assertEquals(1000L, foundFileAttachment.getSize());
-        Assertions.assertArrayEquals(contents1, foundFileAttachment.getContents());
-        Assertions.assertEquals(1L, foundFileAttachment.getId());
+        verifyFileAttachment(foundFileAttachment, 1L, "receipt", "PNG", 1000L, contents1, "Snack");
+        verify(fileAttachmentRepository, times(1)).findById(fileAttachmentId);
     }
 
     @Test
@@ -119,10 +125,10 @@ public class FileAttachmentServiceTests {
 
         Assertions.assertNotNull(foundFileAttachmentList);
         Assertions.assertEquals(2, foundFileAttachmentList.size());
-        Assertions.assertEquals(1L, foundFileAttachmentList.getFirst().getId());
-        Assertions.assertEquals(1000L, foundFileAttachmentList.getFirst().getSize());
-        Assertions.assertEquals(2L, foundFileAttachmentList.getLast().getId());
-        Assertions.assertEquals(5000L, foundFileAttachmentList.getLast().getSize());
+        verifyFileAttachment(fileAttachmentList.getFirst(), 1L, "receipt", "PNG", 1000L, contents1, "Snack");
+        verifyFileAttachment(fileAttachmentList.getLast(), 2L, "invoice", "PDF", 5000L, contents2, "Snack");
+        verify(itemRepository, times(1)).findById(bankRecordId);
+        verify(fileAttachmentRepository, times(1)).findByItemId(bankRecordId);
     }
 
     @Test
@@ -136,8 +142,11 @@ public class FileAttachmentServiceTests {
 
         Assertions.assertNotNull(foundFileAttachmentList);
         Assertions.assertEquals(1, foundFileAttachmentList.size());
+        verifyFileAttachment(foundFileAttachmentList.getFirst(), 3L, "purchase", "TXT", 100L, contents3, "Water Bottle");
         Assertions.assertEquals(3L, foundFileAttachmentList.getFirst().getId());
         Assertions.assertEquals(100L, foundFileAttachmentList.getFirst().getSize());
+        verify(itemRepository, times(1)).findById(financialTransactionId);
+        verify(fileAttachmentRepository, times(1)).findByItemId(financialTransactionId);
     }
 
     @Test

@@ -140,14 +140,29 @@ public class DateAmountControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()", CoreMatchers.is(5)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id", CoreMatchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].monthValue", CoreMatchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].dayValue", CoreMatchers.is(13)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].amount", CoreMatchers.is(899)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id", CoreMatchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].monthValue", CoreMatchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].dayValue", CoreMatchers.is(26)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].amount", CoreMatchers.is(950)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].id", CoreMatchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].monthValue", CoreMatchers.is(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].dayValue", CoreMatchers.is(9)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].amount", CoreMatchers.is(1100)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[3].id", CoreMatchers.is(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[3].yearValue", CoreMatchers.is(2026)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[3].monthValue", CoreMatchers.is(8)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[3].dayValue", CoreMatchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[3].amount", CoreMatchers.is(1200)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[4].id", CoreMatchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[4].yearValue", CoreMatchers.is(2026)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[4].monthValue", CoreMatchers.is(8)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[4].dayValue", CoreMatchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[4].amount", CoreMatchers.is(1050)));
     }
 
@@ -173,10 +188,19 @@ public class DateAmountControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()", CoreMatchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id", CoreMatchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].monthValue", CoreMatchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].dayValue", CoreMatchers.is(13)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].amount", CoreMatchers.is(899)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id", CoreMatchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].monthValue", CoreMatchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].dayValue", CoreMatchers.is(26)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].amount", CoreMatchers.is(950)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].id", CoreMatchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].monthValue", CoreMatchers.is(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].dayValue", CoreMatchers.is(9)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].amount", CoreMatchers.is(1100)));
     }
 
@@ -201,8 +225,14 @@ public class DateAmountControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()", CoreMatchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id", CoreMatchers.is(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].yearValue", CoreMatchers.is(2026)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].monthValue", CoreMatchers.is(8)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].dayValue", CoreMatchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].amount", CoreMatchers.is(1200)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id", CoreMatchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].yearValue", CoreMatchers.is(2026)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].monthValue", CoreMatchers.is(8)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].dayValue", CoreMatchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].amount", CoreMatchers.is(1050)));
     }
 
@@ -226,6 +256,9 @@ public class DateAmountControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()", CoreMatchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id", CoreMatchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].yearValue", CoreMatchers.is(2025)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].monthValue", CoreMatchers.is(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].dayValue", CoreMatchers.is(9)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].amount", CoreMatchers.is(1100)));
     }
 
@@ -245,6 +278,9 @@ public class DateAmountControllerTests {
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.success", CoreMatchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id", CoreMatchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.yearValue", CoreMatchers.is(2026)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.monthValue", CoreMatchers.is(8)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.dayValue", CoreMatchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.amount", CoreMatchers.is(1250)));
     }
 

@@ -69,10 +69,10 @@ public class FileAttachmentControllerTests {
         itemId = 1L;
         item = new TestBankRecord(itemId, account, (short) 2026, (byte) 8, (byte) 21, 999L,
                 "Song A", new HashSet<FileAttachment>(), new HashSet<FinancialTransaction>());
-        contents1 = new byte[100];
+        contents1 = new byte[100]; // [0, 1, 2, ..., 98, 99]
         for (int i = 0; i < 100; i++)
             contents1[i] = (byte) i;
-        contents2 = new byte[250];
+        contents2 = new byte[250]; // [0, 1, 2, ..., 8, 9, 0, 1, ..., 8, 9]
         for (int i = 0; i < 250; i++)
             contents2[i] = (byte) (i % 10);
         fileAttachment1 = new TestFileAttachment(1L, "Purchase-Record", "DOC", 200L, contents1, item);
@@ -102,8 +102,12 @@ public class FileAttachmentControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()", CoreMatchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id", CoreMatchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name", CoreMatchers.is("Purchase-Record")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].type", CoreMatchers.is("DOC")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].size", CoreMatchers.is(200)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id", CoreMatchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].name", CoreMatchers.is("SongReceipt")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].name", CoreMatchers.is("SongReceipt")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].type", CoreMatchers.is("JPG")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].size", CoreMatchers.is(500)));
     }
 
     @Test

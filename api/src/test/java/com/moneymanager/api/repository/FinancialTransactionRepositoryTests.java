@@ -46,6 +46,17 @@ public class FinancialTransactionRepositoryTests {
     private FinancialTransaction financialTransaction4;
     private FinancialTransaction financialTransaction5;
 
+    private void verifyFinancialTransaction(FinancialTransaction financialTransaction, short yearValue, byte monthValue,
+                                            byte dayValue, Long amount, String name, String accountName) {
+        Assertions.assertEquals(yearValue, financialTransaction.getYearValue());
+        Assertions.assertEquals(monthValue, financialTransaction.getMonthValue());
+        Assertions.assertEquals(dayValue, financialTransaction.getDayValue());
+        Assertions.assertEquals(amount, financialTransaction.getAmount());
+        Assertions.assertEquals(name, financialTransaction.getName());
+        Assertions.assertEquals(accountName, financialTransaction.getAccount().getName());
+        Assertions.assertTrue(financialTransaction.getId() > 0);
+    }
+
     private int compareTransactions(FinancialTransaction transaction1, FinancialTransaction transaction2) {
         if (transaction1.getYearValue().shortValue() != transaction2.getYearValue().shortValue())
             return transaction1.getYearValue() - transaction2.getYearValue();
@@ -79,13 +90,7 @@ public class FinancialTransactionRepositoryTests {
     public void FinancialTransactionRepository_Save() {
         FinancialTransaction savedFinancialTransaction = financialTransactionRepository.save(financialTransaction1);
 
-        Assertions.assertEquals((short) 2025, savedFinancialTransaction.getYearValue());
-        Assertions.assertEquals((byte) 7, savedFinancialTransaction.getMonthValue());
-        Assertions.assertEquals((byte) 15, savedFinancialTransaction.getDayValue());
-        Assertions.assertEquals(-4096L, savedFinancialTransaction.getAmount());
-        Assertions.assertEquals("Phone Bill", savedFinancialTransaction.getName());
-        Assertions.assertEquals("Bank A", savedFinancialTransaction.getAccount().getName());
-        Assertions.assertTrue(savedFinancialTransaction.getId() > 0);
+        verifyFinancialTransaction(savedFinancialTransaction, (short) 2025, (byte) 7, (byte) 15, -4096L, "Phone Bill", "Bank A");
     }
 
     @Test
@@ -101,7 +106,7 @@ public class FinancialTransactionRepositoryTests {
 
         Assertions.assertTrue(foundTransactionOptional.isPresent());
         FinancialTransaction foundTransaction = foundTransactionOptional.get();
-        Assertions.assertEquals("Candy", foundTransaction.getName());
+        verifyFinancialTransaction(foundTransaction, (short) 2025, (byte) 8, (byte) 2, -333L, "Candy", "Bank A");
     }
 
     @Test
@@ -118,10 +123,10 @@ public class FinancialTransactionRepositoryTests {
         Assertions.assertNotNull(foundTransactions);
         Assertions.assertEquals(4, foundTransactions.size());
         foundTransactions.sort(this::compareTransactions);
-        Assertions.assertEquals("Phone Bill", foundTransactions.get(0).getName());
-        Assertions.assertEquals("Breakfast", foundTransactions.get(1).getName());
-        Assertions.assertEquals("Candy", foundTransactions.get(2).getName());
-        Assertions.assertEquals("Office Supplies", foundTransactions.get(3).getName());
+        verifyFinancialTransaction(foundTransactions.get(0), (short) 2025, (byte) 7, (byte) 15, -4096L, "Phone Bill", "Bank A");
+        verifyFinancialTransaction(foundTransactions.get(1), (short) 2025, (byte) 7, (byte) 28, -1888L, "Breakfast", "Bank A");
+        verifyFinancialTransaction(foundTransactions.get(2), (short) 2025, (byte) 8, (byte) 2, -333L, "Candy", "Bank A");
+        verifyFinancialTransaction(foundTransactions.get(3), (short) 2026, (byte) 8, (byte) 2, -1000L, "Office Supplies", "Bank A");
     }
 
     @Test
@@ -139,9 +144,9 @@ public class FinancialTransactionRepositoryTests {
         Assertions.assertNotNull(foundTransactions);
         Assertions.assertEquals(3, foundTransactions.size());
         foundTransactions.sort(this::compareTransactions);
-        Assertions.assertEquals("Phone Bill", foundTransactions.get(0).getName());
-        Assertions.assertEquals("Breakfast", foundTransactions.get(1).getName());
-        Assertions.assertEquals("Candy", foundTransactions.get(2).getName());
+        verifyFinancialTransaction(foundTransactions.get(0), (short) 2025, (byte) 7, (byte) 15, -4096L, "Phone Bill", "Bank A");
+        verifyFinancialTransaction(foundTransactions.get(1), (short) 2025, (byte) 7, (byte) 28, -1888L, "Breakfast", "Bank A");
+        verifyFinancialTransaction(foundTransactions.get(2), (short) 2025, (byte) 8, (byte) 2, -333L, "Candy", "Bank A");
     }
 
     @Test
@@ -159,8 +164,8 @@ public class FinancialTransactionRepositoryTests {
         Assertions.assertNotNull(foundTransactions);
         Assertions.assertEquals(2, foundTransactions.size());
         foundTransactions.sort(this::compareTransactions);
-        Assertions.assertEquals("Phone Bill", foundTransactions.get(0).getName());
-        Assertions.assertEquals("Breakfast", foundTransactions.get(1).getName());
+        verifyFinancialTransaction(foundTransactions.getFirst(), (short) 2025, (byte) 7, (byte) 15, -4096L, "Phone Bill", "Bank A");
+        verifyFinancialTransaction(foundTransactions.getLast(), (short) 2025, (byte) 7, (byte) 28, -1888L, "Breakfast", "Bank A");
     }
 
     @Test
@@ -178,8 +183,7 @@ public class FinancialTransactionRepositoryTests {
 
         Assertions.assertNotNull(foundTransactions);
         Assertions.assertEquals(1, foundTransactions.size());
-        foundTransactions.sort(this::compareTransactions);
-        Assertions.assertEquals("Office Supplies", foundTransactions.get(0).getName());
+        verifyFinancialTransaction(foundTransactions.getFirst(), (short) 2026, (byte) 8, (byte) 2, -1000L, "Office Supplies", "Bank A");
     }
 
     @Test
@@ -189,12 +193,7 @@ public class FinancialTransactionRepositoryTests {
         Optional<FinancialTransaction> foundTransactionOptional = financialTransactionRepository.findById(financialTransactionId);
         Assertions.assertTrue(foundTransactionOptional.isPresent());
         FinancialTransaction foundTransaction = foundTransactionOptional.get();
-        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest();
-        financialTransactionRequest.setYearValue((short) 2023);
-        financialTransactionRequest.setMonthValue((byte) 4);
-        financialTransactionRequest.setDayValue((byte) 22);
-        financialTransactionRequest.setAmount(12345L);
-        financialTransactionRequest.setName("Streaming Subscription");
+        FinancialTransactionRequest financialTransactionRequest = new FinancialTransactionRequest((short) 2023, (byte) 4, (byte) 22, 12345L, "Streaming Subscription");
 
         foundTransaction.update(financialTransactionRequest);
         financialTransactionRepository.save(foundTransaction);
@@ -202,11 +201,7 @@ public class FinancialTransactionRepositoryTests {
         Optional<FinancialTransaction> updatedFoundTransactionOptional = financialTransactionRepository.findById(financialTransactionId);
         Assertions.assertTrue(updatedFoundTransactionOptional.isPresent());
         FinancialTransaction updatedFoundTransaction = updatedFoundTransactionOptional.get();
-        Assertions.assertEquals((short) 2023, updatedFoundTransaction.getYearValue());
-        Assertions.assertEquals((byte) 4, updatedFoundTransaction.getMonthValue());
-        Assertions.assertEquals((byte) 22, updatedFoundTransaction.getDayValue());
-        Assertions.assertEquals(12345L, updatedFoundTransaction.getAmount());
-        Assertions.assertEquals("Streaming Subscription", updatedFoundTransaction.getName());
+        verifyFinancialTransaction(updatedFoundTransaction, (short) 2023, (byte) 4, (byte) 22, 12345L, "Streaming Subscription", "Bank A");
     }
 
     @Test

@@ -40,6 +40,16 @@ public class AccountRepositoryTests {
     private Account accountB;
     private Account accountC;
 
+    private int compareAccounts(Account account1, Account account2) {
+        return account1.getName().compareTo(account2.getName());
+    }
+
+    private void verifyAccount(Account account, String name, String username) {
+        Assertions.assertEquals(name, account.getName());
+        Assertions.assertEquals(username, account.getUserEntity().getUsername());
+        Assertions.assertTrue(account.getId() > 0);
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new Role("USER");
@@ -59,9 +69,7 @@ public class AccountRepositoryTests {
     public void AccountRepository_Save() {
         Account savedAccount = accountRepository.save(accountA);
 
-        Assertions.assertEquals("Bank A", savedAccount.getName());
-        Assertions.assertEquals("Spring1", savedAccount.getUserEntity().getUsername());
-        Assertions.assertTrue(savedAccount.getId() > 0);
+        verifyAccount(savedAccount, "Bank A", "Spring1");
     }
 
     @Test
@@ -75,7 +83,7 @@ public class AccountRepositoryTests {
 
         Assertions.assertTrue(foundAccountOptional.isPresent());
         Account foundAccount = foundAccountOptional.get();
-        Assertions.assertEquals("Bank C", foundAccount.getName());
+        verifyAccount(foundAccount, "Bank C", "Spring2");
     }
 
     @Test
@@ -89,15 +97,9 @@ public class AccountRepositoryTests {
 
         Assertions.assertNotNull(foundAccountList);
         Assertions.assertEquals(2, foundAccountList.size());
-        String foundAccount1 = foundAccountList.getFirst().getName();
-        String foundAccount2 = foundAccountList.getLast().getName();
-        if (foundAccount1.compareTo(foundAccount2) > 0) {
-            String tmp = foundAccount1;
-            foundAccount1 = foundAccount2;
-            foundAccount2 = tmp;
-        }
-        Assertions.assertEquals("Bank B", foundAccount1);
-        Assertions.assertEquals("Bank C", foundAccount2);
+        foundAccountList.sort(this::compareAccounts);
+        verifyAccount(foundAccountList.getFirst(), "Bank B", "Spring2");
+        verifyAccount(foundAccountList.getLast(), "Bank C", "Spring2");
     }
 
     @Test
@@ -111,7 +113,7 @@ public class AccountRepositoryTests {
 
         Assertions.assertNotNull(foundAccountList);
         Assertions.assertEquals(1, foundAccountList.size());
-        Assertions.assertEquals("Bank B", foundAccountList.getFirst().getName());
+        verifyAccount(foundAccountList.getFirst(), "Bank B", "Spring2");
     }
 
     @Test
@@ -130,7 +132,7 @@ public class AccountRepositoryTests {
         Optional<Account> updatedFoundAccountOptional = accountRepository.findById(accountId);
         Assertions.assertTrue(updatedFoundAccountOptional.isPresent());
         Account updatedFoundAccount = updatedFoundAccountOptional.get();
-        Assertions.assertEquals("Bank Alpha", updatedFoundAccount.getName());
+        verifyAccount(updatedFoundAccount, "Bank Alpha", "Spring1");
     }
 
     @Test

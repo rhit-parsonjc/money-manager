@@ -50,6 +50,19 @@ public class FileAttachmentRepositoryTests {
     private FileAttachment fileAttachment3;
     private FileAttachment fileAttachment4;
 
+    private int compareFileAttachments(FileAttachment fileAttachment1, FileAttachment fileAttachment2) {
+        return (int) (fileAttachment1.getSize() - fileAttachment2.getSize());
+    }
+
+    private void verifyFileAttachment(FileAttachment fileAttachment, String name, String type, long size, byte[] contents, String itemName) {
+        Assertions.assertEquals(name, fileAttachment.getName());
+        Assertions.assertEquals(type, fileAttachment.getType());
+        Assertions.assertEquals(size, fileAttachment.getSize());
+        Assertions.assertArrayEquals(contents, fileAttachment.getContents());
+        Assertions.assertEquals(itemName, fileAttachment.getItem().getName());
+        Assertions.assertTrue(fileAttachment.getId() > 0);
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new Role("USER");
@@ -60,23 +73,23 @@ public class FileAttachmentRepositoryTests {
         UserEntity savedUserEntity = userEntityRepository.save(userEntity);
         Account account = new Account(savedUserEntity, "Bank A");
         Account savedAccount = accountRepository.save(account);
-        BankRecord bankRecord = new BankRecord(savedAccount, (short) 2025, (byte) 5, (byte) 11, 2525L, "Book");
+        BankRecord bankRecord = new BankRecord(savedAccount, (short) 2025, (byte) 5, (byte) 11, -2525L, "Book");
         savedBankRecord = bankRecordRepository.save(bankRecord);
         FinancialTransaction financialTransaction = new FinancialTransaction(
-                savedAccount, (short) 2025, (byte) 4, (byte) 23, 3838L, "Snacks");
+                savedAccount, (short) 2025, (byte) 4, (byte) 23, -3838L, "Snacks");
         savedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
-        contents1 = new byte[100];
+        contents1 = new byte[100]; // [1, 2, ..., 99, 100]
         for (int i = 0; i < 100; i++)
             contents1[i] = (byte) (i + 1);
-        contents2 = new byte[50];
+        contents2 = new byte[50]; // [88, 88, ..., 88, 88]
         for (int i = 0; i < 50; i++)
             contents1[i] = 88;
         contents3 = new byte[250];
-        for (int i = 0; i < 250; i++)
-            contents3[i] = (byte) (255 - i);
+        for (int i = 0; i < 250; i++) // [0, 1, 2, ..., 8, 9, 0, 1, 2, ..., 8, 9]
+            contents3[i] = (byte) (i % 10);
         contents4 = new byte[1000];
-        for (int i = 0; i < 1000; i++)
-            contents4[i] = (byte) (i % 200 + 1);
+        for (int i = 0; i < 1000; i++) // [0, 1, 2, ..., 99, 100, 0, 1, 2, ..., 99]
+            contents4[i] = (byte) (i % 100 + 1);
         fileAttachment1 = new FileAttachment("receipt", "png", 100L, contents1, savedBankRecord);
         fileAttachment2 = new FileAttachment("email", "pdf", 50L, contents2, savedBankRecord);
         fileAttachment3 = new FileAttachment("invoice", "pdf", 250L, contents3, savedFinancialTransaction);
@@ -87,12 +100,7 @@ public class FileAttachmentRepositoryTests {
     public void FileAttachmentRepository_Save() {
         FileAttachment savedFileAttachment = fileAttachmentRepository.save(fileAttachment1);
 
-        Assertions.assertEquals("receipt", savedFileAttachment.getName());
-        Assertions.assertEquals("png", savedFileAttachment.getType());
-        Assertions.assertEquals(100L, savedFileAttachment.getSize());
-        Assertions.assertArrayEquals(contents1, savedFileAttachment.getContents());
-        Assertions.assertEquals("Book", savedFileAttachment.getItem().getName());
-        Assertions.assertTrue(savedFileAttachment.getId() > 0);
+        verifyFileAttachment(savedFileAttachment, "receipt", "png", 100L, contents1, "Book");
     }
 
     @Test
@@ -107,7 +115,7 @@ public class FileAttachmentRepositoryTests {
 
         Assertions.assertTrue(foundFileAttachmentOptional.isPresent());
         FileAttachment foundFileAttachment = foundFileAttachmentOptional.get();
-        Assertions.assertEquals(1000L, foundFileAttachment.getSize());
+        verifyFileAttachment(foundFileAttachment, "invoice", "txt", 1000L, contents4, "Snacks");
     }
 
     @Test
@@ -122,15 +130,9 @@ public class FileAttachmentRepositoryTests {
 
         Assertions.assertNotNull(fileAttachmentList);
         Assertions.assertEquals(2, fileAttachmentList.size());
-        Long fileSize1 = fileAttachmentList.getFirst().getSize();
-        Long fileSize2 = fileAttachmentList.getLast().getSize();
-        if (fileSize1 > fileSize2) {
-            Long tmp = fileSize1;
-            fileSize1 = fileSize2;
-            fileSize2 = tmp;
-        }
-        Assertions.assertEquals(50L, fileSize1);
-        Assertions.assertEquals(100L, fileSize2);
+        fileAttachmentList.sort(this::compareFileAttachments);
+        verifyFileAttachment(fileAttachmentList.getFirst(), "email", "pdf", 50L, contents2, "Book");
+        verifyFileAttachment(fileAttachmentList.getLast(), "receipt", "png", 100L, contents1, "Book");
     }
 
     @Test
@@ -145,15 +147,9 @@ public class FileAttachmentRepositoryTests {
 
         Assertions.assertNotNull(fileAttachmentList);
         Assertions.assertEquals(2, fileAttachmentList.size());
-        Long fileSize1 = fileAttachmentList.getFirst().getSize();
-        Long fileSize2 = fileAttachmentList.getLast().getSize();
-        if (fileSize1 > fileSize2) {
-            Long tmp = fileSize1;
-            fileSize1 = fileSize2;
-            fileSize2 = tmp;
-        }
-        Assertions.assertEquals(250L, fileSize1);
-        Assertions.assertEquals(1000L, fileSize2);
+        fileAttachmentList.sort(this::compareFileAttachments);
+        verifyFileAttachment(fileAttachmentList.getFirst(), "invoice", "pdf", 250L, contents3, "Snacks");
+        verifyFileAttachment(fileAttachmentList.getLast(), "invoice", "txt", 1000L, contents4, "Snacks");
     }
 
     @Test

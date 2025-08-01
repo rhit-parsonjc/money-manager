@@ -57,6 +57,15 @@ public class DateAmountRepositoryTests {
         return 0;
     }
 
+    private void verifyDateAmount(DateAmount dateAmount, short yearValue, byte monthValue, byte dayValue, long amount, String accountName) {
+        Assertions.assertEquals(yearValue, dateAmount.getYearValue());
+        Assertions.assertEquals(monthValue, dateAmount.getMonthValue());
+        Assertions.assertEquals(dayValue, dateAmount.getDayValue());
+        Assertions.assertEquals(amount, dateAmount.getAmount());
+        Assertions.assertEquals(accountName, dateAmount.getAccount().getName());
+        Assertions.assertTrue(dateAmount.getId() > 0);
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new Role("USER");
@@ -80,12 +89,7 @@ public class DateAmountRepositoryTests {
     public void DateAmountRepository_Save() {
         DateAmount savedDateAmount = dateAmountRepository.save(dateAmount1);
 
-        Assertions.assertEquals((short) 2024, savedDateAmount.getYearValue());
-        Assertions.assertEquals((byte) 3, savedDateAmount.getMonthValue());
-        Assertions.assertEquals((byte) 25, savedDateAmount.getDayValue());
-        Assertions.assertEquals(98765L, savedDateAmount.getAmount());
-        Assertions.assertEquals("Bank A", savedDateAmount.getAccount().getName());
-        Assertions.assertTrue(savedDateAmount.getId() > 0);
+        verifyDateAmount(savedDateAmount, (short) 2024, (byte) 3, (byte) 25, 98765L, "Bank A");
     }
 
     @Test
@@ -101,7 +105,7 @@ public class DateAmountRepositoryTests {
 
         Assertions.assertTrue(foundDateAmountOptional.isPresent());
         DateAmount foundDateAmount = foundDateAmountOptional.get();
-        Assertions.assertEquals(1800L, foundDateAmount.getAmount());
+        verifyDateAmount(foundDateAmount, (short) 2024, (byte) 2, (byte) 15, 1800L, "Bank B");
     }
 
     @Test
@@ -118,7 +122,7 @@ public class DateAmountRepositoryTests {
         Assertions.assertNotNull(foundDateAmounts);
         Assertions.assertEquals(1, foundDateAmounts.size());
         foundDateAmounts.sort(this::compareDateAmounts);
-        Assertions.assertEquals(98765L, foundDateAmounts.get(0).getAmount());
+        verifyDateAmount(foundDateAmounts.getFirst(), (short) 2024, (byte) 3, (byte) 25, 98765L, "Bank A");
     }
 
     @Test
@@ -136,9 +140,9 @@ public class DateAmountRepositoryTests {
         Assertions.assertNotNull(foundDateAmounts);
         Assertions.assertEquals(3, foundDateAmounts.size());
         foundDateAmounts.sort(this::compareDateAmounts);
-        Assertions.assertEquals(2000L, foundDateAmounts.get(0).getAmount());
-        Assertions.assertEquals(1800L, foundDateAmounts.get(1).getAmount());
-        Assertions.assertEquals(1500L, foundDateAmounts.get(2).getAmount());
+        verifyDateAmount(foundDateAmounts.get(0), (short) 2024, (byte) 2, (byte) 5, 2000L, "Bank B");
+        verifyDateAmount(foundDateAmounts.get(1), (short) 2024, (byte) 2, (byte) 15, 1800L, "Bank B");
+        verifyDateAmount(foundDateAmounts.get(2), (short) 2024, (byte) 3, (byte) 7, 1500L, "Bank B");
     }
 
     @Test
@@ -156,8 +160,8 @@ public class DateAmountRepositoryTests {
         Assertions.assertNotNull(foundDateAmounts);
         Assertions.assertEquals(2, foundDateAmounts.size());
         foundDateAmounts.sort(this::compareDateAmounts);
-        Assertions.assertEquals(2000L, foundDateAmounts.get(0).getAmount());
-        Assertions.assertEquals(1800L, foundDateAmounts.get(1).getAmount());
+        verifyDateAmount(foundDateAmounts.getFirst(), (short) 2024, (byte) 2, (byte) 5, 2000L, "Bank B");
+        verifyDateAmount(foundDateAmounts.getLast(), (short) 2024, (byte) 2, (byte) 15, 1800L, "Bank B");
     }
 
     @Test
@@ -176,7 +180,7 @@ public class DateAmountRepositoryTests {
         Assertions.assertNotNull(foundDateAmounts);
         Assertions.assertEquals(1, foundDateAmounts.size());
         foundDateAmounts.sort(this::compareDateAmounts);
-        Assertions.assertEquals(1800L, foundDateAmounts.get(0).getAmount());
+        verifyDateAmount(foundDateAmounts.getFirst(), (short) 2024, (byte) 2, (byte) 15, 1800L, "Bank B");
     }
 
     @Test
@@ -186,8 +190,7 @@ public class DateAmountRepositoryTests {
         Optional<DateAmount> foundDateAmountOptional = dateAmountRepository.findById(dateAmountId);
         Assertions.assertTrue(foundDateAmountOptional.isPresent());
         DateAmount foundDateAmount = foundDateAmountOptional.get();
-        DateAmountUpdateRequest dateAmountUpdateRequest = new DateAmountUpdateRequest();
-        dateAmountUpdateRequest.setAmount(77777L);
+        DateAmountUpdateRequest dateAmountUpdateRequest = new DateAmountUpdateRequest(77777L);
 
         foundDateAmount.update(dateAmountUpdateRequest);
         dateAmountRepository.save(foundDateAmount);
@@ -195,7 +198,7 @@ public class DateAmountRepositoryTests {
         Optional<DateAmount> updatedFoundDateAmountOptional = dateAmountRepository.findById(dateAmountId);
         Assertions.assertTrue(updatedFoundDateAmountOptional.isPresent());
         DateAmount updatedFoundDateAmount = updatedFoundDateAmountOptional.get();
-        Assertions.assertEquals(77777L, updatedFoundDateAmount.getAmount());
+        verifyDateAmount(updatedFoundDateAmount, (short) 2024, (byte) 3, (byte) 25, 77777L, "Bank A");
     }
 
     @Test

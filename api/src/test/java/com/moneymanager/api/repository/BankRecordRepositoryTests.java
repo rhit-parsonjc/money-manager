@@ -50,6 +50,16 @@ public class BankRecordRepositoryTests {
         return record1.getName().compareTo(record2.getName());
     }
 
+    private void verifyBankRecord(BankRecord bankRecord, short yearValue, byte monthValue, byte dayValue, long amount, String name, String accountName) {
+        Assertions.assertEquals(yearValue, bankRecord.getYearValue());
+        Assertions.assertEquals(monthValue, bankRecord.getMonthValue());
+        Assertions.assertEquals(dayValue, bankRecord.getDayValue());
+        Assertions.assertEquals(amount, bankRecord.getAmount());
+        Assertions.assertEquals(name, bankRecord.getName());
+        Assertions.assertEquals(accountName, bankRecord.getAccount().getName());
+        Assertions.assertTrue(bankRecord.getId() > 0);
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new Role("USER");
@@ -71,13 +81,7 @@ public class BankRecordRepositoryTests {
     public void BankRecordRepository_Save() {
         BankRecord savedBankRecord = bankRecordRepository.save(bankRecord1);
 
-        Assertions.assertEquals((short) 2025, savedBankRecord.getYearValue());
-        Assertions.assertEquals((byte) 7, savedBankRecord.getMonthValue());
-        Assertions.assertEquals((byte) 4, savedBankRecord.getDayValue());
-        Assertions.assertEquals(-1599L, savedBankRecord.getAmount());
-        Assertions.assertEquals("Movie Tickets", savedBankRecord.getName());
-        Assertions.assertEquals("Bank A", savedBankRecord.getAccount().getName());
-        Assertions.assertTrue(savedBankRecord.getId() > 0);
+        verifyBankRecord(savedBankRecord, (short) 2025, (byte) 7, (byte) 4, -1599L, "Movie Tickets", "Bank A");
     }
 
     @Test
@@ -93,7 +97,7 @@ public class BankRecordRepositoryTests {
 
         Assertions.assertTrue(foundBankRecordOptional.isPresent());
         BankRecord foundBankRecord = foundBankRecordOptional.get();
-        Assertions.assertEquals("Holiday Gift", foundBankRecord.getName());
+        verifyBankRecord(foundBankRecord, (short) 2025, (byte) 12, (byte) 27, 2500L, "Holiday Gift", "Bank A");
     }
 
     @Test
@@ -110,11 +114,12 @@ public class BankRecordRepositoryTests {
         Assertions.assertNotNull(foundBankRecords);
         Assertions.assertEquals(5, foundBankRecords.size());
         foundBankRecords.sort(this::compareRecords);
-        Assertions.assertEquals("Lunch", foundBankRecords.get(0).getName());
-        Assertions.assertEquals("Dinner", foundBankRecords.get(1).getName());
-        Assertions.assertEquals("Movie Tickets", foundBankRecords.get(2).getName());
-        Assertions.assertEquals("Streaming Service", foundBankRecords.get(3).getName());
-        Assertions.assertEquals("Holiday Gift", foundBankRecords.get(4).getName());
+
+        verifyBankRecord(foundBankRecords.get(0), (short) 2024, (byte) 4, (byte) 15, -1250L, "Lunch", "Bank A");
+        verifyBankRecord(foundBankRecords.get(1), (short) 2025, (byte) 7, (byte) 4, -3500L, "Dinner", "Bank A");
+        verifyBankRecord(foundBankRecords.get(2), (short) 2025, (byte) 7, (byte) 4, -1599L, "Movie Tickets", "Bank A");
+        verifyBankRecord(foundBankRecords.get(3), (short) 2025, (byte) 7, (byte) 25, -750L, "Streaming Service", "Bank A");
+        verifyBankRecord(foundBankRecords.get(4), (short) 2025, (byte) 12, (byte) 27, 2500L, "Holiday Gift", "Bank A");
     }
 
     @Test
@@ -131,10 +136,10 @@ public class BankRecordRepositoryTests {
         Assertions.assertNotNull(foundBankRecords);
         Assertions.assertEquals(4, foundBankRecords.size());
         foundBankRecords.sort(this::compareRecords);
-        Assertions.assertEquals("Dinner", foundBankRecords.get(0).getName());
-        Assertions.assertEquals("Movie Tickets", foundBankRecords.get(1).getName());
-        Assertions.assertEquals("Streaming Service", foundBankRecords.get(2).getName());
-        Assertions.assertEquals("Holiday Gift", foundBankRecords.get(3).getName());
+        verifyBankRecord(foundBankRecords.get(0), (short) 2025, (byte) 7, (byte) 4, -3500L, "Dinner", "Bank A");
+        verifyBankRecord(foundBankRecords.get(1), (short) 2025, (byte) 7, (byte) 4, -1599L, "Movie Tickets", "Bank A");
+        verifyBankRecord(foundBankRecords.get(2), (short) 2025, (byte) 7, (byte) 25, -750L, "Streaming Service", "Bank A");
+        verifyBankRecord(foundBankRecords.get(3), (short) 2025, (byte) 12, (byte) 27, 2500L, "Holiday Gift", "Bank A");
     }
 
     @Test
@@ -152,9 +157,9 @@ public class BankRecordRepositoryTests {
         Assertions.assertNotNull(foundBankRecords);
         Assertions.assertEquals(3, foundBankRecords.size());
         foundBankRecords.sort(this::compareRecords);
-        Assertions.assertEquals("Dinner", foundBankRecords.get(0).getName());
-        Assertions.assertEquals("Movie Tickets", foundBankRecords.get(1).getName());
-        Assertions.assertEquals("Streaming Service", foundBankRecords.get(2).getName());
+        verifyBankRecord(foundBankRecords.get(0), (short) 2025, (byte) 7, (byte) 4, -3500L, "Dinner", "Bank A");
+        verifyBankRecord(foundBankRecords.get(1), (short) 2025, (byte) 7, (byte) 4, -1599L, "Movie Tickets", "Bank A");
+        verifyBankRecord(foundBankRecords.get(2), (short) 2025, (byte) 7, (byte) 25, -750L, "Streaming Service", "Bank A");
     }
 
     @Test
@@ -173,8 +178,8 @@ public class BankRecordRepositoryTests {
         Assertions.assertNotNull(foundBankRecords);
         Assertions.assertEquals(2, foundBankRecords.size());
         foundBankRecords.sort(this::compareRecords);
-        Assertions.assertEquals("Dinner", foundBankRecords.get(0).getName());
-        Assertions.assertEquals("Movie Tickets", foundBankRecords.get(1).getName());
+        verifyBankRecord(foundBankRecords.get(0), (short) 2025, (byte) 7, (byte) 4, -3500L, "Dinner", "Bank A");
+        verifyBankRecord(foundBankRecords.get(1), (short) 2025, (byte) 7, (byte) 4, -1599L, "Movie Tickets", "Bank A");
     }
 
     @Test
@@ -184,12 +189,7 @@ public class BankRecordRepositoryTests {
         Optional<BankRecord> foundBankRecordOptional = bankRecordRepository.findById(bankRecordId);
         Assertions.assertTrue(foundBankRecordOptional.isPresent());
         BankRecord foundBankRecord = foundBankRecordOptional.get();
-        BankRecordRequest bankRecordRequest = new BankRecordRequest();
-        bankRecordRequest.setYearValue((short) 2026);
-        bankRecordRequest.setMonthValue((byte) 12);
-        bankRecordRequest.setDayValue((byte) 27);
-        bankRecordRequest.setAmount(9999L);
-        bankRecordRequest.setName("Fireworks");
+        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2026, (byte) 12, (byte) 27, 9999L, "Fireworks");
 
         foundBankRecord.update(bankRecordRequest);
         bankRecordRepository.save(foundBankRecord);
@@ -197,11 +197,7 @@ public class BankRecordRepositoryTests {
         Optional<BankRecord> updatedFoundBankRecordOptional = bankRecordRepository.findById(bankRecordId);
         Assertions.assertTrue(updatedFoundBankRecordOptional.isPresent());
         BankRecord updatedFoundBankRecord = updatedFoundBankRecordOptional.get();
-        Assertions.assertEquals((short) 2026, updatedFoundBankRecord.getYearValue());
-        Assertions.assertEquals((byte) 12, updatedFoundBankRecord.getMonthValue());
-        Assertions.assertEquals((byte) 27, updatedFoundBankRecord.getDayValue());
-        Assertions.assertEquals(9999L, updatedFoundBankRecord.getAmount());
-        Assertions.assertEquals("Fireworks", updatedFoundBankRecord.getName());
+        verifyBankRecord(updatedFoundBankRecord, (short) 2026, (byte) 12, (byte) 27, 9999L, "Fireworks", "Bank A");
     }
 
     @Test

@@ -45,6 +45,15 @@ public class BankRecordServiceTests {
     private BankRecord bankRecord2;
     private BankRecord bankRecord3;
 
+    private void verifyBankRecord(BankRecord bankRecord, long id, short yearValue, byte monthValue, byte dayValue, long amount, String name, String accountName) {
+        Assertions.assertEquals(id, bankRecord.getId());
+        Assertions.assertEquals(yearValue, bankRecord.getYearValue());
+        Assertions.assertEquals(monthValue, bankRecord.getMonthValue());
+        Assertions.assertEquals(dayValue, bankRecord.getDayValue());
+        Assertions.assertEquals(amount, bankRecord.getAmount());
+        Assertions.assertEquals(name, bankRecord.getName());
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new TestRole(1L, "USER");
@@ -56,14 +65,14 @@ public class BankRecordServiceTests {
         account = new TestAccount(accountId, "Bank A", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());
         userEntity.getAccounts().add(account);
-        bankRecord1 = new TestBankRecord(1L, account, (short) 2025, (byte) 7, (byte) 25, 1500L,
+        bankRecord1 = new TestBankRecord(1L, account, (short) 2025, (byte) 7, (byte) 25, -1500L,
                 "Breakfast", new HashSet<FileAttachment>(), new HashSet<FinancialTransaction>());
-        account.getBankRecords().add(bankRecord1);
-        bankRecord2 = new TestBankRecord(2L, account, (short) 2025, (byte) 7, (byte) 30, 2200L,
+        bankRecord2 = new TestBankRecord(2L, account, (short) 2025, (byte) 7, (byte) 30, -2200L,
                 "Lunch", new HashSet<FileAttachment>(), new HashSet<FinancialTransaction>());
-        account.getBankRecords().add(bankRecord2);
-        bankRecord3 = new TestBankRecord(3L, account, (short) 2025, (byte) 8, (byte) 8, 3850L,
+        bankRecord3 = new TestBankRecord(3L, account, (short) 2025, (byte) 8, (byte) 8, -3850L,
                 "Dinner", new HashSet<FileAttachment>(), new HashSet<FinancialTransaction>());
+        account.getBankRecords().add(bankRecord1);
+        account.getBankRecords().add(bankRecord2);
         account.getBankRecords().add(bankRecord3);
 
         when(accountService.getAccountById(1L)).thenReturn(account);
@@ -72,9 +81,9 @@ public class BankRecordServiceTests {
     @Test
     public void BankRecordService_CreateBankRecord() {
         Long bankRecordId = 4L;
-        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2025, (byte) 8, (byte) 27, 733L, "Snack");
+        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2025, (byte) 8, (byte) 27, -733L, "Snack");
         BankRecord bankRecord = new TestBankRecord(bankRecordId, account, (short) 2025, (byte) 8,
-                (byte) 27, 733L, "Snack", new HashSet<FileAttachment>(),
+                (byte) 27, -733L, "Snack", new HashSet<FileAttachment>(),
                 new HashSet<FinancialTransaction>());
         when(mapperService.mapBankRecordRequestToRecord(account, bankRecordRequest)).thenReturn(bankRecord);
         when(bankRecordRepository.save(bankRecord)).thenReturn(bankRecord);
@@ -82,12 +91,9 @@ public class BankRecordServiceTests {
         BankRecord createdBankRecord = bankRecordService.createBankRecord(accountId, bankRecordRequest);
 
         Assertions.assertNotNull(createdBankRecord);
-        Assertions.assertEquals((short) 2025, createdBankRecord.getYearValue());
-        Assertions.assertEquals((byte) 8, createdBankRecord.getMonthValue());
-        Assertions.assertEquals((byte) 27, createdBankRecord.getDayValue());
-        Assertions.assertEquals(733L, createdBankRecord.getAmount());
-        Assertions.assertEquals("Snack", createdBankRecord.getName());
-        Assertions.assertEquals(bankRecordId, createdBankRecord.getId());
+        verifyBankRecord(createdBankRecord, bankRecordId, (short) 2025, (byte) 8, (byte) 27, -733L, "Snack", "Bank A");
+        verify(mapperService, times(1)).mapBankRecordRequestToRecord(account, bankRecordRequest);
+        verify(bankRecordRepository, times(1)).save(bankRecord);
     }
 
     @Test
@@ -98,8 +104,8 @@ public class BankRecordServiceTests {
         BankRecord foundBankRecord = bankRecordService.getBankRecordById(accountId, bankRecordId);
 
         Assertions.assertNotNull(foundBankRecord);
-        Assertions.assertEquals("Dinner", foundBankRecord.getName());
-        Assertions.assertEquals(bankRecordId, foundBankRecord.getId());
+        verifyBankRecord(foundBankRecord, bankRecordId, (short) 2025, (byte) 8, (byte) 8, -3850L, "Dinner", "Bank A");
+        verify(bankRecordRepository, times(1)).findById(bankRecordId);
     }
 
     @Test
@@ -123,12 +129,10 @@ public class BankRecordServiceTests {
 
         Assertions.assertNotNull(foundBankRecordList);
         Assertions.assertEquals(3, foundBankRecordList.size());
-        Assertions.assertEquals(1L, foundBankRecordList.get(0).getId());
-        Assertions.assertEquals("Breakfast", foundBankRecordList.get(0).getName());
-        Assertions.assertEquals(2L, foundBankRecordList.get(1).getId());
-        Assertions.assertEquals("Lunch", foundBankRecordList.get(1).getName());
-        Assertions.assertEquals(3L, foundBankRecordList.get(2).getId());
-        Assertions.assertEquals("Dinner", foundBankRecordList.get(2).getName());
+        verifyBankRecord(foundBankRecordList.get(0), 1L, (short) 2025, (byte) 7, (byte) 25, -1500L, "Breakfast", "Bank A");
+        verifyBankRecord(foundBankRecordList.get(1), 2L, (short) 2025, (byte) 7, (byte) 30, -2200L, "Lunch", "Bank A");
+        verifyBankRecord(foundBankRecordList.get(2), 3L, (short) 2025, (byte) 8, (byte) 8, -3850L, "Dinner", "Bank A");
+        verify(bankRecordRepository, times(1)).findByAccountId(accountId);
     }
 
     @Test
@@ -144,12 +148,10 @@ public class BankRecordServiceTests {
 
         Assertions.assertNotNull(foundBankRecordList);
         Assertions.assertEquals(3, foundBankRecordList.size());
-        Assertions.assertEquals(1L, foundBankRecordList.get(0).getId());
-        Assertions.assertEquals("Breakfast", foundBankRecordList.get(0).getName());
-        Assertions.assertEquals(2L, foundBankRecordList.get(1).getId());
-        Assertions.assertEquals("Lunch", foundBankRecordList.get(1).getName());
-        Assertions.assertEquals(3L, foundBankRecordList.get(2).getId());
-        Assertions.assertEquals("Dinner", foundBankRecordList.get(2).getName());
+        verifyBankRecord(foundBankRecordList.get(0), 1L, (short) 2025, (byte) 7, (byte) 25, -1500L, "Breakfast", "Bank A");
+        verifyBankRecord(foundBankRecordList.get(1), 2L, (short) 2025, (byte) 7, (byte) 30, -2200L, "Lunch", "Bank A");
+        verifyBankRecord(foundBankRecordList.get(2), 3L, (short) 2025, (byte) 8, (byte) 8, -3850L, "Dinner", "Bank A");
+        verify(bankRecordRepository, times(1)).findByAccountIdAndYearValue(accountId, (short) 2025);
     }
 
     @Test
@@ -165,10 +167,9 @@ public class BankRecordServiceTests {
 
         Assertions.assertNotNull(foundBankRecordList);
         Assertions.assertEquals(2, foundBankRecordList.size());
-        Assertions.assertEquals(1L, foundBankRecordList.get(0).getId());
-        Assertions.assertEquals("Breakfast", foundBankRecordList.get(0).getName());
-        Assertions.assertEquals(2L, foundBankRecordList.get(1).getId());
-        Assertions.assertEquals("Lunch", foundBankRecordList.get(1).getName());
+        verifyBankRecord(foundBankRecordList.getFirst(), 1L, (short) 2025, (byte) 7, (byte) 25, -1500L, "Breakfast", "Bank A");
+        verifyBankRecord(foundBankRecordList.getLast(), 2L, (short) 2025, (byte) 7, (byte) 30, -2200L, "Lunch", "Bank A");
+        verify(bankRecordRepository, times(1)).findByAccountIdAndYearValueAndMonthValue(accountId, (short) 2025, (byte) 7);
     }
 
     @Test
@@ -183,32 +184,29 @@ public class BankRecordServiceTests {
 
         Assertions.assertNotNull(foundBankRecordList);
         Assertions.assertEquals(1, foundBankRecordList.size());
-        Assertions.assertEquals(2L, foundBankRecordList.get(0).getId());
-        Assertions.assertEquals("Lunch", foundBankRecordList.get(0).getName());
+        verifyBankRecord(foundBankRecordList.getFirst(), 2L, (short) 2025, (byte) 7, (byte) 30, -2200L, "Lunch", "Bank A");
+        verify(bankRecordRepository, times(1)).findByAccountIdAndYearValueAndMonthValueAndDayValue(accountId, (short) 2025, (byte) 7, (byte) 30);
     }
 
     @Test
     public void BankRecordService_UpdateBankRecord() {
         Long bankRecordId = 2L;
-        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2024, (byte) 10, (byte) 22, 2400L, "Brunch");
+        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2024, (byte) 10, (byte) 22, -2400L, "Brunch");
         when(bankRecordRepository.findById(bankRecordId)).thenReturn(Optional.of(bankRecord2));
         when(bankRecordRepository.save(bankRecord2)).thenReturn(bankRecord2);
 
         BankRecord updatedBankRecord = bankRecordService.updateBankRecord(accountId, bankRecordId, bankRecordRequest);
 
         Assertions.assertNotNull(updatedBankRecord);
-        Assertions.assertEquals((short) 2024, updatedBankRecord.getYearValue());
-        Assertions.assertEquals((byte) 10, updatedBankRecord.getMonthValue());
-        Assertions.assertEquals((byte) 22, updatedBankRecord.getDayValue());
-        Assertions.assertEquals(2400L, updatedBankRecord.getAmount());
-        Assertions.assertEquals("Brunch", updatedBankRecord.getName());
-        Assertions.assertEquals(bankRecordId, updatedBankRecord.getId());
+        verifyBankRecord(updatedBankRecord, bankRecordId, (short) 2024, (byte) 10, (byte) 22, -2400L, "Brunch", "Bank A");
+        verify(bankRecordRepository, times(1)).findById(bankRecordId);
+        verify(bankRecordRepository, times(1)).save(bankRecord2);
     }
 
     @Test
     public void BankRecordService_UpdateBankRecord_NonexistentRecord() {
         Long bankRecordId = 7L;
-        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2026, (byte) 2, (byte) 28, 1024L, "Parking");
+        BankRecordRequest bankRecordRequest = new BankRecordRequest((short) 2026, (byte) 2, (byte) 28, -1024L, "Parking");
         when(bankRecordRepository.findById(bankRecordId)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(ResourceNotFoundException.class,

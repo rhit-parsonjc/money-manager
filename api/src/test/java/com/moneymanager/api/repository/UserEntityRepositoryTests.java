@@ -28,6 +28,12 @@ public class UserEntityRepositoryTests {
 
     private Set<Role> roleSet;
 
+    private void verifyUserEntity(UserEntity userEntity, String username, String password) {
+        Assertions.assertEquals(username, userEntity.getUsername());
+        Assertions.assertEquals(password, userEntity.getPassword());
+        Assertions.assertTrue(userEntity.getId() > 0);
+    }
+
     @BeforeEach
     public void setup() {
         Role userRole = new Role("USER");
@@ -42,9 +48,7 @@ public class UserEntityRepositoryTests {
 
         UserEntity savedUserEntity = userEntityRepository.save(userEntity);
 
-        Assertions.assertEquals("Spring", savedUserEntity.getUsername());
-        Assertions.assertEquals("pass1234", savedUserEntity.getPassword());
-        Assertions.assertTrue(userEntity.getId() > 0);
+        verifyUserEntity(savedUserEntity, "Spring", "pass1234");
     }
 
     @Test
@@ -58,6 +62,6 @@ public class UserEntityRepositoryTests {
 
         Assertions.assertNotNull(foundUserEntityList);
         Assertions.assertEquals(1, foundUserEntityList.size());
-        Assertions.assertEquals("Spring1", foundUserEntityList.getFirst().getUsername());
+        verifyUserEntity(foundUserEntityList.getFirst(), "Spring1", "pass1234");
     }
 }

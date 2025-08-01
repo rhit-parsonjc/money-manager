@@ -292,13 +292,13 @@ public class MapperServiceTests {
         List<FileAttachmentDto> sortedFileAttachmentDtos = new ArrayList<FileAttachmentDto>(fileAttachmentDtos);
         sortedFileAttachmentDtos.sort(this::compareFileAttachmentDtos);
 
-        FileAttachmentDto fileAttachmentDto1 = fileAttachmentDtos.getFirst();
+        FileAttachmentDto fileAttachmentDto1 = sortedFileAttachmentDtos.getFirst();
         Assertions.assertEquals(88L, fileAttachmentDto1.getId());
         Assertions.assertEquals("receipt", fileAttachmentDto1.getName());
         Assertions.assertEquals("PNG", fileAttachmentDto1.getType());
         Assertions.assertEquals(123456789L, fileAttachmentDto1.getSize());
 
-        FileAttachmentDto fileAttachmentDto2 = fileAttachmentDtos.getLast();
+        FileAttachmentDto fileAttachmentDto2 = sortedFileAttachmentDtos.getLast();
         Assertions.assertEquals(300L, fileAttachmentDto2.getId());
         Assertions.assertEquals("invoice", fileAttachmentDto2.getName());
         Assertions.assertEquals("PDF", fileAttachmentDto2.getType());

@@ -18,14 +18,18 @@ public class RoleRepositoryTests {
     @Autowired
     private RoleRepository roleRepository;
 
+    private void verifyRole(Role role, String name) {
+        Assertions.assertEquals(name, role.getName());
+        Assertions.assertTrue(role.getId() > 0);
+    }
+
     @Test
     public void RoleRepository_Save() {
         Role role = new Role("USER");
 
         Role savedRole = roleRepository.save(role);
 
-        Assertions.assertEquals("USER", savedRole.getName());
-        Assertions.assertTrue(savedRole.getId() > 0);
+        verifyRole(role, "USER");
     }
 
     @Test
@@ -39,6 +43,6 @@ public class RoleRepositoryTests {
 
         Assertions.assertNotNull(foundAdminRoleList);
         Assertions.assertEquals(1, foundAdminRoleList.size());
-        Assertions.assertEquals("ADMIN", foundAdminRoleList.getFirst().getName());
+        verifyRole(foundAdminRoleList.getFirst(), "ADMIN");
     }
 }
