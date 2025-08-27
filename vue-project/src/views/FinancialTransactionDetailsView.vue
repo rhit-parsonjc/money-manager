@@ -1,26 +1,27 @@
 <script setup>
 import { watch } from 'vue';
 
-import FinancialTransactionDetails from '@/components/BankRecordOrFinancialTransactionDetails/FinancialTransactionDetails.vue';
+import FinancialTransactionDetails from '@/components/RecordTransactionDetails/FinancialTransactionDetails.vue';
 import DataMessages from '@/components/DataMessages.vue';
-import useDataStore from '@/store/DataStore';
+import useDataStore, { DataStatus } from '@/store/DataStore';
 
 const dataStore = useDataStore();
 
-const {transactionId} = defineProps(["transactionId"]);
+const { accountId, transactionId } = defineProps(["accountId", "transactionId"]);
 
-watch(() => dataStore.retrievalStatus,
-  (newRetrievalStatus) => {
-    if (newRetrievalStatus === 'NOT LOADED') {
-      dataStore.loadSingleFinancialTransaction(transactionId);
-    }
-  },
-  {immediate: true});
+watch(() => dataStore.dataStatus,
+    (newDataStatus) => {
+        if (newDataStatus === DataStatus.NOT_LOADED) {
+            dataStore.loadSingleFinancialTransactionAsync(accountId, transactionId);
+        }
+    },
+    {immediate: true}
+);
 </script>
 
 <template>
-  <DataMessages :retrievalStatus="dataStore.retrievalStatus"
-  loadingMessage="Loading Transaction..." errorMessage="Could Not Load Transaction">
-    <FinancialTransactionDetails :transaction="dataStore.data.financialTransaction"/>
-  </DataMessages>
+    <DataMessages :retrievalStatus="dataStore.dataStatus"
+        loadingMessage="Loading Transaction..." errorMessage="Could Not Load Transaction">
+        <FinancialTransactionDetails :accountId="accountId" :transaction="dataStore.data.financialTransaction"/>
+    </DataMessages>
 </template>

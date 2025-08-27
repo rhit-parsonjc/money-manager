@@ -10,6 +10,10 @@ import FinancialTransactionsView from './views/FinancialTransactionsView.vue'
 import AttachRecordsView from './views/AttachRecordsView.vue'
 import AttachTransactionsView from './views/AttachTransactionsView.vue'
 import HomeView from './views/HomeView.vue'
+import LoginView from './views/LoginView.vue'
+import RegisterView from './views/RegisterView.vue'
+import AccountsView from './views/AccountsView.vue'
+import AccountView from './views/AccountView.vue'
 
 const routes = [
   {
@@ -18,57 +22,82 @@ const routes = [
     component: HomeView,
   },
   {
-    path: '/create/record',
+    path: '/login',
+    name: 'login',
+    component: LoginView,
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterView,
+  },
+  {
+    path: '/accounts',
+    name: 'accounts',
+    component: AccountsView,
+  },
+  {
+    path: '/accounts/:accountId',
+    name: 'account',
+    component: AccountView,
+    props: true,
+  },
+  {
+    path: '/accounts/:accountId/create/record',
     name: 'record-create',
     component: BankRecordCreateView,
+    props: true,
   },
   {
-    path: '/records',
+    path: '/accounts/:accountId/records',
     name: 'records',
     component: BankRecordsView,
+    props: true,
   },
   {
-    path: '/records/:recordId',
+    path: '/accounts/:accountId/records/:recordId',
     name: 'record',
     component: BankRecordDetailsView,
     props: true,
   },
   {
-    path: '/records/:recordId/update',
+    path: '/accounts/:accountId/records/:recordId/update',
     name: 'record-update',
     component: BankRecordUpdateView,
     props: true,
   },
   {
-    path: '/records/:recordId/transactions',
+    path: '/accounts/:accountId/records/:recordId/transactions',
     name: 'attach-transactions',
     component: AttachTransactionsView,
     props: true,
   },
   {
-    path: '/create/transaction',
+    path: '/accounts/:accountId/create/transaction',
     name: 'transaction-create',
     component: FinancialTransactionCreateView,
+    props: true,
   },
   {
-    path: '/transactions',
+    path: '/accounts/:accountId/transactions',
     name: 'transactions',
     component: FinancialTransactionsView,
+    props: true,
   },
   {
-    path: '/transactions/:transactionId',
+    path: '/accounts/:accountId/transactions/:transactionId',
     name: 'transaction',
     component: FinancialTransactionDetailsView,
     props: true,
   },
   {
-    path: '/transactions/:transactionId/update',
+    path: '/accounts/:accountId/transactions/:transactionId/update',
     name: 'transaction-update',
     component: FinancialTransactionUpdateView,
     props: true,
   },
   {
-    path: '/transactions/:transactionId/records',
+    path: '/accounts/:accountId/transactions/:transactionId/records',
     name: 'attach-records',
     component: AttachRecordsView,
     props: true,

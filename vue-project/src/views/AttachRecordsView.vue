@@ -1,21 +1,21 @@
 <script setup>
 import { watch, ref } from 'vue';
 
-import AttachBankRecords from '@/components/AttachBankRecordsOrFinancialTransactions/AttachBankRecords.vue';
+import AttachBankRecords from '@/components/AttachRecordTransaction/AttachBankRecords.vue';
 import DataMessages from '@/components/DataMessages.vue';
 import DateFilter from '@/components/DateFilter.vue';
-import useDataStore from '@/store/DataStore';
+import useDataStore, { DataStatus } from '@/store/DataStore';
 
 const dataStore = useDataStore();
 
 const criterionType = ref("None");
 const criterion = ref(null);
 
-const { transactionId } = defineProps(["transactionId"]);
+const { accountId, transactionId } = defineProps(["accountId", "transactionId"]);
 
-watch(() => dataStore.retrievalStatus,
-    (newRetrievalStatus) => {
-        if (newRetrievalStatus === 'NOT LOADED') {
+watch(() => dataStore.dataStatus,
+    (newDataStatus) => {
+        if (newDataStatus === DataStatus.NOT_LOADED) {
             loadData();
         }
     },
@@ -30,16 +30,16 @@ function reloadData(criterionInfo) {
 function loadData() {
     switch (criterionType.value) {
         case "None":
-            dataStore.loadFinancialTransactionAndBankRecords(transactionId);
+            dataStore.loadFinancialTransactionAndBankRecordsAsync(accountId, transactionId);
             break;
         case "Year":
-            dataStore.loadFinancialTransactionAndBankRecordsDuringYear(transactionId, criterion.value.year);
+            dataStore.loadFinancialTransactionAndBankRecordsDuringYearAsync(accountId, transactionId, criterion.value.year);
             break;
         case "Month":
-            dataStore.loadFinancialTransactionAndBankRecordsDuringMonth(transactionId, criterion.value.year, criterion.value.month);
+            dataStore.loadFinancialTransactionAndBankRecordsDuringMonthAsync(accountId, transactionId, criterion.value.year, criterion.value.month);
             break;
         case "Day":
-            dataStore.loadFinancialTransactionAndBankRecordsDuringDay(transactionId, criterion.value.year, criterion.value.month, criterion.value.day);
+            dataStore.loadFinancialTransactionAndBankRecordsDuringDayAsync(accountId, transactionId, criterion.value.year, criterion.value.month, criterion.value.day);
             break;
     }
 }
@@ -47,7 +47,7 @@ function loadData() {
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.retrievalStatus"
+    <DataMessages :retrievalStatus="dataStore.dataStatus"
     loadingMessage="Loading Transaction and Records..."
     errorMessage="Could Not Load Transaction or Records...">
         <h1 class="libre-baskerville-regular AttachRecordsView-header">{{ dataStore.data.financialTransaction.name }}</h1>

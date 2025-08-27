@@ -2,11 +2,7 @@
 import { ref, computed } from 'vue';
 /*
 * DateFilter represents a filter that specifies a date range to load data from.
-* The filter type is specified by criterionTypeValue, which can be either:
-* - None
-* - Year
-* - Month
-* - Day
+* The filter type is specified by criterionTypeValue
 */
 
 const yearValue = ref();
@@ -15,17 +11,17 @@ const dayValue = ref();
 const criterionTypeValue = ref("None");
 
 const criterionInvalid = computed(() => {
-  switch (criterionTypeValue.value) {
-    case "None":
-      return false;
-    case "Year":
-      return yearValue.value === undefined;
-    case "Month":
-      return monthValue.value === undefined;
-    case "Day":
-      return dayValue.value === undefined;
-    default:
-      return true;
+    switch (criterionTypeValue.value) {
+        case "None":
+            return false;
+        case "Year":
+            return yearValue.value === undefined;
+        case "Month":
+            return monthValue.value === undefined;
+        case "Day":
+            return dayValue.value === undefined;
+        default:
+            return true;
   }
 })
 
@@ -89,21 +85,21 @@ function getCriterionInfo() {
 
 <style scoped>
 .DateFilter-filter {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 .DateFilter-filter * {
-  margin-right: 0.5em;
+    margin-right: 0.5em;
 }
 .DateFilter-filter *:last-child {
-  margin-right: 0em;
+    margin-right: 0em;
 }
 .DateFilter-year-input {
-  width: 5em;
+    width: 5em;
 }
 .DateFilter-apply-filter {
-  background-color: white;
+    background-color: white;
 }
 </style>

@@ -1,19 +1,15 @@
 <script setup>
 /*
 * DateItemAndRecordsList displays a list of DateItemAndRecords
-* Props
-* - bankRecords (BankRecordModel list)
-* - dateAmounts (DateAmountModel list)
-* - criterionType ("None"/"Year"/"Month"/"Day")
-* - criterion (object possibly containing year, month, and day)
 */
 import DateItemList from './DateItemList.vue';
 
-const { bankRecords, dateAmounts, criterionType, criterion } = defineProps(["bankRecords", "dateAmounts", "criterionType", "criterion"])
+const { accountId, bankRecords, dateAmounts, criterionType, criterion } = defineProps(["accountId", "bankRecords", "dateAmounts", "criterionType", "criterion"])
 </script>
 
 <template>
     <DateItemList
+        :accountId="accountId"
         :displayBankRecords="true"
         :bankRecords="bankRecords"
         :dateAmounts="dateAmounts"

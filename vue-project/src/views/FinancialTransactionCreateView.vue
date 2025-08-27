@@ -1,7 +1,9 @@
 <script setup>
-import FinancialTransactionForm from '@/components/BankRecordOrFinancialTransactionForm/FinancialTransactionForm.vue';
+import FinancialTransactionForm from '@/components/RecordTransactionForm/FinancialTransactionForm.vue';
+
+const { accountId } = defineProps(["accountId"]);
 </script>
 
 <template>
-    <FinancialTransactionForm :transaction="null" />
+    <FinancialTransactionForm :accountId="accountId" :transaction="null"/>
 </template>

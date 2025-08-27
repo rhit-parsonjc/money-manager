@@ -2,9 +2,6 @@
 /*
 * BankRecordOrFinancialTransactionForm represents either a BankRecordForm
 * or a FinancialTransactionForm
-* Props
-* - data (BankRecordModel if isBankRecord, else FinancialTransactionModel)
-* - isBankRecord (true if BankRecordForm, false if FinancialTransactionForm)
 */
 import { useRouter } from 'vue-router';
 import { computed, ref } from 'vue';
@@ -15,7 +12,7 @@ import { monthNames, daysPerMonth, monthNameFromNumber } from '@/model/DateObjec
 const dataStore = useDataStore();
 const router = useRouter();
 
-const {data, isBankRecord} = defineProps(["data", "isBankRecord"]);
+const {accountId, data, isBankRecord} = defineProps(["accountId", "data", "isBankRecord"]);
 
 const initialFormValues = (data === null) ? {
     monthValue: 1,
@@ -27,7 +24,7 @@ const initialFormValues = (data === null) ? {
     monthValue: data.dateObj.monthValue,
     dayValue: data.dateObj.dayValue,
     yearValue: data.dateObj.yearValue,
-    amountValue: data.amount.toFixed(2),
+    amountValue: data.amount,
     nameValue: data.name,
 };
 
@@ -41,20 +38,20 @@ const daysInMonth = computed(() => daysPerMonth(monthNameValue.value, yearValue.
 
 function toItem() {
     return {
-        year: yearValue.value,
-        month: monthNames.indexOf(monthNameValue.value) + 1,
-        day: dayValue.value,
+        yearValue: yearValue.value,
+        monthValue: monthNames.indexOf(monthNameValue.value) + 1,
+        dayValue: dayValue.value,
         amount: amountValue.value,
         name: nameValue.value,
     };
 }
 
 function goToListAsync() {
-    return router.push(isBankRecord ? "/records/" : "/transactions/");
+    return router.push(`/accounts/${accountId}` + (isBankRecord ? "/records/" : "/transactions/"));
 }
 
 function goToDetailsAsync(id) {
-    return () => router.push(isBankRecord ? `/records/${id}` : `/transactions/${id}`);
+    return () => router.push(`/accounts/${accountId}` + (isBankRecord ? `/records/${id}` : `/transactions/${id}`));
 }
 
 function returnAction() {
@@ -69,20 +66,20 @@ function returnAction() {
 function confirmAction() {
     if (data === null) {
         if (isBankRecord)
-            dataStore.createBankRecordAsync(toItem())
+            dataStore.createBankRecordAsync(accountId, toItem())
                 .then(goToListAsync)
                 .then(dataStore.resetData);
         else
-            dataStore.createFinancialTransactionAsync(toItem())
+            dataStore.createFinancialTransactionAsync(accountId, toItem())
                 .then(goToListAsync)
                 .then(dataStore.resetData);
     } else {
         if (isBankRecord)
-            dataStore.updateBankRecordAsync(data.id, toItem())
+            dataStore.updateBankRecordAsync(accountId, data.id, toItem())
                 .then(goToDetailsAsync(data.id))
                 .then(dataStore.resetData);
         else
-            dataStore.updateFinancialTransactionAsync(data.id, toItem())
+            dataStore.updateFinancialTransactionAsync(accountId, data.id, toItem())
                 .then(goToDetailsAsync(data.id))
                 .then(dataStore.resetData);
     }
@@ -91,75 +88,75 @@ function confirmAction() {
 </script>
 
 <template>
-    <h1 class="libre-baskerville-regular BankRecordOrFinancialTransactionForm-header">{{ (data === null ? "Create" : "Edit") + (isBankRecord ? " Bank Record" : " Financial Transaction") }}</h1>
-    <div class="BankRecordOrFinancialTransactionForm-input-line">
+    <h1 class="libre-baskerville-regular RecordTransactionForm-header">{{ (data === null ? "Create" : "Edit") + (isBankRecord ? " Bank Record" : " Financial Transaction") }}</h1>
+    <div class="RecordTransactionForm-input-line">
         <p class="ubuntu-regular">Name:</p>
-        <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-name-input" v-model="nameValue">
+        <input class="happy-monkey-regular RecordTransactionForm-name-input" v-model="nameValue">
     </div>
-    <div class="BankRecordOrFinancialTransactionForm-input-line">
+    <div class="RecordTransactionForm-input-line">
         <p class="ubuntu-regular">Date:</p>
-        <select class="happy-monkey-regular BankRecordOrFinancialTransactionForm-month-input" v-model="monthNameValue">
+        <select class="happy-monkey-regular RecordTransactionForm-month-input" v-model="monthNameValue">
             <option v-for="monthName of monthNames" :key="monthName" class="happy-monkey-regular">{{ monthName }}</option>
         </select>
-        <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-day-input" type="number" v-model="dayValue" min="1" :max="daysInMonth">
-        <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-year-input" type="number" v-model="yearValue">
+        <input class="happy-monkey-regular RecordTransactionForm-day-input" type="number" v-model="dayValue" min="1" :max="daysInMonth">
+        <input class="happy-monkey-regular RecordTransactionForm-year-input" type="number" v-model="yearValue">
     </div>
-    <div class="BankRecordOrFinancialTransactionForm-input-line">
+    <div class="RecordTransactionForm-input-line">
         <p class="ubuntu-regular">Amount ($):</p>
-        <input class="happy-monkey-regular BankRecordOrFinancialTransactionForm-amount-input" v-model="amountValue">
+        <input class="happy-monkey-regular RecordTransactionForm-amount-input" v-model="amountValue">
     </div>
-    <div class="BankRecordOrFinancialTransactionForm-buttons">
-        <button class="ubuntu-regular BankRecordOrFinancialTransactionForm-confirm-button" @click="confirmAction">Confirm</button>
+    <div class="RecordTransactionForm-buttons">
+        <button class="ubuntu-regular RecordTransactionForm-confirm-button" @click="confirmAction">Confirm</button>
         <button class="ubuntu-regular" @click="returnAction">Cancel</button>
     </div>
 </template>
 
 <style scoped>
-.BankRecordOrFinancialTransactionForm-header {
+.RecordTransactionForm-header {
   text-align: center;
   text-decoration: underline;
   margin-bottom: 1rem;
 }
-.BankRecordOrFinancialTransactionForm-input-line {
+.RecordTransactionForm-input-line {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-bottom: 0.5rem;
 }
-.BankRecordOrFinancialTransactionForm-name-input {
+.RecordTransactionForm-name-input {
     width: 14em;
     margin-left: 1rem;
 }
-.BankRecordOrFinancialTransactionForm-month-input {
+.RecordTransactionForm-month-input {
     margin-left: 1rem;
 }
-.BankRecordOrFinancialTransactionForm-day-input {
+.RecordTransactionForm-day-input {
     width: 3em;
     margin-left: 0.5rem;
 }
-.BankRecordOrFinancialTransactionForm-year-input {
+.RecordTransactionForm-year-input {
     width: 5em;
     margin-left: 0.5rem;
 }
-.BankRecordOrFinancialTransactionForm-amount-input {
+.RecordTransactionForm-amount-input {
     width: 10em;
     margin-left: 1rem;
 }
-.BankRecordOrFinancialTransactionForm-buttons button {
+.RecordTransactionForm-buttons button {
     background-color: white;
     border-width: 0px;
 }
-.BankRecordOrFinancialTransactionForm-buttons button:hover {
+.RecordTransactionForm-buttons button:hover {
     text-decoration: underline;
     cursor: pointer;
 }
-.BankRecordOrFinancialTransactionForm-buttons {
+.RecordTransactionForm-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     margin-top: 1rem;
 }
-.BankRecordOrFinancialTransactionForm-confirm-button {
+.RecordTransactionForm-confirm-button {
     color: #050;
 }
 </style>

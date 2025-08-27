@@ -32,6 +32,16 @@
 - [Learn CORS In 6 Minutes](https://www.youtube.com/watch?v=PNtFSVU-YTI)
 - Thanks to [Sébastien Deleuze](https://spring.io/blog/2015/06/08/cors-support-in-spring-framework) for the solution.
 
+### CORS (Spring Security)
+
+- Thanks to [Allow CORS with Spring Security 6.1.1 with authenticated requests](https://stackoverflow.com/questions/76682586/allow-cors-with-spring-security-6-1-1-with-authenticated-requests) for helping with CORS setup in Spring Boot with Spring Security
+- Also thanks to [How to configure CORS in a Spring Boot + Spring Security application?](https://stackoverflow.com/questions/36968963/how-to-configure-cors-in-a-spring-boot-spring-security-application?rq=1) as well for helping with CORS setup in Spring Boot with Spring Security, primarily Soroosh Khodami's response
+- Thanks to Spring documentation for showing how to set up CORS with Spring Security for a [Reactive](https://docs.spring.io/spring-security/reference/reactive/integrations/cors.html) or a [Servlet](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html) application
+- These resources also talk about CORS in general, but did not address Spring Security specifically:
+- [XMLHttpRequest blocked by CORS Policy](https://stackoverflow.com/questions/46277295/xmlhttprequest-blocked-by-cors-policy)
+- [Response to preflight request doesn't pass access control check - No 'Access-Control-Allow-Origin' header](https://stackoverflow.com/questions/35588699/response-to-preflight-request-doesnt-pass-access-control-check-no-access-con)
+- [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS)
+
 ### Spring Data Stack Overflow
 
 - Thanks to [Andrey B. Panfilov](https://stackoverflow.com/questions/73078524/java-lang-stackoverflowerror-while-saving-jpa-entities) for addressing a Stack Overflow exception.
@@ -79,6 +89,10 @@
 - Thanks to [Abderrahim Azhrioun](https://www.baeldung.com/spring-boot-h2-jdbcsqlsyntaxerrorexception-expected-identifier) for noting that the H2 issue could be due to a reserved word. According to [H2 Documentation](https://h2database.com/html/advanced.html#keywords), these keywords are YEAR, MONTH, and DAY.
 - Thanks to [W3Schools](https://www.w3schools.com/java/java_advanced_sorting.asp) for explaining how to use Java sorting
 - Thanks to [Ali Bouali](https://www.youtube.com/watch?v=uGZQdD9IpQc) for explaining Spring testing
+
+### Pinia
+
+- Thanks to [Mikalai Parakhnevich](https://stackoverflow.com/questions/73966166/pinia-vue3-set-on-proxy-trap-when-i-try-to-change-my-state) for noting that my getter and state variable having the same name would cause an issue
 
 ## Random Value
 

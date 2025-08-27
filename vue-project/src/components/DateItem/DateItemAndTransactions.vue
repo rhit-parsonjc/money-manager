@@ -2,16 +2,15 @@
 /*
 * DateItemAndTransactions displays the date followed by
 * A list of financial transactions
-* Props
-* - dateAndTransactions (DateAndTransactionsModel)
 */
 import DateItem from './DateItem.vue';
 
-const { dateAndTransactions } = defineProps(["dateAndTransactions"]);
+const { accountId, dateAndTransactions } = defineProps(["accountId", "dateAndTransactions"]);
 </script>
 
 <template>
     <DateItem
+        :accountId="accountId"
         :data="dateAndTransactions"
         :displayBankRecords="false"
     />
