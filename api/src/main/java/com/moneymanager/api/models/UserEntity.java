@@ -1,5 +1,6 @@
 package com.moneymanager.api.models;
 
+import com.moneymanager.api.requests.UserUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,9 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
+    private String email;
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
 
@@ -34,10 +38,33 @@ public class UserEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userEntity", orphanRemoval = true)
     protected Set<Account> accounts;
 
-    public UserEntity(String username, String password, Set<Role> roles) {
+    public UserEntity(String email, String firstName, String lastName, String username, String password, Set<Role> roles) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.roles = roles;
         this.accounts = new HashSet<>();
+    }
+
+    public void update(UserUpdateRequest userUpdateRequest) {
+        String newEmail = userUpdateRequest.getEmail();
+        String newFirstName = userUpdateRequest.getFirstName();
+        String newLastName = userUpdateRequest.getLastName();
+        String newUsername = userUpdateRequest.getUsername();
+        if (newEmail != null)
+            this.email = newEmail;
+        if (newFirstName != null)
+            this.firstName = newFirstName;
+        if (newLastName != null)
+            this.lastName = newLastName;
+        if (newUsername != null)
+            this.username = newUsername;
+    }
+
+    public void update(UserUpdateRequest userUpdateRequest, String encodedPassword) {
+        this.update(userUpdateRequest);
+        this.password = encodedPassword;
     }
 }

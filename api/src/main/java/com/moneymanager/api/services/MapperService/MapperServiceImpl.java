@@ -172,4 +172,12 @@ public class MapperServiceImpl implements MapperService {
                 accountRequest.getName()
         );
     }
+
+    @Override
+    public UserEntityDto mapUserEntityToDto(UserEntity userEntity) {
+        return new UserEntityDto(userEntity.getEmail(),
+                userEntity.getFirstName(),
+                userEntity.getLastName(),
+                userEntity.getUsername());
+    }
 }

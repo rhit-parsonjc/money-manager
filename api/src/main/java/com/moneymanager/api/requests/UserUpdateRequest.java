@@ -3,7 +3,7 @@ package com.moneymanager.api.requests;
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+public class UserUpdateRequest {
     private String email;
     private String firstName;
     private String lastName;

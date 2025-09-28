@@ -55,8 +55,8 @@ public class MapperServiceTests {
         userRole = new TestRole(7L, "USER");
         Set<Role> roleSet = new HashSet<Role>();
         roleSet.add(userRole);
-        userEntity = new TestUserEntity(6L, "Spring", "password",
-                roleSet, new HashSet<Account>());
+        UserEntity userEntity = new TestUserEntity(6L, "first.last@spring.io", "First",
+                "Last", "Username", "password", roleSet, new HashSet<Account>());
         account1 = new TestAccount(3L, "Bank Epsilon", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(),
                 new HashSet<DateAmount>());

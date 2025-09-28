@@ -1,5 +1,9 @@
 package com.moneymanager.api.controllers;
 
+import com.moneymanager.api.dtos.UserEntityDto;
+import com.moneymanager.api.models.UserEntity;
+import com.moneymanager.api.requests.UserUpdateRequest;
+import com.moneymanager.api.services.MapperService.MapperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +26,7 @@ import com.moneymanager.api.services.UserEntityService.UserEntityService;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final UserEntityService userEntityService;
+    private final MapperService mapperService;
     private final JWTUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
 
@@ -45,5 +50,28 @@ public class AuthController {
         userEntityService.createUser(registerRequest);
         DataOrErrorResponse response = new DataOrErrorResponse(true, null);
         return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<DataOrErrorResponse> getUser() {
+        UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
+        UserEntityDto userEntityDto = mapperService.mapUserEntityToDto(userEntity);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, userEntityDto);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("")
+    public ResponseEntity<DataOrErrorResponse> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
+        UserEntity userEntity = userEntityService.updateUser(userUpdateRequest);
+        UserEntityDto userEntityDto = mapperService.mapUserEntityToDto(userEntity);
+        DataOrErrorResponse response = new DataOrErrorResponse(true, userEntityDto);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<DataOrErrorResponse> deleteUser() {
+        userEntityService.deleteUser();
+        DataOrErrorResponse response = new DataOrErrorResponse(true, null);
+        return new ResponseEntity<DataOrErrorResponse>(response, HttpStatus.NO_CONTENT);
     }
 }

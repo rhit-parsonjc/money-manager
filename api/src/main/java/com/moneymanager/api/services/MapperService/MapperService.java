@@ -31,4 +31,6 @@ public interface MapperService {
     AccountDto mapAccountToDto(Account account);
     List<AccountDto> mapAccountsToDtos(List<Account> accounts);
     Account mapAccountRequestToAccount(UserEntity user, AccountRequest accountRequest);
+
+    UserEntityDto mapUserEntityToDto(UserEntity userEntity);
 }

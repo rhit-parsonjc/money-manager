@@ -22,6 +22,12 @@ Base URL: _/api/v1_
 
 **POST** to _/auth/register_: registers a user with the specified username and password
 
+**GET** to _/auth_: gets the user based on the authorization token
+
+**PATCH** to _/auth_: updates the user's email, first name, last name, and password, whichever are non-null
+
+**DELETE** to _/auth_: deletes the user based on the authorization token
+
 ## Bank Records
 
 **POST** to _/bankrecords/{accountId}_: creates a new bank record for the specified account using the specified body
@@ -70,7 +76,7 @@ Base URL: _/api/v1_
 
 ## File Attachments
 
-**POST** to _/fileattachments/{itemId}: creates a new file attached to an item
+**POST** to \_/fileattachments/{itemId}: creates a new file attached to an item
 
 **GET** to _/fileattachments/{id}_: gets the file attachment with the specified id
 

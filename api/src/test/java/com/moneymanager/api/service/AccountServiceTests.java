@@ -56,8 +56,8 @@ public class AccountServiceTests {
         Set<Role> roleSet = new HashSet<Role>();
         roleSet.add(userRole);
         userEntityId = 1L;
-        userEntity = new TestUserEntity(userEntityId, "Spring", "pass1234",
-                roleSet, new HashSet<Account>());
+        userEntity = new TestUserEntity(userEntityId, "spring@spring.boot", "Spring",
+                "Boot", "SpringBoot", "pass1234", roleSet, new HashSet<Account>());
         account1 = new TestAccount(1L, "Bank Alpha", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());
         account2 = new TestAccount(2L, "Bank Beta", userEntity,

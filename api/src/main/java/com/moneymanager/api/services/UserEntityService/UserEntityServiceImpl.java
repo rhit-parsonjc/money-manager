@@ -8,6 +8,7 @@ import com.moneymanager.api.repositories.RoleRepository;
 import com.moneymanager.api.repositories.UserEntityRepository;
 import com.moneymanager.api.requests.RegisterRequest;
 
+import com.moneymanager.api.requests.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,11 +28,17 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     @Override
     public void createUser(RegisterRequest registerRequest) {
+        String email = registerRequest.getEmail();
+        String firstName = registerRequest.getFirstName();
+        String lastName = registerRequest.getLastName();
         String username = registerRequest.getUsername();
         String password = registerRequest.getPassword();
-        List<UserEntity> userEntities = userEntityRepository.findByUsername(username);
-        if (!userEntities.isEmpty())
-            throw new AlreadyExistsException(AlreadyExistsException.USER_MESSAGE);
+        List<UserEntity> userEntitiesByUsername = userEntityRepository.findByUsername(username);
+        if (!userEntitiesByUsername.isEmpty())
+            throw new AlreadyExistsException(AlreadyExistsException.USERNAME_MESSAGE);
+        List<UserEntity> userEntitiesByEmail = userEntityRepository.findByEmail(email);
+        if (!userEntitiesByEmail.isEmpty())
+            throw new AlreadyExistsException(AlreadyExistsException.EMAIL_MESSAGE);
         List<Role> roles = roleRepository.findByName("USER");
         Role userRole;
         if (roles.isEmpty()) {
@@ -42,6 +49,9 @@ public class UserEntityServiceImpl implements UserEntityService {
         }
         Set<Role> singletonUserRole = Collections.singleton(userRole);
         UserEntity userEntity = new UserEntity(
+                email,
+                firstName,
+                lastName,
                 username,
                 passwordEncoder.encode(password),
                 singletonUserRole
@@ -69,5 +79,25 @@ public class UserEntityServiceImpl implements UserEntityService {
             throw new PermissionsException(PermissionsException.NO_USER);
         else
             return userEntityOptional.get();
+    }
+
+    @Override
+    public UserEntity updateUser(UserUpdateRequest userUpdateRequest) {
+        UserEntity userEntity = this.getAuthenticatedUserOrThrow();
+        String password = userUpdateRequest.getPassword();
+        if (password != null) {
+            String encodedPassword = passwordEncoder.encode(password);
+            userEntity.update(userUpdateRequest, encodedPassword);
+        } else {
+            userEntity.update(userUpdateRequest);
+        }
+        return userEntityRepository.save(userEntity);
+    }
+
+    @Override
+    public void deleteUser() {
+        UserEntity userEntity = this.getAuthenticatedUserOrThrow();
+        Long userEntityId = userEntity.getId();
+        userEntityRepository.deleteById(userEntityId);
     }
 }

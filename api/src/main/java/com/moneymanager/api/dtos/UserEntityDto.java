@@ -1,12 +1,13 @@
-package com.moneymanager.api.requests;
+package com.moneymanager.api.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+@AllArgsConstructor
+public class UserEntityDto {
     private String email;
     private String firstName;
     private String lastName;
     private String username;
-    private String password;
 }
