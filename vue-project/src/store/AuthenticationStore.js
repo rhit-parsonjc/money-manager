@@ -48,6 +48,7 @@ function clearJsonToken() {
   window.localStorage.clear()
 }
 
+// This function is from Peheje's answer at https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
 function parseJsonToken(jsonToken) {
   const jsonTokenParts = jsonToken.split('.')
   const base64Url = jsonTokenParts[1]

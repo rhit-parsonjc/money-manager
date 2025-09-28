@@ -102,6 +102,14 @@
 - [handling file download from api call](https://stackoverflow.com/questions/64897447/handling-file-download-from-api-call)
 - [trying to download file directly from response of an api](https://stackoverflow.com/questions/75901154/trying-to-download-file-directly-from-response-of-an-api)
 
+### Local Storage
+
+- Thanks to [HTML Web Storage API](https://www.w3schools.com/html/html5_webstorage.asp) and [Window localStorage](https://www.w3schools.com/jsref/prop_win_localstorage.asp) for describing how to use local storage.
+
+### JWT Parsing
+
+- Thanks to [Peheje](https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library)'s answer for parsing JWT tokens.
+
 ## Random Value
 
 - [Random.org](https://www.random.org/) was used to generate the root password for the MySQL Database and the JWT secret
