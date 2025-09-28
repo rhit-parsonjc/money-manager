@@ -10,7 +10,7 @@ import { TransactionAndRecordsModel } from '@/model/TransactionAndRecordsModel';
 import FinancialTransactionItem from '../RecordTransactionItem/FinancialTransactionItem.vue';
 import BankRecordItem from '../RecordTransactionItem/BankRecordItem.vue';
 
-const {item, subitems, isBankRecord} = defineProps(["accountId", "item", "subitems", "isBankRecord"]);
+const {accountId, item, subitems, isBankRecord} = defineProps(["accountId", "item", "subitems", "isBankRecord"]);
 
 const dataModel = computed(() => {
     if (isBankRecord)
@@ -28,6 +28,7 @@ const dataModel = computed(() => {
             v-for="financialTransaction of dataModel.financialTransactions"
             class="AttachRecordTransactions-item"
             :key="financialTransaction.id"
+            :accountId="accountId"
             :recordId="item.id"
             :transaction="financialTransaction"
             :isAttached="true"
@@ -37,6 +38,7 @@ const dataModel = computed(() => {
             v-for="financialTransaction of dataModel.otherFinancialTransactions"
             class="AttachRecordTransactions-item"
             :key="financialTransaction.id"
+            :accountId="accountId"
             :recordId="item.id"
             :transaction="financialTransaction"
             :isAttached="false"
@@ -48,6 +50,7 @@ const dataModel = computed(() => {
             v-for="bankRecord of dataModel.bankRecords"
             class="AttachRecordTransactions-item"
             :key="bankRecord.id"
+            :accountId="accountId"
             :transactionId="item.id"
             :record="bankRecord"
             :isAttached="true"
@@ -57,6 +60,7 @@ const dataModel = computed(() => {
             v-for="bankRecord of dataModel.otherBankRecords"
             class="AttachRecordTransactions-item"
             :key="bankRecord.id"
+            :accountId="accountId"
             :transactionId="item.id"
             :record="bankRecord"
             :isAttached="false"

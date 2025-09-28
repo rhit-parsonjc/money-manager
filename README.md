@@ -94,6 +94,14 @@
 
 - Thanks to [Mikalai Parakhnevich](https://stackoverflow.com/questions/73966166/pinia-vue3-set-on-proxy-trap-when-i-try-to-change-my-state) for noting that my getter and state variable having the same name would cause an issue
 
+### Downloading Images
+
+- Thanks to the following resources for describing how to download files from a REST API:
+- [Code Sense](https://medium.com/@codesense/how-to-download-file-on-button-click-in-vue-or-nuxt-in-just-2-steps-a0a013b6bd8b)
+- [How to download a file through an API in React?](https://stackoverflow.com/questions/56219640/how-to-download-a-file-through-an-api-in-react?rq=3)
+- [handling file download from api call](https://stackoverflow.com/questions/64897447/handling-file-download-from-api-call)
+- [trying to download file directly from response of an api](https://stackoverflow.com/questions/75901154/trying-to-download-file-directly-from-response-of-an-api)
+
 ## Random Value
 
 - [Random.org](https://www.random.org/) was used to generate the root password for the MySQL Database and the JWT secret

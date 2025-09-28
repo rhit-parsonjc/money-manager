@@ -63,6 +63,20 @@ function uploadFile() {
             .then(dataStore.resetData);
 }
 
+function loadFile(id, name) {
+    dataStore.loadFileAttachmentAsync(id)
+    .then((result) => {
+        const fileURL = window.URL.createObjectURL(result.data);
+        const a = document.createElement('a');
+        a.href = fileURL;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(fileURL);
+    });
+}
+
 function deleteFile(id) {
     dataStore.deleteFileAttachmentAsync(id)
         .then(dataStore.resetData);
@@ -81,11 +95,11 @@ function deleteFile(id) {
     </div>
     <div v-if="isBankRecord">
         <h2 class="happy-monkey-regular">Financial Transactions</h2>
-        <FinancialTransactionItem v-for="financialTransaction of data.financialTransactions" :key="financialTransaction.id" :recordId="data.id" :transaction="financialTransaction" :isAttached="true" class="RecordTransactionDetails-item"/>
+        <FinancialTransactionItem v-for="financialTransaction of data.financialTransactions" :key="financialTransaction.id" :accountId="accountId" :recordId="data.id" :transaction="financialTransaction" :isAttached="true" class="RecordTransactionDetails-item"/>
     </div>
     <div v-else>
         <h2 class="happy-monkey-regular">Bank Records</h2>
-        <BankRecordItem v-for="bankRecord of data.bankRecords" :key="bankRecord.id" :transactionId="data.id" :record="bankRecord" :isAttached="true" class="RecordTransactionDetails-item"/>
+        <BankRecordItem v-for="bankRecord of data.bankRecords" :key="bankRecord.id" :accountId="accountId" :transactionId="data.id" :record="bankRecord" :isAttached="true" class="RecordTransactionDetails-item"/>
     </div>
     <div class="RecordTransactionDetails-link-buttons">
         <button class="ubuntu-regular" @click="attachSubitems">Attach</button>
@@ -93,7 +107,7 @@ function deleteFile(id) {
     <h2 class="happy-monkey-regular">Attached Files</h2>
     <ul class="RecordTransactionDetails-files">
         <li v-for="fileAttachment of data.fileAttachments" :key="fileAttachment.id" class="RecordTransactionDetails-file-line">
-            <a :href="`http://localhost:8080/api/v1/fileattachments/${fileAttachment.id}`" class="happy-monkey-regular">{{ fileAttachment.name }}</a>
+            <a class="happy-monkey-regular" @click="loadFile(fileAttachment.id, fileAttachment.name)">{{ fileAttachment.name }}</a>
             <button class="ubuntu-regular RecordTransactionDetails-delete-file-button" @click="deleteFile(fileAttachment.id)">Delete</button>
         </li>
     </ul>

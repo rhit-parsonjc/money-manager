@@ -53,6 +53,7 @@ function loadData() {
         <h1 class="libre-baskerville-regular AttachTransactionsView-header">{{ dataStore.data.bankRecord.name }}</h1>
         <DateFilter @applyFilter="reloadData" class="AttachTransactionsView-filter"/>
         <AttachFinancialTransactions
+            :accountId="accountId"
             :bankRecord="dataStore.data.bankRecord"
             :financialTransactions="dataStore.data.financialTransactions"/>
     </DataMessages>

@@ -209,6 +209,25 @@ function loadDataFromMultipleSourcesAsync(sources) {
   })
 }
 
+function loadFileByIdAsync(id) {
+  const authenticationStore = useAuthenticationStore()
+  const jsonToken = authenticationStore.jsonToken
+  const promise = axios.get(`${baseUrl}/fileattachments/${id}`, {
+    headers: { Authorization: `Bearer ${jsonToken}` },
+    responseType: 'blob',
+  })
+  return new Promise((resolve, reject) => {
+    promise
+      .then((response) => {
+        resolve(response)
+      })
+      .catch((error) => {
+        console.error(error)
+        reject(error)
+      })
+  })
+}
+
 function modifyDataAsync(relativeUrl, data, dataHandler, requestFunction) {
   return new Promise((resolve, reject) => {
     if (!verifyAuthenticated()) reject()
@@ -559,6 +578,10 @@ const useDataStore = defineStore('data', {
           mapFunction: toBankRecordModels,
         },
       ])
+    },
+
+    loadFileAttachmentAsync(id) {
+      return loadFileByIdAsync(id)
     },
 
     createAccountAsync(account) {
