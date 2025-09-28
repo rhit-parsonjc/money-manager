@@ -24,10 +24,20 @@ function attachOrDetach() {
     const transactionId = isBankRecord ? id : data.id;
     if (isAttached)
         dataStore.detachRecordAndTransactionAsync(recordId, transactionId)
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
     else
         dataStore.attachRecordAndTransactionAsync(recordId, transactionId)
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
 }
 
 </script>

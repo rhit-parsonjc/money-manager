@@ -3,6 +3,8 @@
 * DateItem represents either a DateItemAndRecords or a DateItemAndTransactions
 */
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import useDataStore from '@/store/DataStore';
 
 import BankRecord from '../RecordTransaction/BankRecord.vue';
@@ -10,6 +12,7 @@ import FinancialTransaction from '../RecordTransaction/FinancialTransaction.vue'
 import { formatCurrency } from '@/utilities/utilities';
 
 const dataStore = useDataStore();
+const router = useRouter();
 
 const { accountId, data, displayBankRecords } = defineProps(["accountId", "data", "displayBankRecords"]);
 const isEditing = ref(false);
@@ -32,11 +35,21 @@ function confirmAddOrEdit() {
     if (hasAmount) {
         dataStore
             .updateDateAmountAsync(newAmount.year, newAmount.month, newAmount.day, newAmount.amount)
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
     } else {
         dataStore
             .createDateAmountAsync(newAmount)
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
     }
 }
 
@@ -44,7 +57,12 @@ function clearAmount() {
     const {yearValue, monthValue, dayValue} = data.dateObj;
     dataStore
         .deleteDateAmountAsync(yearValue, monthValue, dayValue)
-        .then(dataStore.resetData);
+        .then(dataStore.resetData)
+        .catch(err => {
+            if (err === 'Unauthorized') {
+                router.push('/');
+            }
+        });
 }
 
 function cancelAddOrEdit() {

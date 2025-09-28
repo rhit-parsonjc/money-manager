@@ -68,20 +68,40 @@ function confirmAction() {
         if (isBankRecord)
             dataStore.createBankRecordAsync(accountId, toItem())
                 .then(goToListAsync)
-                .then(dataStore.resetData);
+                .then(dataStore.resetData)
+                .catch(err => {
+                    if (err === 'Unauthorized') {
+                        router.push('/');
+                    }
+                });
         else
             dataStore.createFinancialTransactionAsync(accountId, toItem())
                 .then(goToListAsync)
-                .then(dataStore.resetData);
+                .then(dataStore.resetData)
+                .catch(err => {
+                    if (err === 'Unauthorized') {
+                        router.push('/');
+                    }
+                });
     } else {
         if (isBankRecord)
             dataStore.updateBankRecordAsync(accountId, data.id, toItem())
                 .then(goToDetailsAsync(data.id))
-                .then(dataStore.resetData);
+                .then(dataStore.resetData)
+                .catch(err => {
+                    if (err === 'Unauthorized') {
+                        router.push('/');
+                    }
+                });
         else
             dataStore.updateFinancialTransactionAsync(accountId, data.id, toItem())
                 .then(goToDetailsAsync(data.id))
-                .then(dataStore.resetData);
+                .then(dataStore.resetData)
+                .catch(err => {
+                    if (err === 'Unauthorized') {
+                        router.push('/');
+                    }
+                });
     }
 }
 

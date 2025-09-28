@@ -1,5 +1,6 @@
 <script setup>
 import { watch, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AttachBankRecords from '@/components/AttachRecordTransaction/AttachBankRecords.vue';
 import DataMessages from '@/components/DataMessages.vue';
@@ -7,6 +8,7 @@ import DateFilter from '@/components/DateFilter.vue';
 import useDataStore, { DataStatus } from '@/store/DataStore';
 
 const dataStore = useDataStore();
+const router = useRouter();
 
 const criterionType = ref("None");
 const criterion = ref(null);
@@ -28,20 +30,26 @@ function reloadData(criterionInfo) {
 }
 
 function loadData() {
+    let promise = null;
     switch (criterionType.value) {
         case "None":
-            dataStore.loadFinancialTransactionAndBankRecordsAsync(accountId, transactionId);
+            promise = dataStore.loadFinancialTransactionAndBankRecordsAsync(accountId, transactionId);
             break;
         case "Year":
-            dataStore.loadFinancialTransactionAndBankRecordsDuringYearAsync(accountId, transactionId, criterion.value.year);
+            promise = dataStore.loadFinancialTransactionAndBankRecordsDuringYearAsync(accountId, transactionId, criterion.value.year);
             break;
         case "Month":
-            dataStore.loadFinancialTransactionAndBankRecordsDuringMonthAsync(accountId, transactionId, criterion.value.year, criterion.value.month);
+            promise = dataStore.loadFinancialTransactionAndBankRecordsDuringMonthAsync(accountId, transactionId, criterion.value.year, criterion.value.month);
             break;
         case "Day":
-            dataStore.loadFinancialTransactionAndBankRecordsDuringDayAsync(accountId, transactionId, criterion.value.year, criterion.value.month, criterion.value.day);
+            promise = dataStore.loadFinancialTransactionAndBankRecordsDuringDayAsync(accountId, transactionId, criterion.value.year, criterion.value.month, criterion.value.day);
             break;
     }
+    promise.catch(err => {
+        if (err === 'Unauthorized') {
+            router.push('/');
+        }
+    });
 }
 
 </script>

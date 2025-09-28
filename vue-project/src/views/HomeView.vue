@@ -1,7 +1,9 @@
 <script setup>
 import { useRouter } from 'vue-router';
+import useDataStore from '@/store/DataStore';
 
 const router = useRouter();
+const dataStore = useDataStore();
 
 function goToRegisterPage() {
     router.push("/register");
@@ -10,6 +12,11 @@ function goToRegisterPage() {
 function goToLoginPage() {
     router.push("/login");
 }
+
+dataStore.loadAccountsAsync().then(
+    () => router.push("/accounts")
+);
+
 </script>
 
 <template>

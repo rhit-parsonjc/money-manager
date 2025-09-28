@@ -21,6 +21,10 @@ function login() {
         .then(dataStore.resetData);
 }
 
+dataStore.loadAccountsAsync().then(
+    () => router.push("/accounts")
+);
+
 </script>
 
 <template>

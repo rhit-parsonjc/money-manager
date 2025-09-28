@@ -1,5 +1,6 @@
 <script setup>
 import { watch, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AttachFinancialTransactions from '@/components/AttachRecordTransaction/AttachFinancialTransactions.vue';
 import DataMessages from '@/components/DataMessages.vue';
@@ -7,6 +8,7 @@ import DateFilter from '@/components/DateFilter.vue';
 import useDataStore, { DataStatus } from '@/store/DataStore';
 
 const dataStore = useDataStore();
+const router = useRouter();
 
 const criterionType = ref("None");
 const criterion = ref(null);
@@ -28,20 +30,26 @@ function reloadData(criterionInfo) {
 }
 
 function loadData() {
+    let promise = null;
     switch (criterionType.value) {
         case "None":
-            dataStore.loadBankRecordAndFinancialTransactionsAsync(accountId, recordId);
+            promise = dataStore.loadBankRecordAndFinancialTransactionsAsync(accountId, recordId);
             break;
         case "Year":
-            dataStore.loadBankRecordAndFinancialTransactionsDuringDayAsync(accountId, recordId, criterion.value.year);
+            promise = dataStore.loadBankRecordAndFinancialTransactionsDuringDayAsync(accountId, recordId, criterion.value.year);
             break;
         case "Month":
-            dataStore.loadBankRecordAndFinancialTransactionsDuringMonthAsync(accountId, recordId, criterion.value.year, criterion.value.month);
+            promise = dataStore.loadBankRecordAndFinancialTransactionsDuringMonthAsync(accountId, recordId, criterion.value.year, criterion.value.month);
             break;
         case "Day":
-            dataStore.loadBankRecordAndFinancialTransactionsDuringDayAsync(accountId, recordId, criterion.value.year, criterion.value.month, criterion.value.day);
+            promise = dataStore.loadBankRecordAndFinancialTransactionsDuringDayAsync(accountId, recordId, criterion.value.year, criterion.value.month, criterion.value.day);
             break;
     }
+    promise.catch(err => {
+        if (err === 'Unauthorized') {
+            router.push('/');
+        }
+    });
 }
 
 </script>

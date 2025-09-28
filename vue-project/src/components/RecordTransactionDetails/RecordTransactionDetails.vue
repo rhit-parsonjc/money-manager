@@ -32,21 +32,41 @@ function deleteItem() {
     if (isBankRecord)
         dataStore.deleteBankRecordAsync(accountId, data.id)
             .then(() => router.push(`/accounts/${accountId}/records`))
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
     else
         dataStore.deleteFinancialTransactionAsync(accountId, data.id)
             .then(() => router.push(`/accounts/${accountId}/transactions`))
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
 }
 
 function attachSubitems() {
     dataStore.expireData();
     if (isBankRecord)
         router.push(`/accounts/${accountId}/records/${data.id}/transactions`)
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
     else
         router.push(`/accounts/${accountId}/transactions/${data.id}/records`)
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
 }
 
 function uploadFile() {
@@ -57,16 +77,26 @@ function uploadFile() {
     const file = files[0];
     if (isBankRecord)
         dataStore.attachFileToItemAsync(file, data.id)
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
     else
         dataStore.attachFileToItemAsync(file, data.id)
-            .then(dataStore.resetData);
+            .then(dataStore.resetData)
+            .catch(err => {
+                if (err === 'Unauthorized') {
+                    router.push('/');
+                }
+            });
 }
 
 function loadFile(id, name) {
     dataStore.loadFileAttachmentAsync(id)
     .then((result) => {
-        const fileURL = window.URL.createObjectURL(result.data);
+        const fileURL = window.URL.createObjectURL(result);
         const a = document.createElement('a');
         a.href = fileURL;
         a.download = name;
@@ -74,12 +104,22 @@ function loadFile(id, name) {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(fileURL);
+    })
+    .catch(err => {
+        if (err === 'Unauthorized') {
+            router.push('/');
+        }
     });
 }
 
 function deleteFile(id) {
     dataStore.deleteFileAttachmentAsync(id)
-        .then(dataStore.resetData);
+        .then(dataStore.resetData)
+        .catch(err => {
+            if (err === 'Unauthorized') {
+                router.push('/');
+            }
+        });
 }
 
 </script>

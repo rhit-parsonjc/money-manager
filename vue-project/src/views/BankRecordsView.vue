@@ -36,20 +36,26 @@ function reloadData(criterionInfo) {
 }
 
 function loadData() {
+    let promise = null;
     switch (criterionType.value) {
         case "None":
-            dataStore.loadBankRecordsAndDateAmountsAsync(accountId);
+            promise = dataStore.loadBankRecordsAndDateAmountsAsync(accountId);
             break;
         case "Year":
-            dataStore.loadBankRecordsAndDateAmountsDuringYearAsync(accountId, criterion.value.year);
+            promise = dataStore.loadBankRecordsAndDateAmountsDuringYearAsync(accountId, criterion.value.year);
             break;
         case "Month":
-            dataStore.loadBankRecordsAndDateAmountsDuringMonthAsync(accountId, criterion.value.year, criterion.value.month);
+            promise = dataStore.loadBankRecordsAndDateAmountsDuringMonthAsync(accountId, criterion.value.year, criterion.value.month);
             break;
         case "Day":
-            dataStore.loadBankRecordsAndDateAmountsDuringDayAsync(accountId, criterion.value.year, criterion.value.month, criterion.value.day);
+            promise = dataStore.loadBankRecordsAndDateAmountsDuringDayAsync(accountId, criterion.value.year, criterion.value.month, criterion.value.day);
             break;
     }
+    promise.catch(err => {
+        if (err === 'Unauthorized') {
+            router.push('/');
+        }
+    });
 }
 
 </script>

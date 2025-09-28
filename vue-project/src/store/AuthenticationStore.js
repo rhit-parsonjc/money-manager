@@ -32,11 +32,42 @@ function postAsync(url, data) {
   })
 }
 
+function getJsonToken() {
+  const jsonToken = window.localStorage.getItem('token')
+  if (jsonToken) {
+    parseJsonToken(jsonToken)
+    return jsonToken
+  } else return null
+}
+
+function setJsonToken(jsonToken) {
+  window.localStorage.setItem('token', jsonToken)
+}
+
+function clearJsonToken() {
+  window.localStorage.clear()
+}
+
+function parseJsonToken(jsonToken) {
+  const jsonTokenParts = jsonToken.split('.')
+  const base64Url = jsonTokenParts[1]
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+  const base64Atob = window.atob(base64)
+  const base64AtobChars = base64Atob.split('')
+  const base64AtobCharsCodes = base64AtobChars.map(
+    (c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2),
+  )
+  const jsonPayloadEncoded = base64AtobCharsCodes.join('')
+  const jsonPayload = decodeURIComponent(jsonPayloadEncoded)
+  const parsedJsonPayload = JSON.parse(jsonPayload)
+  return parsedJsonPayload
+}
+
 const useAuthenticationStore = defineStore('authentication', {
   state: () => {
     return {
       /** @type any */
-      _jsonToken: null,
+      _jsonToken: getJsonToken(),
     }
   },
 
@@ -46,6 +77,10 @@ const useAuthenticationStore = defineStore('authentication', {
     },
     isAuthenticated(state) {
       return state._jsonToken !== null
+    },
+    username(state) {
+      if (state._jsonToken) return parseJsonToken(state._jsonToken).sub
+      else return null
     },
   },
 
@@ -73,6 +108,7 @@ const useAuthenticationStore = defineStore('authentication', {
             const jsonToken = response
             console.log({ jsonToken })
             this._jsonToken = jsonToken
+            setJsonToken(jsonToken)
             resolve()
           })
           .catch((error) => {
@@ -84,6 +120,7 @@ const useAuthenticationStore = defineStore('authentication', {
     signOut() {
       console.log('Logged out')
       this._jsonToken = null
+      clearJsonToken()
     },
   },
 })

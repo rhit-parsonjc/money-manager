@@ -14,7 +14,7 @@ import java.util.Date;
 
 @Component
 public class JWTUtils {
-    public static final long JWT_EXPIRATION_MS = 600000;
+    public static final long JWT_EXPIRATION_MS = 10 * 60 * 1000;
     private static final String SECRET = "8788983817605578185276655735596017032038753549434871185848913430";
 
     private Key getKey() {

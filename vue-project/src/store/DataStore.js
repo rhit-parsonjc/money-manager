@@ -145,22 +145,31 @@ function authenticatedFnAsync(fn, relativeUrl, data, verify) {
     data === null
       ? fn(baseUrl + relativeUrl, {
           headers: { Authorization: `Bearer ${jsonToken}` },
+          validateStatus: () => true,
         })
       : fn(baseUrl + relativeUrl, data, {
           headers: { Authorization: `Bearer ${jsonToken}` },
+          validateStatus: () => true,
         })
   if (verify) {
     return new Promise((resolve, reject) => {
       promise
         .then((response) => {
-          if (response.data.success) {
+          if (response.status === 401) {
+            authenticationStore.signOut()
+            reject('Unauthorized')
+          } else if (response.data.success) {
             resolve(response.data.data)
           } else {
             const errorMessage = response.data.data
-            reject(errorMessage)
+            console.error(errorMessage)
+            reject('Other error')
           }
         })
-        .catch((error) => reject(error))
+        .catch((error) => {
+          console.error(error)
+          reject('Other error')
+        })
     })
   } else {
     return promise
@@ -203,8 +212,7 @@ function loadDataFromMultipleSourcesAsync(sources) {
         resolve(data)
       })
       .catch((error) => {
-        console.error(error)
-        reject()
+        reject(error)
       })
   })
 }
@@ -214,32 +222,44 @@ function loadFileByIdAsync(id) {
   const jsonToken = authenticationStore.jsonToken
   const promise = axios.get(`${baseUrl}/fileattachments/${id}`, {
     headers: { Authorization: `Bearer ${jsonToken}` },
+    validateStatus: () => true,
     responseType: 'blob',
   })
   return new Promise((resolve, reject) => {
     promise
       .then((response) => {
-        resolve(response)
+        if (response.status === 401) {
+          authenticationStore.signOut()
+          reject('Unauthorized')
+        } else {
+          resolve(response.data)
+        }
       })
       .catch((error) => {
         console.error(error)
-        reject(error)
+        reject('Other error')
       })
   })
 }
 
 function modifyDataAsync(relativeUrl, data, dataHandler, requestFunction) {
+  const authenticationStore = useAuthenticationStore()
   return new Promise((resolve, reject) => {
-    if (!verifyAuthenticated()) reject()
+    if (!verifyAuthenticated()) reject('Unauthorized')
     const promise = data == null ? requestFunction(relativeUrl) : requestFunction(relativeUrl, data)
     promise
-      .then(() => {
-        dataHandler()
-        resolve()
+      .then((response) => {
+        if (response.status === 401) {
+          authenticationStore.signOut()
+          reject('Unauthorized')
+        } else {
+          dataHandler()
+          resolve()
+        }
       })
       .catch((error) => {
         console.error(error)
-        reject()
+        reject('Other error')
       })
   })
 }
@@ -248,20 +268,25 @@ function attachFileAsync(file, itemId, dataHandler) {
   const authenticationStore = useAuthenticationStore()
   const jsonToken = authenticationStore.jsonToken
   return new Promise((resolve, reject) => {
-    if (!verifyAuthenticated()) reject()
+    if (!verifyAuthenticated()) reject('Unauthorized')
     const formData = new FormData()
     formData.append('file', file)
     axios
       .post(`${baseUrl}/fileattachments/${itemId}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${jsonToken}` },
       })
-      .then(() => {
-        dataHandler()
-        resolve()
+      .then((response) => {
+        if (response.status === 401) {
+          authenticationStore.signOut()
+          reject('Unauthorized')
+        } else {
+          dataHandler()
+          resolve()
+        }
       })
       .catch((error) => {
         console.error(error)
-        reject()
+        reject('Other error')
       })
   })
 }
@@ -304,7 +329,7 @@ const useDataStore = defineStore('data', {
 
     loadDataAsync(sources) {
       return new Promise((resolve, reject) => {
-        if (!verifyAuthenticated()) reject()
+        if (!verifyAuthenticated()) reject('Unauthorized')
         const promise = loadDataFromMultipleSourcesAsync(sources)
         promise
           .then((data) => {
@@ -312,9 +337,9 @@ const useDataStore = defineStore('data', {
             this._dataStatus = DataStatus.LOADED
             resolve()
           })
-          .catch(() => {
+          .catch((error) => {
             this._dataStatus = DataStatus.ERROR
-            reject()
+            reject(error)
           })
         this._dataStatus = DataStatus.LOADING
       })
