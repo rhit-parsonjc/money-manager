@@ -1,6 +1,7 @@
 package com.moneymanager.api.service;
 
 import com.moneymanager.api.exceptions.AlreadyExistsException;
+import com.moneymanager.api.exceptions.InvalidRequestException;
 import com.moneymanager.api.exceptions.ResourceNotFoundException;
 import com.moneymanager.api.models.*;
 import com.moneymanager.api.models.test.TestAccount;
@@ -12,6 +13,7 @@ import com.moneymanager.api.services.AccountService.AccountServiceImpl;
 import com.moneymanager.api.services.MapperService.MapperService;
 import com.moneymanager.api.services.UserEntityService.UserEntityService;
 
+import com.moneymanager.api.services.ValidatorService.ValidatorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +36,9 @@ public class AccountServiceTests {
 
     @Mock
     private MapperService mapperService;
+
+    @Mock
+    private ValidatorService validatorService;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -83,6 +88,7 @@ public class AccountServiceTests {
 
         Assertions.assertNotNull(createdAccount);
         verifyAccount(createdAccount, accountId, "Bank Gamma", "SpringBoot");
+        verify(validatorService, times(1)).validate(accountRequest);
         verify(accountRepository, times(1)).findByUserEntityIdAndName(userEntityId, "Bank Gamma");
         verify(mapperService, times(1)).mapAccountRequestToAccount(userEntity, accountRequest);
         verify(accountRepository, times(1)).save(account);
@@ -150,6 +156,7 @@ public class AccountServiceTests {
 
         Assertions.assertNotNull(updatedAccount);
         verifyAccount(updatedAccount, 2L, "Bank 2", "SpringBoot");
+        verify(validatorService, times(1)).validate(accountRequest);
         verify(accountRepository, times(1)).findById(accountId);
         verify(accountRepository, times(1)).findByUserEntityIdAndName(userEntityId, "Bank 2");
         verify(accountRepository, times(1)).save(account2);

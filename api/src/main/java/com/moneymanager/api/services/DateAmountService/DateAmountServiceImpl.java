@@ -10,6 +10,7 @@ import com.moneymanager.api.requests.DateAmountUpdateRequest;
 import com.moneymanager.api.services.AccountService.AccountService;
 import com.moneymanager.api.services.MapperService.MapperService;
 
+import com.moneymanager.api.services.ValidatorService.ValidatorService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class DateAmountServiceImpl implements DateAmountService {
     private final AccountService accountService;
     private final DateAmountRepository dateAmountRepository;
     private final MapperService mapperService;
+    private final ValidatorService validatorService;
 
     private Optional<DateAmount> getDateAmountByDay(Account account, Short yearValue, Byte monthValue, Byte dayValue) {
         List<DateAmount> dateAmounts = dateAmountRepository.findByAccountIdAndYearValueAndMonthValueAndDayValue(account.getId(), yearValue, monthValue, dayValue);
@@ -35,6 +37,7 @@ public class DateAmountServiceImpl implements DateAmountService {
     @Override
     public DateAmount createDateAmount(Long accountId, DateAmountCreateRequest request) {
         Account account = accountService.getAccountById(accountId);
+        validatorService.validate(request);
         Optional<DateAmount> existingDateAmountOptional = this.getDateAmountByDay(account, request.getYearValue(), request.getMonthValue(), request.getDayValue());
         if (existingDateAmountOptional.isPresent())
             throw new AlreadyExistsException(AlreadyExistsException.DATE_AMOUNT_MESSAGE);
@@ -44,7 +47,7 @@ public class DateAmountServiceImpl implements DateAmountService {
 
     @Override
     public List<DateAmount> getDateAmounts(Long accountId) {
-        Account account = accountService.getAccountById(accountId);
+        accountService.getAccountById(accountId);
         return dateAmountRepository.findByAccountId(accountId);
     }
 
@@ -69,6 +72,7 @@ public class DateAmountServiceImpl implements DateAmountService {
     @Override
     public DateAmount updateDateAmount(Long accountId, Short yearValue, Byte monthValue, Byte dayValue, DateAmountUpdateRequest request) {
         Account account = accountService.getAccountById(accountId);
+        validatorService.validate(request);
         Optional<DateAmount> dateAmountOptional = this.getDateAmountByDay(account, yearValue, monthValue, dayValue);
         if (dateAmountOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.DATE_AMOUNT_MESSAGE);

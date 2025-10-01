@@ -9,6 +9,7 @@ import com.moneymanager.api.models.Account;
 import com.moneymanager.api.services.AccountService.AccountService;
 import com.moneymanager.api.services.MapperService.MapperService;
 
+import com.moneymanager.api.services.ValidatorService.ValidatorService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,12 @@ public class BankRecordServiceImpl implements BankRecordService {
     private final AccountService accountService;
     private final BankRecordRepository bankRecordRepository;
     private final MapperService mapperService;
+    private final ValidatorService validatorService;
 
     @Override
     public BankRecord createBankRecord(Long accountId, BankRecordRequest request) {
         Account account = accountService.getAccountById(accountId);
+        validatorService.validate(request);
         BankRecord bankRecord = mapperService.mapBankRecordRequestToRecord(account, request);
         return bankRecordRepository.save(bankRecord);
     }
@@ -69,6 +72,7 @@ public class BankRecordServiceImpl implements BankRecordService {
     @Override
     public BankRecord updateBankRecord(Long accountId, Long id, BankRecordRequest request) {
         accountService.getAccountById(accountId);
+        validatorService.validate(request);
         Optional<BankRecord> bankRecordOptional = bankRecordRepository.findById(id);
         if (bankRecordOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.BANK_RECORD_MESSAGE);

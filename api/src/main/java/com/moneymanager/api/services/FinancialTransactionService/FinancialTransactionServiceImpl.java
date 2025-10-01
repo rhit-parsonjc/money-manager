@@ -8,6 +8,7 @@ import com.moneymanager.api.requests.FinancialTransactionRequest;
 import com.moneymanager.api.services.AccountService.AccountService;
 import com.moneymanager.api.services.MapperService.MapperService;
 
+import com.moneymanager.api.services.ValidatorService.ValidatorService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,12 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     private final AccountService accountService;
     private final FinancialTransactionRepository financialTransactionRepository;
     private final MapperService mapperService;
+    private final ValidatorService validatorService;
 
     @Override
     public FinancialTransaction createFinancialTransaction(Long accountId, FinancialTransactionRequest request) {
         Account account = accountService.getAccountById(accountId);
+        validatorService.validate(request);
         FinancialTransaction financialTransaction = mapperService.mapFinancialTransactionRequestToTransaction(account, request);
         return financialTransactionRepository.save(financialTransaction);
     }
@@ -68,6 +71,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     @Override
     public FinancialTransaction updateFinancialTransaction(Long accountId, Long id, FinancialTransactionRequest request) {
         accountService.getAccountById(accountId);
+        validatorService.validate(request);
         Optional<FinancialTransaction> financialTransactionOptional = financialTransactionRepository.findById(id);
         if (financialTransactionOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.FINANCIAL_TRANSACTION_MESSAGE);

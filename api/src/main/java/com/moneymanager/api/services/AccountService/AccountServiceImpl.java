@@ -9,6 +9,7 @@ import com.moneymanager.api.repositories.AccountRepository;
 import com.moneymanager.api.requests.AccountRequest;
 import com.moneymanager.api.services.MapperService.MapperService;
 import com.moneymanager.api.services.UserEntityService.UserEntityService;
+import com.moneymanager.api.services.ValidatorService.ValidatorService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final MapperService mapperService;
     private final UserEntityService userEntityService;
+    private final ValidatorService validatorService;
 
     private Optional<Account> getAccountByName(UserEntity userEntity, String name) {
         List<Account> accounts = accountRepository.findByUserEntityIdAndName(userEntity.getId(), name);
@@ -35,6 +37,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account createAccount(AccountRequest request) {
         UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
+        validatorService.validate(request);
         Optional<Account> existingAccountOptional = this.getAccountByName(userEntity, request.getName());
         if (existingAccountOptional.isPresent())
             throw new AlreadyExistsException(AlreadyExistsException.ACCOUNT_MESSAGE);
@@ -63,6 +66,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account updateAccount(Long id, AccountRequest request) {
         UserEntity userEntity = userEntityService.getAuthenticatedUserOrThrow();
+        validatorService.validate(request);
         Optional<Account> accountOptional = accountRepository.findById(id);
         if (accountOptional.isEmpty())
             throw new ResourceNotFoundException(ResourceNotFoundException.ACCOUNT_MESSAGE);

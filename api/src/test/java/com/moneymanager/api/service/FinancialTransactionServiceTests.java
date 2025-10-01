@@ -12,6 +12,7 @@ import com.moneymanager.api.services.AccountService.AccountService;
 import com.moneymanager.api.services.FinancialTransactionService.FinancialTransactionServiceImpl;
 import com.moneymanager.api.services.MapperService.MapperService;
 
+import com.moneymanager.api.services.ValidatorService.ValidatorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ public class FinancialTransactionServiceTests {
 
     @Mock
     private MapperService mapperService;
+
+    @Mock
+    private ValidatorService validatorService;
 
     @InjectMocks
     private FinancialTransactionServiceImpl financialTransactionService;
@@ -93,6 +97,7 @@ public class FinancialTransactionServiceTests {
 
         Assertions.assertNotNull(createdFinancialTransaction);
         verifyFinancialTransaction(createdFinancialTransaction, financialTransactionId, (short) 2025, (byte) 9, (byte) 15, -1350L, "Game 3", "Bank A");
+        verify(validatorService, times(1)).validate(financialTransactionRequest);
         verify(mapperService, times(1)).mapFinancialTransactionRequestToTransaction(account, financialTransactionRequest);
         verify(financialTransactionRepository, times(1)).save(financialTransaction);
     }
@@ -207,6 +212,7 @@ public class FinancialTransactionServiceTests {
 
         Assertions.assertNotNull(updatedFinancialTransaction);
         verifyFinancialTransaction(updatedFinancialTransaction, financialTransactionId, (short) 2027, (byte) 6, (byte) 18, -1000L, "Song", "Bank A");
+        verify(validatorService, times(1)).validate(financialTransactionRequest);
         verify(financialTransactionRepository, times(1)).findById(financialTransactionId);
         verify(financialTransactionRepository, times(1)).save(financialTransaction1);
     }

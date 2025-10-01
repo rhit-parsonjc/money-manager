@@ -52,15 +52,24 @@ public class UserEntity {
         String newEmail = userUpdateRequest.getEmail();
         String newFirstName = userUpdateRequest.getFirstName();
         String newLastName = userUpdateRequest.getLastName();
-        String newUsername = userUpdateRequest.getUsername();
-        if (newEmail != null)
-            this.email = newEmail;
-        if (newFirstName != null)
-            this.firstName = newFirstName;
-        if (newLastName != null)
-            this.lastName = newLastName;
-        if (newUsername != null)
-            this.username = newUsername;
+        if (newEmail != null) {
+            if (newEmail.isEmpty())
+                this.email = null;
+            else
+                this.email = newEmail;
+        }
+        if (newFirstName != null) {
+            if (newFirstName.isEmpty())
+                this.firstName = null;
+            else
+                this.firstName = newFirstName;
+        }
+        if (newLastName != null) {
+            if (newLastName.isEmpty())
+                this.lastName = null;
+            else
+                this.lastName = newLastName;
+        }
     }
 
     public void update(UserUpdateRequest userUpdateRequest, String encodedPassword) {

@@ -14,6 +14,7 @@ import com.moneymanager.api.services.AccountService.AccountService;
 import com.moneymanager.api.services.DateAmountService.DateAmountServiceImpl;
 import com.moneymanager.api.services.MapperService.MapperService;
 
+import com.moneymanager.api.services.ValidatorService.ValidatorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ public class DateAmountServiceTests {
 
     @Mock
     private MapperService mapperService;
+
+    @Mock
+    private ValidatorService validatorService;
 
     @InjectMocks
     private DateAmountServiceImpl dateAmountService;
@@ -94,6 +98,7 @@ public class DateAmountServiceTests {
 
         Assertions.assertNotNull(createdDateAmount);
         verifyDateAmount(createdDateAmount, dateAmountId, (short) 2024, (byte) 12, (byte) 31, 1700L, "Bank A");
+        verify(validatorService, times(1)).validate(dateAmountCreateRequest);
         verify(dateAmountRepository, times(1)).findByAccountIdAndYearValueAndMonthValueAndDayValue(accountId, (short) 2024, (byte) 12, (byte) 31);
         verify(mapperService, times(1)).mapDateAmountRequestToAmount(account, dateAmountCreateRequest);
         verify(dateAmountRepository, times(1)).save(dateAmount);
@@ -203,6 +208,7 @@ public class DateAmountServiceTests {
 
         Assertions.assertNotNull(updatedDateAmount);
         verifyDateAmount(updatedDateAmount, 1L, (short) 2025, (byte) 7, (byte) 31, 1700L, "Bank A");
+        verify(validatorService, times(1)).validate(dateAmountUpdateRequest);
         verify(dateAmountRepository, times(1)).findByAccountIdAndYearValueAndMonthValueAndDayValue(accountId, (short) 2025, (byte) 7, (byte) 31);
         verify(dateAmountRepository, times(1)).save(dateAmount1);
     }

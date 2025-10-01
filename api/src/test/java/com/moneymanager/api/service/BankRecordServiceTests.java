@@ -12,6 +12,7 @@ import com.moneymanager.api.services.AccountService.AccountService;
 import com.moneymanager.api.services.BankRecordService.BankRecordServiceImpl;
 import com.moneymanager.api.services.MapperService.MapperService;
 
+import com.moneymanager.api.services.ValidatorService.ValidatorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ public class BankRecordServiceTests {
 
     @Mock
     private MapperService mapperService;
+
+    @Mock
+    private ValidatorService validatorService;
 
     @InjectMocks
     private BankRecordServiceImpl bankRecordService;
@@ -92,6 +96,7 @@ public class BankRecordServiceTests {
 
         Assertions.assertNotNull(createdBankRecord);
         verifyBankRecord(createdBankRecord, bankRecordId, (short) 2025, (byte) 8, (byte) 27, -733L, "Snack", "Bank A");
+        verify(validatorService, times(1)).validate(bankRecordRequest);
         verify(mapperService, times(1)).mapBankRecordRequestToRecord(account, bankRecordRequest);
         verify(bankRecordRepository, times(1)).save(bankRecord);
     }
@@ -199,6 +204,7 @@ public class BankRecordServiceTests {
 
         Assertions.assertNotNull(updatedBankRecord);
         verifyBankRecord(updatedBankRecord, bankRecordId, (short) 2024, (byte) 10, (byte) 22, -2400L, "Brunch", "Bank A");
+        verify(validatorService, times(1)).validate(bankRecordRequest);
         verify(bankRecordRepository, times(1)).findById(bankRecordId);
         verify(bankRecordRepository, times(1)).save(bankRecord2);
     }
