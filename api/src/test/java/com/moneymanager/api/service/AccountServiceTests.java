@@ -82,7 +82,7 @@ public class AccountServiceTests {
         Account createdAccount = accountService.createAccount(accountRequest);
 
         Assertions.assertNotNull(createdAccount);
-        verifyAccount(createdAccount, accountId, "Bank Gamma", "Spring");
+        verifyAccount(createdAccount, accountId, "Bank Gamma", "SpringBoot");
         verify(accountRepository, times(1)).findByUserEntityIdAndName(userEntityId, "Bank Gamma");
         verify(mapperService, times(1)).mapAccountRequestToAccount(userEntity, accountRequest);
         verify(accountRepository, times(1)).save(account);
@@ -108,7 +108,7 @@ public class AccountServiceTests {
         Account foundAccount = accountService.getAccountById(accountId);
 
         Assertions.assertNotNull(foundAccount);
-        verifyAccount(foundAccount, accountId, "Bank Beta", "Spring");
+        verifyAccount(foundAccount, accountId, "Bank Beta", "SpringBoot");
         verify(accountRepository, times(1)).findById(accountId);
     }
 
@@ -132,8 +132,8 @@ public class AccountServiceTests {
 
         Assertions.assertNotNull(foundAccountList);
         Assertions.assertEquals(2, foundAccountList.size());
-        verifyAccount(foundAccountList.getFirst(), 1L, "Bank Alpha", "Spring");
-        verifyAccount(foundAccountList.getLast(), 2L, "Bank Beta", "Spring");
+        verifyAccount(foundAccountList.getFirst(), 1L, "Bank Alpha", "SpringBoot");
+        verifyAccount(foundAccountList.getLast(), 2L, "Bank Beta", "SpringBoot");
         verify(accountRepository, times(1)).findByUserEntityId(userEntityId);
     }
 
@@ -149,7 +149,7 @@ public class AccountServiceTests {
         Account updatedAccount = accountService.updateAccount(accountId, accountRequest);
 
         Assertions.assertNotNull(updatedAccount);
-        verifyAccount(updatedAccount, 2L, "Bank 2", "Spring");
+        verifyAccount(updatedAccount, 2L, "Bank 2", "SpringBoot");
         verify(accountRepository, times(1)).findById(accountId);
         verify(accountRepository, times(1)).findByUserEntityIdAndName(userEntityId, "Bank 2");
         verify(accountRepository, times(1)).save(account2);

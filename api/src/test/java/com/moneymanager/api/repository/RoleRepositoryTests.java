@@ -29,7 +29,7 @@ public class RoleRepositoryTests {
 
         Role savedRole = roleRepository.save(role);
 
-        verifyRole(role, "USER");
+        verifyRole(savedRole, "USER");
     }
 
     @Test

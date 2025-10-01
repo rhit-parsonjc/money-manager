@@ -73,7 +73,8 @@ public class DateAmountControllerTests {
         Role userRole = new TestRole(1L, "USER");
         Set<Role> roleSet = new HashSet<Role>();
         roleSet.add(userRole);
-        UserEntity userEntity = new TestUserEntity(3L, "Spring", "pass1234", roleSet, new HashSet<Account>());
+        UserEntity userEntity = new TestUserEntity(3L, "spring@spring.boot", "Spring",
+                "Boot", "SpringBoot", "pass1234", roleSet, new HashSet<Account>());
         accountId = 33L;
         Account account = new TestAccount(accountId, "Bank 1", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(), new HashSet<DateAmount>());

@@ -66,7 +66,8 @@ public class AccountControllerTests {
         Role userRole = new TestRole(1L, "USER");
         Set<Role> roleSet = new HashSet<Role>();
         roleSet.add(userRole);
-        UserEntity userEntity = new TestUserEntity(1L, "Spring", "pass1234", roleSet, new HashSet<Account>());
+        UserEntity userEntity = new TestUserEntity(1L, "spring@spring.boot", "Spring",
+                "Boot", "SpringBoot", "pass1234", roleSet, new HashSet<Account>());
         accountCreateRequest = new AccountRequest("Bank 3");
         accountUpdateRequest = new AccountRequest("Bank A");
         account1 = new TestAccount(1L, "Bank 1", userEntity,

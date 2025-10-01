@@ -73,7 +73,7 @@ public class FinancialTransactionRepositoryTests {
         Role savedUserRole = roleRepository.save(userRole);
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(savedUserRole);
-        UserEntity userEntity = new UserEntity("Spring", "pass1234", roleSet);
+        UserEntity userEntity = new UserEntity("spring@spring.io", "First", "Last", "Spring", "pass1234", roleSet);
         UserEntity savedUserEntity = userEntityRepository.save(userEntity);
         Account account1 = new Account(savedUserEntity, "Bank A");
         Account account2 = new Account(savedUserEntity, "Bank B");

@@ -69,7 +69,7 @@ public class FileAttachmentRepositoryTests {
         Role savedUserRole = roleRepository.save(userRole);
         Set<Role> roleSet = new HashSet<Role>();
         roleSet.add(savedUserRole);
-        UserEntity userEntity = new UserEntity("Spring", "password", roleSet);
+        UserEntity userEntity = new UserEntity("spring@spring.io", "First", "Last", "Spring", "pass1234", roleSet);
         UserEntity savedUserEntity = userEntityRepository.save(userEntity);
         Account account = new Account(savedUserEntity, "Bank A");
         Account savedAccount = accountRepository.save(account);

@@ -55,7 +55,7 @@ public class MapperServiceTests {
         userRole = new TestRole(7L, "USER");
         Set<Role> roleSet = new HashSet<Role>();
         roleSet.add(userRole);
-        UserEntity userEntity = new TestUserEntity(6L, "first.last@spring.io", "First",
+        userEntity = new TestUserEntity(6L, "first.last@spring.io", "First",
                 "Last", "Username", "password", roleSet, new HashSet<Account>());
         account1 = new TestAccount(3L, "Bank Epsilon", userEntity,
                 new HashSet<BankRecord>(), new HashSet<FinancialTransaction>(),
@@ -386,5 +386,15 @@ public class MapperServiceTests {
         Assertions.assertNotNull(account);
         Assertions.assertNull(account.getId());
         Assertions.assertEquals("Bank Omega", account.getName());
+    }
+
+    @Test
+    public void MapperService_MapUserEntityToDto() {
+        UserEntityDto userEntityDto = mapperService.mapUserEntityToDto(userEntity);
+
+        Assertions.assertEquals("first.last@spring.io", userEntityDto.getEmail());
+        Assertions.assertEquals("First", userEntityDto.getFirstName());
+        Assertions.assertEquals("Last", userEntityDto.getLastName());
+        Assertions.assertEquals("Username", userEntityDto.getUsername());
     }
 }
