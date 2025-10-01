@@ -243,24 +243,15 @@ function loadFileByIdAsync(id) {
 }
 
 function modifyDataAsync(relativeUrl, data, dataHandler, requestFunction) {
-  const authenticationStore = useAuthenticationStore()
   return new Promise((resolve, reject) => {
     if (!verifyAuthenticated()) reject('Unauthorized')
     const promise = data == null ? requestFunction(relativeUrl) : requestFunction(relativeUrl, data)
     promise
-      .then((response) => {
-        if (response.status === 401) {
-          authenticationStore.signOut()
-          reject('Unauthorized')
-        } else {
-          dataHandler()
-          resolve()
-        }
+      .then(() => {
+        dataHandler()
+        resolve()
       })
-      .catch((error) => {
-        console.error(error)
-        reject('Other error')
-      })
+      .catch(reject)
   })
 }
 
@@ -554,7 +545,7 @@ const useDataStore = defineStore('data', {
         },
         {
           name: 'bankRecords',
-          relativeUrl: `/bankRecords/${accountId}`,
+          relativeUrl: `/bankrecords/${accountId}`,
           mapFunction: toBankRecordModels,
         },
       ])
@@ -569,7 +560,7 @@ const useDataStore = defineStore('data', {
         },
         {
           name: 'bankRecords',
-          relativeUrl: `/bankRecords/${accountId}?year=${year}`,
+          relativeUrl: `/bankrecords/${accountId}?year=${year}`,
           mapFunction: toBankRecordModels,
         },
       ])
@@ -584,7 +575,7 @@ const useDataStore = defineStore('data', {
         },
         {
           name: 'bankRecords',
-          relativeUrl: `/bankRecords/${accountId}?year=${year}&month=${month}`,
+          relativeUrl: `/bankrecords/${accountId}?year=${year}&month=${month}`,
           mapFunction: toBankRecordModels,
         },
       ])
@@ -599,7 +590,7 @@ const useDataStore = defineStore('data', {
         },
         {
           name: 'bankRecords',
-          relativeUrl: `/bankRecords/${accountId}?year=${year}&month=${month}&day=${day}`,
+          relativeUrl: `/bankrecords/${accountId}?year=${year}&month=${month}&day=${day}`,
           mapFunction: toBankRecordModels,
         },
       ])
