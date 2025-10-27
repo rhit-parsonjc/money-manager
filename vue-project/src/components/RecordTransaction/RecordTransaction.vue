@@ -21,7 +21,7 @@ function goToDetailPage() {
 
 <template>
     <li class="RecordTransaction">
-        <a @click="goToDetailPage" class="happy-monkey-regular RecordTransaction-text">
+        <a @click="goToDetailPage" class="ubuntu-regular RecordTransaction-text">
             {{ data.name }} ({{ formatCurrency(data.amount) }})
         </a>
     </li>
@@ -29,10 +29,9 @@ function goToDetailPage() {
 
 <style scoped>
 .RecordTransaction {
-    margin: 0.25rem 0em;
+    margin: 0.5em 0em;
 }
 .RecordTransaction-text {
-    font-size: 12pt;
     color: black;
     text-decoration: none;
 }

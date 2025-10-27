@@ -14,6 +14,11 @@ import LoginView from './views/LoginView.vue'
 import RegisterView from './views/RegisterView.vue'
 import AccountsView from './views/AccountsView.vue'
 import AccountView from './views/AccountView.vue'
+import ProfileView from './views/ProfileView.vue'
+import AccountCreateView from './views/AccountCreateView.vue'
+import AccountUpdateView from './views/AccountUpdateView.vue'
+import DateAmountCreateView from './views/DateAmountCreateView.vue'
+import DateAmountUpdateView from './views/DateAmountUpdateView.vue'
 
 const routes = [
   {
@@ -32,14 +37,42 @@ const routes = [
     component: RegisterView,
   },
   {
+    path: '/accounts/create',
+    name: 'account-create',
+    component: AccountCreateView,
+  },
+  {
     path: '/accounts',
     name: 'accounts',
     component: AccountsView,
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: ProfileView,
+  },
+  {
     path: '/accounts/:accountId',
     name: 'account',
     component: AccountView,
+    props: true,
+  },
+  {
+    path: '/accounts/:accountId/update',
+    name: 'account-update',
+    component: AccountUpdateView,
+    props: true,
+  },
+  {
+    path: '/accounts/:accountId/amounts/:yearValue/:monthValue/:dayValue/create',
+    name: 'amount-create',
+    component: DateAmountCreateView,
+    props: true,
+  },
+  {
+    path: '/accounts/:accountId/amounts/:yearValue/:monthValue/:dayValue/update',
+    name: 'amount-update',
+    component: DateAmountUpdateView,
     props: true,
   },
   {

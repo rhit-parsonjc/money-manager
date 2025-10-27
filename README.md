@@ -1,5 +1,38 @@
 # Money Manager
 
+## Description
+
+This Money Manager app allows you to keep track of your financial transactions and match them with records for an account at a financial institution.
+
+- Keep track of deposits and withdrawals from an account at a financial institution (bank records).
+- Keep track of payments, donations, income, etc. (financial transactions).
+- Connect bank records with financial transactions.
+- Attach files to a bank record or financial transaction.
+- Keep track of the amount of money in an account at a particular date.
+
+## Pages (To Be Updated)
+
+- /: home page, can go to login or register page (visible to everyone)
+- /login: login page, can go to register, home, or accounts page (only visible to non-authenticated users)
+- /register: register page, can go to login or home page (only visible to non-authenticated users)
+- /accounts: accounts page, can go to account or profile page (only visible to authenticated users)
+- /profile: profile page, can go to home, accounts, or edit profile page (only visible to authenticated users)
+- /profile/edit: profile edit page, can go to profile page (only visible to authenticated users)
+- /profile/delete: profile delete page, can go to profile or home page (only visible to authenticated users)
+- /accounts/{account id}: account page, can go to accounts, records, or transactions page (only visible to authenticated users)
+- /accounts/{account id}/records: records page, can go to record or create record page (only visible to authenticated users)
+- /accounts/{account id}/transactions: transactions page, can go to transaction or create transaction page (only visible to authenticated users)
+- /accounts/{account id}/create-record: create record page, can go to record page (only visible to authenticated users)
+- /accounts/{account id}/create-transaction: create transaction page, can go to transaction page (only visible to authenticated users)
+- /accounts/{account id}/records/{record id}: record page, can go to attach transactions, edit record, or delete record page (only visible to authenticated users)
+- /accounts/{account id}/records/{record id}/transactions: attach transactions page, can go to record page (only visible to authenticated users)
+- /accounts/{account id}/records/{record id}/edit: edit record page, can go to record page (only visible to authenticated users)
+- /accounts/{account id}/records/{record id}/delete: delete record page, can go to record page (only visible to authenticated users)
+- /accounts/{account id}/transactions/{transaction id}: transaction page, can go to attach records, edit transaction, or delete transaction page (only visible to authenticated users)
+- /accounts/{account id}/transactions/{transaction id}/records: attach records page, can go to transaction page (only visible to authenticated users)
+- /accounts/{account id}/transactions/{transaction id}/edit: edit transaction page, can go to transaction page (only visible to authenticated users)
+- /accounts/{account id}/transactions/{transaction id}/delete: delete transaction page, can go to transaction page (only visible to authenticated users)
+
 ## Resources Used
 
 ### Spring Boot Basics
@@ -109,6 +142,18 @@
 ### JWT Parsing
 
 - Thanks to [Peheje](https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library)'s answer for parsing JWT tokens.
+
+### Verifying Date Amounts
+
+- According to [Subset sum problem](https://en.wikipedia.org/wiki/Subset_sum_problem), trying to figure out whether a subset of some numbers equals a number is NP-complete.
+
+### MySQL
+
+- Thanks to [Bro Code](https://www.youtube.com/watch?v=oPV2sjMG53U) for explaining how to install MySQL.
+
+### HTML/CSS
+
+- Thanks to [W3Schools](https://www.w3schools.com/) for explaining HTML and CSS.
 
 ## Random Value
 

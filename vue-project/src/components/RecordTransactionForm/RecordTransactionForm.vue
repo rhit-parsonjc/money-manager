@@ -8,6 +8,7 @@ import { computed, ref } from 'vue';
 
 import useDataStore from '@/store/DataStore';
 import { monthNames, daysPerMonth, monthNameFromNumber } from '@/model/DateObjectModel';
+import { getAmountValue, getCentsValue, getDollarsValue } from '@/utilities/utilities';
 
 const dataStore = useDataStore();
 const router = useRouter();
@@ -15,24 +16,27 @@ const router = useRouter();
 const {accountId, data, isBankRecord} = defineProps(["accountId", "data", "isBankRecord"]);
 
 const initialFormValues = (data === null) ? {
+    nameValue: "",
     monthValue: 1,
     dayValue: 1,
     yearValue: 0,
-    amountValue: 0,
-    nameValue: "",
+    dollarsValue: 0,
+    centsValue: 0,
 } : {
+    nameValue: data.name,
     monthValue: data.dateObj.monthValue,
     dayValue: data.dateObj.dayValue,
     yearValue: data.dateObj.yearValue,
-    amountValue: data.amount,
-    nameValue: data.name,
+    dollarsValue: getDollarsValue(data.amount),
+    centsValue: getCentsValue(data.amount),
 };
 
 const monthNameValue = ref(monthNameFromNumber(initialFormValues.monthValue));
 const dayValue = ref(initialFormValues.dayValue);
 const yearValue = ref(initialFormValues.yearValue);
-const amountValue = ref(initialFormValues.amountValue);
 const nameValue = ref(initialFormValues.nameValue);
+const dollarsValue = ref(initialFormValues.dollarsValue);
+const centsValue = ref(initialFormValues.centsValue);
 
 const daysInMonth = computed(() => daysPerMonth(monthNameValue.value, yearValue.value));
 
@@ -41,7 +45,7 @@ function toItem() {
         yearValue: yearValue.value,
         monthValue: monthNames.indexOf(monthNameValue.value) + 1,
         dayValue: dayValue.value,
-        amount: amountValue.value,
+        amount: getAmountValue(dollarsValue.value, centsValue.value),
         name: nameValue.value,
     };
 }
@@ -108,75 +112,62 @@ function confirmAction() {
 </script>
 
 <template>
-    <h1 class="libre-baskerville-regular RecordTransactionForm-header">{{ (data === null ? "Create" : "Edit") + (isBankRecord ? " Bank Record" : " Financial Transaction") }}</h1>
-    <div class="RecordTransactionForm-input-line">
-        <p class="ubuntu-regular">Name:</p>
-        <input class="happy-monkey-regular RecordTransactionForm-name-input" v-model="nameValue">
-    </div>
-    <div class="RecordTransactionForm-input-line">
-        <p class="ubuntu-regular">Date:</p>
-        <select class="happy-monkey-regular RecordTransactionForm-month-input" v-model="monthNameValue">
-            <option v-for="monthName of monthNames" :key="monthName" class="happy-monkey-regular">{{ monthName }}</option>
-        </select>
-        <input class="happy-monkey-regular RecordTransactionForm-day-input" type="number" v-model="dayValue" min="1" :max="daysInMonth">
-        <input class="happy-monkey-regular RecordTransactionForm-year-input" type="number" v-model="yearValue">
-    </div>
-    <div class="RecordTransactionForm-input-line">
-        <p class="ubuntu-regular">Amount ($):</p>
-        <input class="happy-monkey-regular RecordTransactionForm-amount-input" v-model="amountValue">
-    </div>
-    <div class="RecordTransactionForm-buttons">
-        <button class="ubuntu-regular RecordTransactionForm-confirm-button" @click="confirmAction">Confirm</button>
-        <button class="ubuntu-regular" @click="returnAction">Cancel</button>
+    <h1 class="libre-baskerville-regular">{{ (data === null ? "Create" : "Edit") + (isBankRecord ? " Record" : " Transaction") }}</h1>
+    <div id="RecordTransactionForm-form">
+        <label for="RecordTransactionForm-name-input" class="ubuntu-regular">Name</label>
+        <div class="RecordTransactionForm-input-line">
+            <input class="ubuntu-regular" id="RecordTransactionForm-name-input" v-model="nameValue">
+        </div>
+        <p class="ubuntu-regular">Date</p>
+        <div class="RecordTransactionForm-input-line">
+            <select class="ubuntu-regular" id="RecordTransactionForm-month-input" v-model="monthNameValue">
+                <option v-for="monthName of monthNames" :key="monthName" class="ubuntu-regular">{{ monthName }}</option>
+            </select>
+            <input class="ubuntu-regular" id="RecordTransactionForm-day-input" type="number" v-model="dayValue" min="1" :max="daysInMonth">
+            <input class="ubuntu-regular" id="RecordTransactionForm-year-input" type="number" v-model="yearValue">
+        </div>
+        <p class="ubuntu-regular">Amount ($)</p>
+        <div class="RecordTransactionForm-input-line">
+            <input class="ubuntu-regular" type="number" id="RecordTransactionForm-dollar-input" v-model="dollarsValue"/>
+            <p class="ubuntu-regular">.</p>
+            <input class="ubuntu-regular" type="number" id="RecordTransactionForm-cents-input" v-model="centsValue" min="0" max="99"/>
+        </div>
+        <div id="RecordTransactionForm-buttons">
+            <input class="btn btn-lg btn-primary happy-monkey-regular" type="submit" value="Confirm" @click="confirmAction" />
+            <a class="btn btn-lg btn-link happy-monkey-regular" @click="returnAction">Cancel</a>
+        </div>
     </div>
 </template>
 
 <style scoped>
-.RecordTransactionForm-header {
-  text-align: center;
-  text-decoration: underline;
-  margin-bottom: 1rem;
-}
 .RecordTransactionForm-input-line {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    margin-bottom: 0.5rem;
+    align-items: stretch;
+    margin-bottom: 0.5em;
 }
-.RecordTransactionForm-name-input {
-    width: 14em;
-    margin-left: 1rem;
+#RecordTransactionForm-name-input {
+    width: 100%;
 }
-.RecordTransactionForm-month-input {
-    margin-left: 1rem;
+#RecordTransactionForm-month-input {
+    width: 60%;
 }
-.RecordTransactionForm-day-input {
-    width: 3em;
-    margin-left: 0.5rem;
+#RecordTransactionForm-day-input {
+    width: 15%;
 }
-.RecordTransactionForm-year-input {
-    width: 5em;
-    margin-left: 0.5rem;
+#RecordTransactionForm-year-input {
+    width: 25%;
 }
-.RecordTransactionForm-amount-input {
-    width: 10em;
-    margin-left: 1rem;
+#RecordTransactionForm-dollar-input {
+    width: 75%;
 }
-.RecordTransactionForm-buttons button {
-    background-color: white;
-    border-width: 0px;
+#RecordTransactionForm-cents-input {
+    width: 25%;
 }
-.RecordTransactionForm-buttons button:hover {
-    text-decoration: underline;
-    cursor: pointer;
-}
-.RecordTransactionForm-buttons {
+#RecordTransactionForm-buttons {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: 1rem;
-}
-.RecordTransactionForm-confirm-button {
-    color: #050;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 1em;
 }
 </style>

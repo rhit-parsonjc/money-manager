@@ -61,8 +61,10 @@ function loadData() {
 </script>
 
 <template>
-    <h1 class="libre-baskerville-regular BankRecordsView-header">Bank Records</h1>
-    <a @click="goToCreateRecordPage" class="ubuntu-regular BankRecordsView-add-record">Add New Bank Record</a>
+    <h1 class="libre-baskerville-regular BankRecordsView-header">Records</h1>
+    <div id="BankRecordsView-create-button">
+        <button class="btn btn-primary btn-lg happy-monkey-regular" @click="goToCreateRecordPage">Create Record</button>
+    </div>
     <DateFilter @applyFilter="reloadData" />
     <DataMessages :retrievalStatus="dataStore.dataStatus"
         loadingMessage="Loading Records..." errorMessage="Could Not Load Records">
@@ -77,16 +79,10 @@ function loadData() {
 </template>
 
 <style scoped>
-.BankRecordsView-header {
-    text-align: center;
-    text-decoration: underline;
-    margin-bottom: 1rem;
-}
-.BankRecordsView-add-record {
-    text-decoration: none;
-    color: #050;
-    display: block;
-    text-align: center;
-    margin-bottom: 0.5rem;
+#BankRecordsView-create-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.5em;
 }
 </style>

@@ -19,7 +19,7 @@ function goToAccountPage() {
 
 <template>
     <li>
-        <a @click="goToAccountPage">
+        <a class="ubuntu-regular" @click="goToAccountPage">
             {{ account.name }}
         </a>
     </li>

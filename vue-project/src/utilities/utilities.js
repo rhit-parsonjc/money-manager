@@ -8,4 +8,28 @@ function formatCurrency(value) {
   return `${signString}$${dollars}.${centsTensDigit}${centsOnesDigit}`
 }
 
-export { formatCurrency }
+function getDollarsValue(amountValue) {
+  if (amountValue < 0) {
+    return -getDollarsValue(-amountValue)
+  } else {
+    return (amountValue - (amountValue % 100)) / 100
+  }
+}
+
+function getCentsValue(amountValue) {
+  if (amountValue < 0) {
+    return getCentsValue(-amountValue)
+  } else {
+    return amountValue % 100
+  }
+}
+
+function getAmountValue(dollarsValue, centsValue) {
+  if (dollarsValue < 0) {
+    return dollarsValue * 100 - centsValue
+  } else {
+    return dollarsValue * 100 + centsValue
+  }
+}
+
+export { formatCurrency, getDollarsValue, getCentsValue, getAmountValue }

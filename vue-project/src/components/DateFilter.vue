@@ -69,8 +69,8 @@ function getCriterionInfo() {
 
 <template>
     <div class="DateFilter-filter">
-        <p class="ubuntu-regular">Filter By:</p>
-        <select class="ubuntu-regular" v-model="criterionTypeValue">
+        <label for="DateFilter-filter-type" class="ubuntu-regular">Filter By:</label>
+        <select id="DateFilter-filter-type" class="ubuntu-regular" v-model="criterionTypeValue">
             <option key="None" class="ubuntu-regular">None</option>
             <option key="Year" class="ubuntu-regular">Year</option>
             <option key="Month" class="ubuntu-regular">Month</option>
@@ -79,7 +79,7 @@ function getCriterionInfo() {
         <input type="number" class="ubuntu-regular DateFilter-year-input" v-model="yearValue" v-if="criterionTypeValue === 'Year'">
         <input type="month" class="ubuntu-regular" v-model="monthValue" v-if="criterionTypeValue === 'Month'">
         <input type="date" class="ubuntu-regular" v-model="dayValue" v-if="criterionTypeValue === 'Day'">
-        <button class="ubuntu-regular DateFilter-apply-filter" @click="$emit('applyFilter', getCriterionInfo())" :disabled="criterionInvalid">Apply Filter</button>
+        <button class="btn btn-lg btn-secondary ubuntu-regular DateFilter-apply-filter" @click="$emit('applyFilter', getCriterionInfo())" :disabled="criterionInvalid">Apply Filter</button>
     </div>
 </template>
 
@@ -98,8 +98,5 @@ function getCriterionInfo() {
 }
 .DateFilter-year-input {
     width: 5em;
-}
-.DateFilter-apply-filter {
-    background-color: white;
 }
 </style>

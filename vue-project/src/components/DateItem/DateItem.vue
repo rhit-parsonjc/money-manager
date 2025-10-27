@@ -2,71 +2,26 @@
 /*
 * DateItem represents either a DateItemAndRecords or a DateItemAndTransactions
 */
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-
-import useDataStore from '@/store/DataStore';
 
 import BankRecord from '../RecordTransaction/BankRecord.vue';
 import FinancialTransaction from '../RecordTransaction/FinancialTransaction.vue';
 import { formatCurrency } from '@/utilities/utilities';
 
-const dataStore = useDataStore();
 const router = useRouter();
 
 const { accountId, data, displayBankRecords } = defineProps(["accountId", "data", "displayBankRecords"]);
-const isEditing = ref(false);
 
 const amount = displayBankRecords ? data.amount : null;
-const hasAmount = amount !== null;
-const amountValue = ref(amount);
 
-function beginAddingOrEditing() {
-    isEditing.value = true;
-}
-
-function confirmAddOrEdit() {
-    const newAmount = {
-        yearValue: data.dateObj.yearValue,
-        monthValue: data.dateObj.monthValue,
-        dayValue: data.dateObj.dayValue,
-        amount: amountValue.value,
-    };
-    if (hasAmount) {
-        dataStore
-            .updateDateAmountAsync(newAmount.year, newAmount.month, newAmount.day, newAmount.amount)
-            .then(dataStore.resetData)
-            .catch(err => {
-                if (err === 'Unauthorized') {
-                    router.push('/');
-                }
-            });
-    } else {
-        dataStore
-            .createDateAmountAsync(newAmount)
-            .then(dataStore.resetData)
-            .catch(err => {
-                if (err === 'Unauthorized') {
-                    router.push('/');
-                }
-            });
-    }
-}
-
-function clearAmount() {
+function goToDateAmountCreatePage() {
     const {yearValue, monthValue, dayValue} = data.dateObj;
-    dataStore
-        .deleteDateAmountAsync(yearValue, monthValue, dayValue)
-        .then(dataStore.resetData)
-        .catch(err => {
-            if (err === 'Unauthorized') {
-                router.push('/');
-            }
-        });
+    return router.push(`/accounts/${accountId}/amounts/${yearValue}/${monthValue}/${dayValue}/create`);
 }
 
-function cancelAddOrEdit() {
-    isEditing.value = false;
+function goToDateAmountUpdatePage() {
+    const {yearValue, monthValue, dayValue} = data.dateObj;
+    return router.push(`/accounts/${accountId}/amounts/${yearValue}/${monthValue}/${dayValue}/update`)
 }
 </script>
 
@@ -77,19 +32,16 @@ function cancelAddOrEdit() {
             'DateItem-record-header': displayBankRecords,
             'DateItem-transaction-header': !displayBankRecords
         }">
-            <h2 class="happy-monkey-regular DateItem-header-text">
+            <h2 class="ubuntu-regular DateItem-header-text">
                 {{data.dateObj.format()}}
-                {{ hasAmount ? ("(" + formatCurrency(amount) + ")") : ""}}
+                {{ amount !== null ? ("(" + formatCurrency(amount) + ")") : ""}}
             </h2>
-            <button class="ubuntu-regular" @click="beginAddingOrEditing" v-if="displayBankRecords && !isEditing">
-                {{ hasAmount ? "Edit" : "Add" }}
+            <button class="btn btn-primary btn-large happy-monkey-regular" @click="goToDateAmountCreatePage" v-if="displayBankRecords && amount === null">
+                Add Amount
             </button>
-            <button class="ubuntu-regular" @click="clearAmount" v-if="hasAmount && displayBankRecords && !isEditing">
-                Clear
+            <button class="btn btn-primary btn-large happy-monkey-regular" @click="goToDateAmountUpdatePage" v-if="displayBankRecords && amount !== null">
+                Edit Amount
             </button>
-            <input class="happy-monkey-regular DateItem-amount-input" type="number" v-model="amountValue" v-if="displayBankRecords && isEditing">
-            <button class="ubuntu-regular" @click="confirmAddOrEdit" v-if="displayBankRecords && isEditing">Confirm</button>
-            <button class="ubuntu-regular" @click="cancelAddOrEdit" v-if="displayBankRecords && isEditing">Cancel</button>
         </div>
         <ul class="DateItem-items" v-if="displayBankRecords && data.bankRecords.length > 0">
             <BankRecord
@@ -112,39 +64,17 @@ function cancelAddOrEdit() {
 
 <style scoped>
 .DateItem-header {
-    padding: 0.5rem;
-    margin: 0rem 0rem 0.25rem 0rem;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+    padding: 0.5em;
 }
-.DateItem-header * {
-    margin-right: 0.5rem;
-}
-.DateItem-header *:first-child {
-    margin-right: 1rem;
-}
-.DateItem-header *:last-child {
-    margin-right: 0rem;
-}
-.DateItem-record-header, .DateItem-record-header * {
+.DateItem-record-header {
     background-color: #0c0;
 }
-.DateItem-record-header button:focus {
-    background-color: #050;
-}
-.DateItem-transaction-header, .DateItem-transaction-header * {
+.DateItem-transaction-header {
     background-color: #0cc;
-}
-.DateItem-transaction-header button:focus {
-    background-color: #055;
-}
-.DateItem-amount-input {
-    width: 7em;
 }
 .DateItem-items {
     list-style-type: none;
-    padding-left: 2rem;
-    margin-bottom: 1rem;
+    padding-left: 2em;
+    margin-bottom: 1em;
 }
 </style>

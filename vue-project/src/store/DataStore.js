@@ -356,6 +356,16 @@ const useDataStore = defineStore('data', {
       ])
     },
 
+    loadDateAmountsDuringDayAsync(accountId, year, month, day) {
+      return this.loadDataAsync([
+        {
+          name: 'dateAmounts',
+          relativeUrl: `/dateamounts/${accountId}?year=${year}&month=${month}&day=${day}`,
+          mapFunction: toDateAmountModels,
+        },
+      ])
+    },
+
     loadBankRecordsAndDateAmountsAsync(accountId) {
       return this.loadDataAsync([
         {
@@ -618,7 +628,7 @@ const useDataStore = defineStore('data', {
     createDateAmountAsync(accountId, dateAmount) {
       console.log('Create Date Amount', { dateAmount })
       return modifyDataAsync(
-        `/dateamount/${accountId}`,
+        `/dateamounts/${accountId}`,
         dateAmount,
         this.expireData,
         authenticatedPostAsync,
