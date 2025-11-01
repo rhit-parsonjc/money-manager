@@ -5,11 +5,13 @@ const { accountId, yearValue, monthValue, dayValue } = defineProps(["accountId",
 </script>
 
 <template>
-    <DateAmountForm
-        :accountId="accountId"
-        :yearValue="yearValue"
-        :monthValue="monthValue"
-        :dayValue="dayValue"
-        :amountValue="null"
-    />
+    <div class="container-fluid p-3">
+        <DateAmountForm
+            :accountId="accountId"
+            :yearValue="yearValue"
+            :monthValue="monthValue"
+            :dayValue="dayValue"
+            :amountValue="null"
+        />
+    </div>
 </template>

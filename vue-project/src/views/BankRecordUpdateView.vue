@@ -27,8 +27,10 @@ watch(() => dataStore.dataStatus,
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-        loadingMessage="Loading Record..." errorMessage="Could Not Load Record">
-        <BankRecordForm :accountId="accountId" :record="dataStore.data.bankRecord"/>
-    </DataMessages>
+    <div class="container-fluid p-3">
+        <DataMessages :retrievalStatus="dataStore.dataStatus"
+            loadingMessage="Loading Record..." errorMessage="Could Not Load Record">
+            <BankRecordForm :accountId="accountId" :record="dataStore.data.bankRecord"/>
+        </DataMessages>
+    </div>
 </template>

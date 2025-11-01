@@ -46,28 +46,28 @@ function goToEditAccountPage() {
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-    loadingMessage="Loading Account..." errorMessage="Could Not Load Accounts">
-        <h1 class="libre-baskerville-regular">{{ dataStore.data.account.name }}</h1>
-        <div id="AccountView-buttons">
-            <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToRecordsPage">View Records</a>
-            <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToTransactionsPage">View Transactions</a>
-            <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToAccountsPage">View Accounts</a>
-            <button class="btn btn-primary btn-lg happy-monkey-regular" @click="goToEditAccountPage">Edit Account</button>
+    <div class="container-fluid p-3">
+        <DataMessages :retrievalStatus="dataStore.dataStatus"
+        loadingMessage="Loading Account..." errorMessage="Could Not Load Accounts">
+        <div class="row m-0 mb-3">
+            <h1 class="libre-baskerville-regular text-center p-0">{{ dataStore.data.account.name }}</h1>
         </div>
-    </DataMessages>
+        <div class="row m-0 justify-content-center">
+            <div class="col-sm-5 col-md-4 p-0 mb-3 me-sm-5">
+                <button class="btn btn-primary btn-lg happy-monkey-regular" @click="goToEditAccountPage">Edit Account</button>
+            </div>
+            <div class="col-sm-5 col-md-4 p-0 mb-3">
+                <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToAccountsPage">View Accounts</a>
+            </div>
+        </div>
+        <div class="row m-0 justify-content-center">
+            <div class="col-sm-5 col-md-4 p-0 mb-3 me-sm-5">
+                <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToRecordsPage">View Records</a>
+            </div>
+            <div class="col-sm-5 col-md-4 p-0">
+                <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToTransactionsPage">View Transactions</a>
+            </div>
+        </div>
+        </DataMessages>
+    </div>
 </template>
-
-<style scoped>
-#AccountView-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-#AccountView-buttons * {
-    margin-bottom: 1em;
-}
-#AccountView-buttons *:last-child {
-    margin-bottom: 0em;
-}
-</style>

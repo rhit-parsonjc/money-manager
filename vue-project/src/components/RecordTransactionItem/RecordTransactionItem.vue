@@ -45,58 +45,48 @@ function attachOrDetach() {
 <template>
     <div :class="{
         'RecordTransactionItem-box': true,
+        'card': true,
         'RecordTransactionItem-record': isBankRecord,
         'RecordTransactionItem-transaction': !isBankRecord,
     }">
         <div class="RecordTransactionItem-main-item" @click="gotoLink">
-            <p class="ubuntu-regular">{{ data.name }}</p>
-            <p class="ubuntu-regular">{{ data.dateObj.format() }}</p>
-            <p class="ubuntu-regular">{{ formatCurrency(data.amount) }}</p>
+            <h2 class="ubuntu-regular card-title">{{ data.name }}</h2>
+            <p class="ubuntu-regular card-text">{{ data.dateObj.format() }}</p>
+            <p class="ubuntu-regular card-text">{{ formatCurrency(data.amount) }}</p>
         </div>
         <div class="RecordTransactionItem-icon" @click="attachOrDetach">
-            <p :class="{
-                'ubuntu-regular': true,
-                'RecordTransactionItem-record-icon': isBankRecord,
-                'RecordTransactionItem-transaction-icon': !isBankRecord,
-            }">
+            <button class="btn btn-primary btn-lg ubuntu-regular">
                 {{ isAttached ? "Detach" : "Attach"}}
-            </p>
+            </button>
         </div>
     </div>
 </template>
 
 <style scoped>
-.RecordTransactionItem-box {
-    border: 1px solid black;
-    padding: 0.5em;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-.RecordTransactionItem-main-item, .RecordTransactionItem-icon {
-    cursor: pointer;
-}
 .RecordTransactionItem-record {
     background-color: #0c0;
-}
-.RecordTransactionItem-record:hover {
-    background-color: #0f0;
 }
 .RecordTransactionItem-transaction {
     background-color: #0cc;
 }
+.RecordTransactionItem-record:hover {
+    background-color: #0f0;
+}
 .RecordTransactionItem-transaction:hover {
     background-color: #0ff;
 }
-.RecordTransactionItem-record-icon {
-    color: #050;
+.RecordTransactionItem-record button {
+    background-color: #050;
 }
-.RecordTransactionItem-transaction-icon {
-    color: #055;
+.RecordTransactionItem-transaction button {
+    background-color: #055;
 }
-.RecordTransactionItem-record-icon:hover,
-.RecordTransactionItem-transaction-icon:hover {
-    text-decoration: underline;
+.RecordTransactionItem-box {
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+}
+.RecordTransactionItem-box:hover {
+    cursor: pointer;
 }
 </style>

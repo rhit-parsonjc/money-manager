@@ -7,17 +7,15 @@
 <style>
 h1 {
     font-size: 26pt;
-    text-align: center;
-    margin-bottom: 1rem;
 }
 h2 {
     font-size: 22pt;
 }
-.App-main-content {
-    padding: 0.5rem;
-}
 a, p, label, input, select, option {
     font-size: 18pt;
+}
+.btn, input, select {
+    width: 100%;
 }
 .btn-primary {
     background-color: #050;
@@ -33,8 +31,8 @@ a, p, label, input, select, option {
 .btn-link:hover {
     background-color: #ccc;
 }
-input[type="text"], input[type="password"] {
-    width: 100%;
+a:hover {
+    cursor: pointer;
 }
 /*
 * {

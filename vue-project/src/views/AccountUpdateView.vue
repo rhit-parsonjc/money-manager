@@ -27,8 +27,10 @@ watch(() => dataStore.dataStatus,
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-        loadingMessage="Loading Account..." errorMessage="Could Not Load Account">
-        <AccountForm :account="dataStore.data.account" />
-    </DataMessages>
+    <div class="container-fluid p-3">
+        <DataMessages :retrievalStatus="dataStore.dataStatus"
+            loadingMessage="Loading Account..." errorMessage="Could Not Load Account">
+            <AccountForm :account="dataStore.data.account" />
+        </DataMessages>
+    </div>
 </template>

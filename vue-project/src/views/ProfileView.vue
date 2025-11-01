@@ -13,17 +13,17 @@ function goToAccountsPage() {
 </script>
 
 <template>
-    <h1 class="libre-baskerville-regular">Profile</h1>
-    <div id="ProfileView-buttons">
-        <button class="btn btn-link btn-lg happy-monkey-regular" @click="goToAccountsPage">View Accounts</button>
+    <div class="container-fluid p-3">
+        <div class="row m-0 mb-3">
+            <h1 class="libre-baskerville-regular text-center p0">Profile</h1>
+        </div>
+        <div class="row m-0 mb-3 justify-content-center">
+            <div class="col-sm-6 col-md-4">
+                <button class="btn btn-link btn-lg happy-monkey-regular" @click="goToAccountsPage">View Accounts</button>
+            </div>
+        </div>
+        <div class="row m-0">
+            <p><span class="fw-bold">Username:</span> {{ username }}</p>
+        </div>
     </div>
-    <p>Username: {{ username }}</p>
 </template>
-
-<style scoped>
-#ProfileView-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-</style>

@@ -23,7 +23,7 @@ const dataModel = computed(() => {
 
 <template>
     <div v-if="isBankRecord">
-        <h2 class="libre-baskerville-regular">Detach Financial Transactions</h2>
+        <h2 class="libre-baskerville-regular">Attached Transaction(s)</h2>
         <FinancialTransactionItem
             v-for="financialTransaction of dataModel.financialTransactions"
             class="AttachRecordTransactions-item"
@@ -33,7 +33,7 @@ const dataModel = computed(() => {
             :transaction="financialTransaction"
             :isAttached="true"
         />
-        <h2 class="libre-baskerville-regular AttachRecordTransactions-attach-header">Attach Financial Transactions</h2>
+        <h2 class="libre-baskerville-regular AttachRecordTransactions-attach-header">Other Transaction(s)</h2>
         <FinancialTransactionItem
             v-for="financialTransaction of dataModel.otherFinancialTransactions"
             class="AttachRecordTransactions-item"
@@ -45,7 +45,7 @@ const dataModel = computed(() => {
         />
     </div>
     <div v-else>
-        <h2 class="libre-baskerville-regular">Detach Bank Records</h2>
+        <h2 class="libre-baskerville-regular">Attached Record(s)</h2>
         <BankRecordItem
             v-for="bankRecord of dataModel.bankRecords"
             class="AttachRecordTransactions-item"
@@ -55,7 +55,7 @@ const dataModel = computed(() => {
             :record="bankRecord"
             :isAttached="true"
         />
-        <h2 class="libre-baskerville-regular AttachRecordTransactions-attach-header">Attach Bank Records</h2>
+        <h2 class="libre-baskerville-regular AttachRecordTransactions-attach-header">Other Record(s)</h2>
         <BankRecordItem
             v-for="bankRecord of dataModel.otherBankRecords"
             class="AttachRecordTransactions-item"

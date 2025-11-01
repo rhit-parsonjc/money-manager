@@ -16,18 +16,18 @@ const router = useRouter();
 
 const { accountId, data, isBankRecord } = defineProps(["accountId", "data", "isBankRecord"]);
 
-function editItem() {
+function goToEditItemPage() {
     dataStore.expireData();
     const url = `/accounts/${accountId}` + (isBankRecord ? `/records/${data.id}/update` : `/transactions/${data.id}/update`);
     router.push(url).then(dataStore.resetData);
 }
 
-function goBack() {
+function goToListPage() {
     dataStore.expireData();
     const url = `/accounts/${accountId}` + (isBankRecord ? '/records' : '/transactions');
     router.push(url).then(dataStore.resetData);
 }
-
+/*
 function deleteItem() {
     if (isBankRecord)
         dataStore.deleteBankRecordAsync(accountId, data.id)
@@ -48,8 +48,9 @@ function deleteItem() {
                 }
             });
 }
+*/
 
-function attachSubitems() {
+function goToAttachSubitemsPage() {
     dataStore.expireData();
     if (isBankRecord)
         router.push(`/accounts/${accountId}/records/${data.id}/transactions`)
@@ -112,6 +113,7 @@ function loadFile(id, name) {
     });
 }
 
+/*
 function deleteFile(id) {
     dataStore.deleteFileAttachmentAsync(id)
         .then(dataStore.resetData)
@@ -121,89 +123,64 @@ function deleteFile(id) {
             }
         });
 }
+*/
 
 </script>
 
 <template>
-    <p class="happy-monkey-regular">Name: {{ data.name }}</p>
-    <p class="happy-monkey-regular">Date: {{ data.dateObj.format() }}</p>
-    <p class="happy-monkey-regular">Amount: {{ formatCurrency(data.amount) }}</p>
-    <div class="RecordTransactionDetails-buttons">
-        <button class="ubuntu-regular RecordTransactionDetails-edit-button" @click="editItem">Edit</button>
-        <button class="ubuntu-regular" @click="goBack">Back</button>
-        <button class="ubuntu-regular RecordTransactionDetails-delete-button" @click="deleteItem">Delete</button>
+    <div class="row m-0">
+        <p class="ubuntu-regular"><span class="fw-bold">Name:</span> {{ data.name }}</p>
     </div>
-    <div v-if="isBankRecord">
-        <h2 class="happy-monkey-regular">Financial Transactions</h2>
-        <FinancialTransactionItem v-for="financialTransaction of data.financialTransactions" :key="financialTransaction.id" :accountId="accountId" :recordId="data.id" :transaction="financialTransaction" :isAttached="true" class="RecordTransactionDetails-item"/>
+    <div class="row m-0">
+        <p class="ubuntu-regular"><span class="fw-bold">Date:</span> {{ data.dateObj.format() }}</p>
     </div>
-    <div v-else>
-        <h2 class="happy-monkey-regular">Bank Records</h2>
-        <BankRecordItem v-for="bankRecord of data.bankRecords" :key="bankRecord.id" :accountId="accountId" :transactionId="data.id" :record="bankRecord" :isAttached="true" class="RecordTransactionDetails-item"/>
+    <div class="row m-0">
+        <p class="ubuntu-regular"><span class="fw-bold">Amount:</span> {{ formatCurrency(data.amount) }}</p>
     </div>
-    <div class="RecordTransactionDetails-link-buttons">
-        <button class="ubuntu-regular" @click="attachSubitems">Attach</button>
+    <div class="row m-0 justify-content-start mb-5">
+        <div class="col-sm-5 col-md-3 p-0 me-sm-5 mb-3 mb-sm-0">
+            <button class="btn btn-primary btn-lg happy-monkey-regular" @click="goToEditItemPage">Edit {{ isBankRecord ? "Record" : "Transaction" }}</button>
+        </div>
+        <div class="col-sm-5 col-md-3 p-0">
+            <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToListPage">View {{ isBankRecord ? "Records" : "Transactions" }}</a>
+        </div>
     </div>
-    <h2 class="happy-monkey-regular">Attached Files</h2>
-    <ul class="RecordTransactionDetails-files">
-        <li v-for="fileAttachment of data.fileAttachments" :key="fileAttachment.id" class="RecordTransactionDetails-file-line">
-            <a class="happy-monkey-regular" @click="loadFile(fileAttachment.id, fileAttachment.name)">{{ fileAttachment.name }}</a>
-            <button class="ubuntu-regular RecordTransactionDetails-delete-file-button" @click="deleteFile(fileAttachment.id)">Delete</button>
-        </li>
-    </ul>
-    <input type="file" class="ubuntu-regular" id="RecordTransactionDetails-file-input">
-    <button class="ubuntu-regular" @click="uploadFile">Upload</button>
+    <div class="row m-0 mb-2">
+        <h2 class="libre-baskerville-regular text-center p-0">{{ isBankRecord ? "Transactions" : "Records" }}</h2>
+    </div>
+    <div class="row m-0" v-if="isBankRecord">
+        <FinancialTransactionItem v-for="financialTransaction of data.financialTransactions" :key="financialTransaction.id" :accountId="accountId" :recordId="data.id" :transaction="financialTransaction" :isAttached="true" class="mb-2"/>
+    </div>
+    <div class="row m-0" v-else>
+        <BankRecordItem v-for="bankRecord of data.bankRecords" :key="bankRecord.id" :accountId="accountId" :transactionId="data.id" :record="bankRecord" :isAttached="true" class="mb-2"/>
+    </div>
+    <div class="row justify-content-center m-0 mb-5">
+        <div class="col-sm-8 col-md-6 p-0">
+            <button class="btn btn-primary btn-lg happy-monkey-regular" @click="goToAttachSubitemsPage">Attach/Detach {{ isBankRecord ? "Transactions" : "Records" }}</button>
+        </div>
+    </div>
+    <div class="row m-0 mb-2">
+        <h2 class="libre-baskerville-regular text-center p-0">Files</h2>
+    </div>
+    <div class="row m-0 mb-3">
+        <ul id="RecordTransactionDetails-files" class="p-0 m-0">
+            <li v-for="fileAttachment of data.fileAttachments" :key="fileAttachment.id" class="RecordTransactionDetails-file-line">
+                <a class="happy-monkey-regular" @click="loadFile(fileAttachment.id, fileAttachment.name)">{{ fileAttachment.name }}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="row m-0 justify-content-between">
+        <div class="col-sm-7 col-lg-9 p-0 mb-2 mb-sm-0">
+            <input type="file" class="ubuntu-regular">
+        </div>
+        <div class="col-sm-4 col-lg-2 p-0">
+            <button class="btn btn-secondary btn-lg happy-monkey-regular" @click="uploadFile">Upload File</button>
+        </div>
+    </div>
 </template>
 
 <style scoped>
-.RecordTransactionDetails-buttons button,
-.RecordTransactionDetails-link-buttons button {
-    background-color: white;
-    font-size: 12pt;
-    border-width: 0px;
-}
-.RecordTransactionDetails-buttons button:hover,
-.RecordTransactionDetails-link-buttons button:hover {
-    text-decoration: underline;
-}
-.RecordTransactionDetails-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-bottom: 2rem;
-    margin-top: 0.5rem;
-}
-.RecordTransactionDetails-item {
-    margin-bottom: 1rem;
-    margin-left: 1rem;
-}
-.RecordTransactionDetails-item:last-child {
-    margin-bottom: 0rem;
-}
-.RecordTransactionDetails-edit-button {
-    color: #050;
-}
-.RecordTransactionDetails-delete-button {
-    color: #c00;
-}
-.RecordTransactionDetails-link-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-bottom: 2rem;
-    margin-top: 1rem;
-}
-.RecordTransactionDetails-files {
-    margin: 0.5em 0em;
+#RecordTransactionDetails-files {
     list-style-type: none;
-    padding-left: 0.5em;
-}
-.RecordTransactionDetails-file-line {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-.RecordTransactionDetails-delete-file-button {
-    margin-left: 1em;
 }
 </style>

@@ -3,7 +3,6 @@ import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import useDataStore, { DataStatus } from '@/store/DataStore';
-import AccountItem from '@/components/AccountItem.vue';
 import DataMessages from '@/components/DataMessages.vue';
 
 const dataStore = useDataStore();
@@ -35,34 +34,35 @@ function goToProfilePage() {
 function goToCreateAccountPage() {
     return router.push("/accounts/create");
 }
+
+function goToAccountPage(accountId) {
+    dataStore.expireData();
+    router.push(`/accounts/${accountId}`).then(dataStore.resetData);
+}
 </script>
 
-<style scoped>
-#AccountsView-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-#AccountsView-buttons * {
-    margin-bottom: 1em;
-}
-#AccountsView-accounts-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-</style>
-
 <template>
-    <h1 class="libre-baskerville-regular">Accounts</h1>
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-        loadingMessage="Loading Accounts..." errorMessage="Could Not Load Accounts">
-        <div id="AccountsView-buttons">
-            <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToProfilePage">View Profile</a>
-            <button class="btn btn-primary btn-lg happy-monkey-regular" @click="goToCreateAccountPage">Create Account</button>
+    <div class="container-fluid p-3">
+        <div class="row m-0 mb-3">
+            <h1 class="libre-baskerville-regular text-center p-0">Accounts</h1>
         </div>
-        <ul id="AccountsView-accounts-list">
-            <AccountItem v-for="account of dataStore.data.accounts" :account="account" :key="account.id"/>
-        </ul>
-    </DataMessages>
+        <DataMessages :retrievalStatus="dataStore.dataStatus"
+            loadingMessage="Loading Accounts..." errorMessage="Could Not Load Accounts">
+            <div class="row justify-content-around m-0 mb-3">
+                <div class="col-sm-5 col-md-4 p-0 mb-3 mb-sm-0">
+                    <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToProfilePage">View Profile</a>
+                </div>
+                <div class="col-sm-5 col-md-4 p-0">
+                    <button class="btn btn-primary btn-lg happy-monkey-regular" @click="goToCreateAccountPage">Create Account</button>
+                </div>
+            </div>
+            <div class="row m-0">
+                <div class="list-group">
+                    <a class="ubuntu-regular list-group-item list-group-item-action" v-for="account of dataStore.data.accounts" :key="account.id" @click="goToAccountPage(account.id)">
+                        {{ account.name }}
+                    </a>
+                </div>
+            </div>
+        </DataMessages>
+    </div>
 </template>

@@ -52,14 +52,20 @@ function loadData() {
     });
 }
 
+function goToRecordPage() {
+    dataStore.expireData();
+    router.push(`/accounts/${accountId}/records/${recordId}`).then(dataStore.resetData);
+}
+
 </script>
 
 <template>
     <DataMessages :retrievalStatus="dataStore.dataStatus"
     loadingMessage="Loading Record and Transactions..."
     errorMessage="Could Not Load Record or Transactions...">
-        <h1 class="libre-baskerville-regular AttachTransactionsView-header">{{ dataStore.data.bankRecord.name }}</h1>
-        <DateFilter @applyFilter="reloadData" class="AttachTransactionsView-filter"/>
+        <h1 class="libre-baskerville-regular">{{ dataStore.data.bankRecord.name }}</h1>
+        <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToRecordPage">View Record</a>
+        <DateFilter @applyFilter="reloadData" id="AttachTransactionsView-filter"/>
         <AttachFinancialTransactions
             :accountId="accountId"
             :bankRecord="dataStore.data.bankRecord"
@@ -68,13 +74,7 @@ function loadData() {
 </template>
 
 <style scoped>
-
-.AttachTransactionsView-header {
-    text-align: center;
-    text-decoration: underline;
-    margin-bottom: 1rem;
-}
-.AttachTransactionsView-filter {
+#AttachTransactionsView-filter {
     margin-bottom: 2rem;
 }
 </style>

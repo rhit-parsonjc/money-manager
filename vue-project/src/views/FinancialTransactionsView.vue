@@ -57,34 +57,50 @@ function loadData() {
         }
     });
 }
+
+function goToRecordsPage() {
+    dataStore.expireData();
+    router.push(`/accounts/${accountId}/records`).then(dataStore.resetData);
+}
+
+function goToAccountsPage() {
+    dataStore.expireData();
+    router.push(`/accounts/${accountId}`).then(dataStore.resetData);
+}
+
 </script>
 
 <template>
-    <h1 class="libre-baskerville-regular FinancialTransactionsView-header">Financial Transactions</h1>
-    <a @click="goToCreateTransactionPage" class="ubuntu-regular FinancialTransactionsView-add-button">Add New Financial Transaction</a>
-    <DateFilter @applyFilter="reloadData" />
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-        loadingMessage="Loading Transactions..." errorMessage="Could Not Load Transactions">
-        <DateItemAndTransactionsList
-            :accountId="accountId"
-            :financialTransactions="dataStore.data.financialTransactions"
-            :criterionType="criterionType"
-            :criterion="criterion"
-        />
-    </DataMessages>
+    <div class="container-fluid p-3">
+        <div class="row m-0 mb-3">
+            <h1 class="libre-baskerville-regular text-center p-0">Transactions</h1>
+        </div>
+        <div class="row justify-content-around m-0 mb-4">
+            <div class="col-sm-5 col-md-4 p-0 mb-3">
+                <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToAccountsPage">View Account</a>
+            </div>
+            <div class="col-sm-5 col-md-4 p-0">
+                <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToRecordsPage">View Records</a>
+            </div>
+        </div>
+        <div class="row m-0 justify-content-center mb-3">
+            <div class="col-sm-7 col-md-5 p-0">
+                <button class="btn btn-primary btn-lg happy-monkey-regular" @click="goToCreateTransactionPage">Create Transaction</button>
+            </div>
+        </div>
+        <div class="row m-0">
+            <DateFilter @applyFilter="reloadData" />
+        </div>
+        <div class="row m-0">
+            <DataMessages :retrievalStatus="dataStore.dataStatus"
+                loadingMessage="Loading Transactions..." errorMessage="Could Not Load Transactions">
+                <DateItemAndTransactionsList
+                    :accountId="accountId"
+                    :financialTransactions="dataStore.data.financialTransactions"
+                    :criterionType="criterionType"
+                    :criterion="criterion"
+                />
+            </DataMessages>
+        </div>
+    </div>
 </template>
-
-<style scoped>
-.FinancialTransactionsView-header {
-    text-align: center;
-    text-decoration: underline;
-    margin-bottom: 1rem;
-}
-.FinancialTransactionsView-add-button {
-    text-decoration: none;
-    color: #055;
-    display: block;
-    text-align: center;
-    margin-bottom: 0.5rem;
-}
-</style>

@@ -5,5 +5,7 @@ const { accountId } = defineProps(["accountId"]);
 </script>
 
 <template>
-    <FinancialTransactionForm :accountId="accountId" :transaction="null"/>
+    <div class="container-fluid p-3">
+        <FinancialTransactionForm :accountId="accountId" :transaction="null"/>
+    </div>
 </template>

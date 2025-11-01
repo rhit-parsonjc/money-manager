@@ -52,6 +52,11 @@ function loadData() {
     });
 }
 
+function goToTransactionPage() {
+    dataStore.expireData();
+    router.push(`/accounts/${accountId}/transactions/${transactionId}`).then(dataStore.resetData);
+}
+
 </script>
 
 <template>
@@ -59,6 +64,7 @@ function loadData() {
     loadingMessage="Loading Transaction and Records..."
     errorMessage="Could Not Load Transaction or Records...">
         <h1 class="libre-baskerville-regular AttachRecordsView-header">{{ dataStore.data.financialTransaction.name }}</h1>
+        <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToTransactionPage">View Transaction</a>
         <DateFilter @applyFilter="reloadData" class="AttachRecordsView-filter"/>
         <AttachBankRecords
             :accountId="accountId"

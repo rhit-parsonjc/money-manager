@@ -26,14 +26,16 @@ watch(() => dataStore.retrievalStatus,
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-        loadingMessage="Loading Amount..." errorMessage="Could Not Load Amount">
-        <DateAmountForm
-            :accountId="accountId"
-            :yearValue="yearValue"
-            :monthValue="monthValue"
-            :dayValue="dayValue"
-            :amountValue="dataStore.data.dateAmounts[0].amount"
-        />
-    </DataMessages>
+    <div class="container-fluid p-3">
+        <DataMessages :retrievalStatus="dataStore.dataStatus"
+            loadingMessage="Loading Amount..." errorMessage="Could Not Load Amount">
+            <DateAmountForm
+                :accountId="accountId"
+                :yearValue="yearValue"
+                :monthValue="monthValue"
+                :dayValue="dayValue"
+                :amountValue="dataStore.data.dateAmounts[0].amount"
+            />
+        </DataMessages>
+    </div>
 </template>

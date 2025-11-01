@@ -26,11 +26,13 @@ watch(() => dataStore.dataStatus,
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-        loadingMessage="Loading Transaction..." errorMessage="Could Not Load Transaction">
-        <FinancialTransactionForm
-            :accountId="accountId"
-            :transaction="dataStore.data.financialTransaction"
-        />
-    </DataMessages>
+    <div class="container-fluid p-3">
+        <DataMessages :retrievalStatus="dataStore.dataStatus"
+            loadingMessage="Loading Transaction..." errorMessage="Could Not Load Transaction">
+            <FinancialTransactionForm
+                :accountId="accountId"
+                :transaction="dataStore.data.financialTransaction"
+            />
+        </DataMessages>
+    </div>
 </template>

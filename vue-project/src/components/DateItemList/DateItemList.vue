@@ -37,7 +37,7 @@ const dateItems = computed(() => {
 </script>
 
 <template>
-    <ul class="DateItemList-list">
+    <ul class="DateItemList-list p-0">
         <DateItem
             v-for="dateItem of dateItems"
             :accountId="accountId"
@@ -51,7 +51,5 @@ const dateItems = computed(() => {
 <style scoped>
 .DateItemList-list {
     list-style-type: none;
-    padding-left: 0rem;
-    margin: 0.5rem 0rem 0rem 0rem;
 }
 </style>

@@ -9,7 +9,13 @@ const { retrievalStatus, loadingMessage, errorMessage } = defineProps(["retrieva
 </script>
 
 <template>
-    <p class="ubuntu-regular" v-if="retrievalStatus === DataStatus.LOADING">{{ loadingMessage }}</p>
-    <p class="ubuntu-regular" v-else-if="retrievalStatus === DataStatus.ERROR">{{ errorMessage }}</p>
+    <div class="div position-absolute top-50 start-50 translate-middle" v-if="retrievalStatus === DataStatus.LOADING">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">{{ loadingMessage }}</span>
+        </div>
+    </div>
+    <div class="alert alert-info ubuntu-regular" role="alert" v-else-if="retrievalStatus === DataStatus.ERROR">
+        {{ errorMessage }}
+    </div>
     <slot v-else-if="retrievalStatus === DataStatus.LOADED"></slot>
 </template>

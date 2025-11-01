@@ -3,5 +3,7 @@ import AccountForm from '@/components/AccountForm.vue';
 </script>
 
 <template>
-    <AccountForm :account="null" />
+    <div class="container-fluid p-3">
+        <AccountForm :account="null" />
+    </div>
 </template>
