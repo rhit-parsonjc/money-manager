@@ -32,4 +32,20 @@ function getAmountValue(dollarsValue, centsValue) {
   }
 }
 
-export { formatCurrency, getDollarsValue, getCentsValue, getAmountValue }
+function parseDate(dateStr) {
+  const parts = dateStr.split('-')
+  return {
+    year: parseInt(parts[0]),
+    month: parseInt(parts[1]),
+    day: parseInt(parts[2]),
+  }
+}
+
+function dateToStr(yearValue, monthValue, dayValue) {
+  const yearStr = '' + yearValue
+  const monthStr = (monthValue < 10 ? '0' : '') + monthValue
+  const dayStr = (dayValue < 10 ? '0' : '') + dayValue
+  return yearStr + '-' + monthStr + '-' + dayStr
+}
+
+export { formatCurrency, getDollarsValue, getCentsValue, getAmountValue, parseDate, dateToStr }

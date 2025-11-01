@@ -17,26 +17,44 @@ const dataModel = computed(() => {
         return new RecordAndTransactionsModel(item, item.financialTransactions, subitems);
     else
         return new TransactionAndRecordsModel(item, item.bankRecords, subitems);
-})
+});
+
+const attachedItemCount = computed(() => {
+    if (isBankRecord)
+        return item.financialTransactions.length;
+    else
+        return item.bankRecords.length;
+});
+
+const otherItemCount = computed(() => {
+    if (isBankRecord)
+        return subitems.length - item.financialTransactions.length;
+    else
+        return subitems.length - item.bankRecords.length;
+});
 
 </script>
 
 <template>
     <div v-if="isBankRecord">
-        <h2 class="libre-baskerville-regular">Attached Transaction(s)</h2>
+        <div class="row m-0">
+            <h2 class="libre-baskerville-regular text-center p-0">Attached {{ attachedItemCount == 1 ? "Transaction" : "Transactions" }}</h2>
+        </div>
         <FinancialTransactionItem
             v-for="financialTransaction of dataModel.financialTransactions"
-            class="AttachRecordTransactions-item"
+            class="mt-2"
             :key="financialTransaction.id"
             :accountId="accountId"
             :recordId="item.id"
             :transaction="financialTransaction"
             :isAttached="true"
         />
-        <h2 class="libre-baskerville-regular AttachRecordTransactions-attach-header">Other Transaction(s)</h2>
+        <div class="row m-0 mt-3">
+            <h2 class="libre-baskerville-regular text-center p-0">Other {{ otherItemCount == 1 ? "Transaction" : "Transactions" }}</h2>
+        </div>
         <FinancialTransactionItem
             v-for="financialTransaction of dataModel.otherFinancialTransactions"
-            class="AttachRecordTransactions-item"
+            class="mt-2"
             :key="financialTransaction.id"
             :accountId="accountId"
             :recordId="item.id"
@@ -45,20 +63,24 @@ const dataModel = computed(() => {
         />
     </div>
     <div v-else>
-        <h2 class="libre-baskerville-regular">Attached Record(s)</h2>
+        <div class="row m-0">
+            <h2 class="libre-baskerville-regular text-center p-0">Attached {{ attachedItemCount == 1 ? "Record" : "Records" }}</h2>
+        </div>
         <BankRecordItem
             v-for="bankRecord of dataModel.bankRecords"
-            class="AttachRecordTransactions-item"
+            class="mt-2"
             :key="bankRecord.id"
             :accountId="accountId"
             :transactionId="item.id"
             :record="bankRecord"
             :isAttached="true"
         />
-        <h2 class="libre-baskerville-regular AttachRecordTransactions-attach-header">Other Record(s)</h2>
+        <div class="row m-0 mt-3">
+            <h2 class="libre-baskerville-regular text-center p-0">Other {{ otherItemCount == 1 ? "Record" : "Records" }}</h2>
+        </div>
         <BankRecordItem
             v-for="bankRecord of dataModel.otherBankRecords"
-            class="AttachRecordTransactions-item"
+            class="mt-2"
             :key="bankRecord.id"
             :accountId="accountId"
             :transactionId="item.id"
@@ -67,12 +89,3 @@ const dataModel = computed(() => {
         />
     </div>
 </template>
-
-<style scoped>
-.AttachRecordTransactions-attach-header {
-    margin-top: 2rem;
-}
-.AttachRecordTransactions-item {
-    margin-top: 0.5rem;
-}
-</style>

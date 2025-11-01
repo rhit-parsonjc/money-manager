@@ -1,4 +1,5 @@
 <script setup>
+import { parseDate } from '@/utilities/utilities';
 import { ref, computed } from 'vue';
 /*
 * DateFilter represents a filter that specifies a date range to load data from.
@@ -48,19 +49,14 @@ function getCriterionInfo() {
                 criterionType: criterionTypeValue.value,
                 criterion: {
                     year: parseInt(parts[0]),
-                    month: parseInt(parts[1])
+                    month: parseInt(parts[1]),
                 }
             }
         case "Day":
             if (dayValue.value === undefined) return null
-            parts = dayValue.value.split("-");
             return {
                 criterionType: criterionTypeValue.value,
-                criterion: {
-                    year: parseInt(parts[0]),
-                    month: parseInt(parts[1]),
-                    day: parseInt(parts[2])
-                }
+                criterion: parseDate(dayValue.value),
             }
     }
 }

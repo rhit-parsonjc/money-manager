@@ -48,14 +48,21 @@ function attachOrDetach() {
         'card': true,
         'RecordTransactionItem-record': isBankRecord,
         'RecordTransactionItem-transaction': !isBankRecord,
+        'p-3': true,
+        'd-flex': true,
+        'flex-column': true,
+        'align-items-stretch': true,
+        'flex-sm-row': true,
+        'align-items-sm-center': true,
+        'justify-content-sm-between': true,
     }">
-        <div class="RecordTransactionItem-main-item" @click="gotoLink">
+        <div @click="gotoLink">
             <h2 class="ubuntu-regular card-title">{{ data.name }}</h2>
             <p class="ubuntu-regular card-text">{{ data.dateObj.format() }}</p>
             <p class="ubuntu-regular card-text">{{ formatCurrency(data.amount) }}</p>
         </div>
-        <div class="RecordTransactionItem-icon" @click="attachOrDetach">
-            <button class="btn btn-primary btn-lg ubuntu-regular">
+        <div @click="attachOrDetach">
+            <button class="btn btn-primary btn-lg happy-monkey-regular">
                 {{ isAttached ? "Detach" : "Attach"}}
             </button>
         </div>
@@ -80,11 +87,6 @@ function attachOrDetach() {
 }
 .RecordTransactionItem-transaction button {
     background-color: #055;
-}
-.RecordTransactionItem-box {
-    padding: 0.5em;
-    display: flex;
-    flex-direction: column;
 }
 .RecordTransactionItem-box:hover {
     cursor: pointer;

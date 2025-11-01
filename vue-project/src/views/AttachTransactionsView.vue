@@ -60,21 +60,23 @@ function goToRecordPage() {
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-    loadingMessage="Loading Record and Transactions..."
-    errorMessage="Could Not Load Record or Transactions...">
-        <h1 class="libre-baskerville-regular">{{ dataStore.data.bankRecord.name }}</h1>
-        <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToRecordPage">View Record</a>
-        <DateFilter @applyFilter="reloadData" id="AttachTransactionsView-filter"/>
-        <AttachFinancialTransactions
-            :accountId="accountId"
-            :bankRecord="dataStore.data.bankRecord"
-            :financialTransactions="dataStore.data.financialTransactions"/>
-    </DataMessages>
+    <div class="container-fluid p-3">
+        <DataMessages :retrievalStatus="dataStore.dataStatus"
+        loadingMessage="Loading Record and Transactions..."
+        errorMessage="Could Not Load Record or Transactions...">
+            <div class="row m-0 mb-3">
+                <h1 class="libre-baskerville-regular text-center p-0">{{ dataStore.data.bankRecord.name }}</h1>
+            </div>
+            <div class="row justify-content-center m-0 mb-5">
+                <div class="col-sm-4 col-md-3 p-0">
+                    <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToRecordPage">View Record</a>
+                </div>
+            </div>
+            <DateFilter @applyFilter="reloadData" class="mb-3"/>
+            <AttachFinancialTransactions
+                :accountId="accountId"
+                :bankRecord="dataStore.data.bankRecord"
+                :financialTransactions="dataStore.data.financialTransactions"/>
+        </DataMessages>
+    </div>
 </template>
-
-<style scoped>
-#AttachTransactionsView-filter {
-    margin-bottom: 2rem;
-}
-</style>

@@ -60,26 +60,23 @@ function goToTransactionPage() {
 </script>
 
 <template>
-    <DataMessages :retrievalStatus="dataStore.dataStatus"
-    loadingMessage="Loading Transaction and Records..."
-    errorMessage="Could Not Load Transaction or Records...">
-        <h1 class="libre-baskerville-regular AttachRecordsView-header">{{ dataStore.data.financialTransaction.name }}</h1>
-        <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToTransactionPage">View Transaction</a>
-        <DateFilter @applyFilter="reloadData" class="AttachRecordsView-filter"/>
+    <div class="container-fluid p-3">
+        <DataMessages :retrievalStatus="dataStore.dataStatus"
+        loadingMessage="Loading Transaction and Records..."
+        errorMessage="Could Not Load Transaction or Records...">
+        <div class="row m-0 mb-3">
+            <h1 class="libre-baskerville-regular text-center p-0">{{ dataStore.data.financialTransaction.name }}</h1>
+        </div>
+        <div class="row justify-content-center m-0 mb-5">
+            <div class="col-sm-5 col-md-4 p-0">
+                <a class="btn btn-link btn-lg happy-monkey-regular" @click="goToTransactionPage">View Transaction</a>
+            </div>
+        </div>
+        <DateFilter @applyFilter="reloadData" class="mb-3"/>
         <AttachBankRecords
             :accountId="accountId"
             :financialTransaction="dataStore.data.financialTransaction"
             :bankRecords="dataStore.data.bankRecords"/>
-    </DataMessages>
+        </DataMessages>
+    </div>
 </template>
-
-<style scoped>
-.AttachRecordsView-header {
-    text-align: center;
-    text-decoration: underline;
-    margin-bottom: 1rem;
-}
-.AttachRecordsView-filter {
-    margin-bottom: 2rem;
-}
-</style>

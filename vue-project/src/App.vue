@@ -23,6 +23,9 @@ a, p, label, input, select, option {
 .btn-primary:hover {
     background-color: #090;
 }
+.btn-primary:active {
+    background-color: #0c0 !important;
+}
 .btn-link {
     text-decoration: none;
     background-color: #999;
@@ -30,6 +33,9 @@ a, p, label, input, select, option {
 }
 .btn-link:hover {
     background-color: #ccc;
+}
+.btn-link:active {
+    background-color: #eee !important;
 }
 a:hover {
     cursor: pointer;
